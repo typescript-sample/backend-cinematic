@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mappers">
+  <select id="user">
+    select *
+    from users
+    where
+    <if test="username != null">
+      username like #{username} and
+    </if>
+    <if test="displayName != null">
+      displayName like #{displayName} and
+    </if>
+    <if test="status != null">
+      status in (#{status}) and
+    </if>
+    <if test="q != null">
+      (username like #{q} or displayName like #{q} or email like #{q}) and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="role">
+    select *
+    from roles
+    where
+    <if test="roleName != null">
+      roleName like #{roleName} and
+    </if>
+    <if test="status != null">
+      status in (#{status}) and
+    </if>
+    <if test="q != null">
+      (roleName like #{q} or roleId like #{q} or remark like #{q}) and
+    </if>
+    1 = 1
+  </select>
+
+  <select id="category">
+    select *
+    from categories
+    where
+    <if test="categoryName != null">
+    category like #{categoryName} and
+    </if>
+    <if test="q != null">
+      (categoryName like #{q})
+    </if>
+    1 = 1
+  </select>
+
+    <select id="film">
+    select *
+    from films
+    where
+    <if test="title != null">
+    title like #{title} and
+    </if>
+    <if test="description != null">
+    description like #{description} and
+    </if>
+    <if test ="imageUrl != null">
+    imageUrl like #{imageUrl} and 
+    </if>
+    <if test = "trailerUrl != null">
+    trailerUrl like #{trailerUrl} and
+    </if>
+    <if test="categories != null" array="skip">
+      categories && #{categories} and
+    </if>
+    <if test="q != null">
+      (title like #{q} or description like #{q} or imageUrl like #{q} or trailerUrl like #{trailerUrl}) and
+    </if>
+    <if test="sort != null">
+      order by {sort}
+    </if>
+    1 = 1
+  </select>
+</mapper>
