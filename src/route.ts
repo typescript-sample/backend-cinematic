@@ -10,6 +10,7 @@ import { L } from 'logger-core';
 export function route(app: Application, ctx: Context, secure: boolean): void {
   const parser = multer();
   app.get('/health', ctx.health.check);
+  // app.get('/healthcheck', ctx.health2.check);
   app.patch('/log', ctx.log.config);
   app.patch('/middleware', ctx.middleware.config);
   app.post('/authenticate', parser.none(), ctx.authentication.authenticate);
@@ -65,5 +66,27 @@ app.put('/films/:id',checkFilm,ctx.film.update);
 app.patch('/films/:id',checkFilm,ctx.film.patch );
 app.delete('/films/:id',checkFilm,ctx.film.delete);
 
+const readCinemaParent = ctx.authorize('cinemaParent', read);
+const writeCinemaParent = ctx.authorize('cinemaParent', write);
+
+// get(app, '/cinemaParent', readCinemaParent, ctx.cinemaParent.all, secure);
+post(app, '/cinemaParent/search', readCinemaParent, ctx.cinemaParent.search, secure);
+get(app, '/cinemaParent/search', readCinemaParent, ctx.cinemaParent.search, secure);
+get(app, '/cinemaParent/:id', readCinemaParent, ctx.cinemaParent.load, secure);
+post(app, '/cinemaParent', writeCinemaParent, ctx.cinemaParent.create, secure);
+put(app, '/cinemaParent/:id', writeCinemaParent, ctx.cinemaParent.update, secure);
+patch(app, '/cinemaParent/:id', writeCinemaParent, ctx.cinemaParent.patch, secure);
+del(app, '/cinemaParent/:id', writeCinemaParent, ctx.cinemaParent.delete, secure);
+
+const readCinema = ctx.authorize('cinema', read);
+const writeCinema = ctx.authorize('cinema', write);
+// get(app, '/cinemaParent', readCinemaParent, ctx.cinemaParent.all, secure); 
+post(app, '/cinema/search', readCinema, ctx.cinema.search, secure);
+get(app, '/cinema/search', readCinema, ctx.cinema.search, secure);
+get(app, '/cinema/:id', readCinema, ctx.cinema.load, secure);
+post(app, '/cinema', writeCinema, ctx.cinema.create, secure);
+put(app, '/cinema/:id', writeCinema, ctx.cinema.update, secure);
+patch(app, '/cinema/:id', writeCinema, ctx.cinema.patch, secure);
+del(app, '/cinema/:id', writeCinema, ctx.cinema.delete, secure);
 
 }

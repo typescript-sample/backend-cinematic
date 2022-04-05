@@ -80,4 +80,44 @@
     </if>
     1 = 1
   </select>
+  <select id="cinema">
+    select *
+    from cinema
+    where
+    <if test="name != null">
+      name like #{name} and
+    </if>
+    <if test="status != null">
+      status in (#{status}) and
+    </if>
+    <if test="q != null">
+      (name like #{q} ) and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="cinemaParent">
+    select *
+    from cinemaParent
+    where
+    <if test="name != null">
+      name like #{name} and
+    </if>
+    <if test="aliases != null">
+      aliases like #{aliases} and
+    </if>
+    <if test="status != null">
+      status in (#{status}) and
+    </if>
+    <if test="q != null">
+      (name like #{q} or aliases like #{q}) and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
 </mapper>

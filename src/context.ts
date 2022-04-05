@@ -15,6 +15,8 @@ import { RoleController, useRoleController } from './role';
 import { UserController, useUserController } from './user';
 import { CategoryController } from 'category/category-controller';
 import { useCategoryController } from './category';
+import { CinemaParentController, useCinemaParentController } from './cinemaparent';
+import { CinemaController, useCinemaController } from './cinema';
 
 resources.createValidator = createValidator;
 resources.check = check;
@@ -41,6 +43,8 @@ export interface Context {
   auditLog: AuditLogController;
   film: FilmController;
   category: CategoryController;
+  cinemaParent: CinemaParentController;
+  cinema: CinemaController;
 }
 export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: Config, mapper?: TemplateMap): Context {
   const auth = conf.auth;
@@ -68,5 +72,10 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
 
   const film = useFilmController(logger.error,db,mapper);
   const category = useCategoryController(logger.error, db, mapper);
-  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, film, category };
+
+  const cinemaParent = useCinemaParentController(logger.error, db, mapper)
+  const cinema = useCinemaController(logger.error, db, mapper)
+  // const healthChecker2  =new Checker2('mongo',"https://localhost:443/health",5000);
+  // const health2 = new HealthController2([healthChecker2])
+  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, film, category ,cinema,cinemaParent};
 }

@@ -28,6 +28,21 @@ createdby varying(40),
   updatedat timestamp
 );
 
+
+CREATE TABLE cinema (
+  id varchar(40) PRIMARY KEY,
+  name varchar(255) NOT NULL,
+  address varchar(255) NOT NULL,
+  parent varchar(40),
+  status CHAR(1) NOT NULL,
+  lati varchar(255),
+  longi varchar(255),
+  createdby varchar(40),
+  createdat timestamp,
+  updatedby varchar(40),
+  updatedat timestamp,
+);
+
 -- insert into categories(categoryid, categoryname) values('0001','category 1');
 -- insert into categories values('0002','category 2');
 -- insert into films(filmid,title,description, imageurl, trailerurl, categories) 
