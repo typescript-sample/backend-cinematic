@@ -11,6 +11,7 @@
   "keywords": [],
   "author": "",
   "dependencies": {
+    "@google-cloud/storage": "^5.15.3",
     "authen-express": "^0.0.3",
     "authen-service": "^0.0.5",
     "config-plus": "^0.0.4",
@@ -18,6 +19,7 @@
     "dotenv": "^10.0.0",
     "express": "^4.17.2",
     "express-ext": "^0.1.18",
+    "google-storage": "0.0.2",
     "jsonwebtoken": "^8.5.1",
     "jsonwebtoken-plus": "^0.0.5",
     "ldap-plus": "^0.0.2",
@@ -27,6 +29,7 @@
     "nodemailer": "^6.7.3",
     "onecore": "^0.0.27",
     "pg": "^8.7.3",
+    "pg-core": "^0.1.15",
     "pg-extension": "^0.1.1",
     "query-core": "^0.1.18",
     "query-mappers": "0.0.3",

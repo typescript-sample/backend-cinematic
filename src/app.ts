@@ -48,7 +48,7 @@ const templates = loadTemplates(conf.template, buildTemplates, trim, ['./src/que
 const pool = new Pool(config.db);
 // const pool = createPool(config.db);
 const db = log(new PoolManager(pool), conf.log.db, logger, 'postgres');
-const ctx = useContext(db, logger, middleware, conf, templates);
+const ctx = useContext(db, logger, middleware, conf,pool, templates);
 route(app, ctx, conf.secure);
 http.createServer(app).listen(conf.port, () => {
   console.log('Start server at port ' + conf.port);

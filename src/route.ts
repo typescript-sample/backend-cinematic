@@ -89,4 +89,11 @@ put(app, '/cinema/:id', writeCinema, ctx.cinema.update, secure);
 patch(app, '/cinema/:id', writeCinema, ctx.cinema.patch, secure);
 del(app, '/cinema/:id', writeCinema, ctx.cinema.delete, secure);
 
+
+app.get('/uploads', ctx.uploads.all);
+app.get('/uploads/:id', ctx.uploads.load);
+app.post('/uploads', parser.single('file'), ctx.uploads.upload);
+app.post('/uploads/youtube', ctx.uploads.insertData);
+app.delete('/uploads', ctx.uploads.remove);
+app.delete('/uploads/youtube', ctx.uploads.deleteData);
 }
