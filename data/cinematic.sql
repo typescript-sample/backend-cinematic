@@ -1,6 +1,6 @@
 create database backoffice;
 -- drop database backoffice;
-use backoffice;
+use  backoffice;
 
 -- drop table films
 create table films(
@@ -22,9 +22,9 @@ create table categories(
   categoryid character varying(40) primary key,
   categoryname character varying(300) not null,
   status char(1) not null,
-  createdby varying(40),
+  createdby character varying(40),
   createdat timestamp,
-  updatedby varying(40),
+  updatedby character varying(40),
   updatedat timestamp
 );
 
@@ -40,19 +40,8 @@ CREATE TABLE cinema (
   createdby varchar(40),
   createdat timestamp,
   updatedby varchar(40),
-  updatedat timestamp,
+  updatedat timestamp
 );
-
--- insert into films(filmid,title,description, imageurl, trailerurl, categories) 
--- values(
--- 	'000001',
--- 	'godzilla',
--- 	'phim hay',
--- 	'https://www.new-video.de/co/startup01.jpg',
--- 	'https://www.youtube.com/watch?v=0DOQ81qsqdA',
--- 	'{0001,0002}'
--- )
-
 
 CREATE TABLE modules (
   moduleid varchar(40) PRIMARY KEY,
@@ -123,34 +112,33 @@ CREATE TABLE auditlog (
 
 
 
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('action','action','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('adventure','adventure','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('animated','animated','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('comedy','comedy','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('drama','drama','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('horror','horror','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('crime','crime','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('fantasy','fantasy','A');
-INSERT INTO categories (categoryid,categoryname,status) VALUE ('family','family','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES('adventure','adventure','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('animated','animated','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('comedy','comedy','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('drama','drama','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('horror','horror','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('crime','crime','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('fantasy','fantasy','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUES ('family','family','A');
 
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00001','The Shawshank Redemption','https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg','https://www.imdb.com/video/vi3877612057?playlistId=tt0111161&ref_=tt_pr_ov_vi','{drama}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00002','Thor: Love and Thunder','https://genk.mediacdn.vn/139269124445442048/2022/4/19/2-16503255592162067496114.jpg','https://www.youtube.com/watch?v=tgB1wUcmbbw','{drama,crime}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00003','Top Gun: Maverick','https://www.cgv.vn/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/t/o/top_gun_maverick_-_poster_28.03_1_.jpg','https://www.youtube.com/watch?v=yM389FbhlRQ','{action,drama}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00004','The Batman','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/p/o/poster_batman-1.jpg','https://youtu.be/761uRaAoW00','{action,crime,drama}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00005','The Sadness','https://phimnhua.com/wp-content/uploads/2022/04/phimnhua_1650248826.jpg','https://www.youtube.com/watch?v=axjme4v-xRo','{horror}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00006','Doctor Strange in the Multiverse of Madness','https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg','https://www.imdb.com/video/vi3877612057?playlistId=tt0111161&ref_=tt_pr_ov_vi','{action,adventure,fantasy}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00007','Fantastic Beasts: The Secrets of Dumbledore','https://i.bloganchoi.com/bloganchoi.com/wp-content/uploads/2022/04/review-phim-sinh-vat-huyen-bi-3-fantastic-beasts-3-2-696x1031.jpg?fit=700%2C20000&quality=95&ssl=1','https://youtu.be/Y9dr2zw-TXQ','{family,adventure,fantasy}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00008','The Adam Project','http://photos.q00gle.com/storage/files/images-2021/images-movies/09/622b6789e7084.jpg''https://youtu.be/IE8HIsIrq4o','{action,comedy,adventure}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00009','Spider-Man: No Way Home','https://gamek.mediacdn.vn/133514250583805952/2021/11/17/photo-1-1637118381839432740223.jpg','https://www.youtube.com/watch?v=OB3g37GTALc','{action,adventure,fantasy}','A')
-INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00010','Dune','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/u/dune-poster-1.jpg','https://youtu.be/8g18jFHCLXk','{action,adventure,drama}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00001','The Shawshank Redemption','https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg','https://www.imdb.com/video/vi3877612057?playlistId=tt0111161&ref_=tt_pr_ov_vi','{drama}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00002','Thor: Love and Thunder','https://genk.mediacdn.vn/139269124445442048/2022/4/19/2-16503255592162067496114.jpg','https://www.youtube.com/watch?v=tgB1wUcmbbw','{drama,crime}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00003','Top Gun: Maverick','https://www.cgv.vn/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/t/o/top_gun_maverick_-_poster_28.03_1_.jpg','https://www.youtube.com/watch?v=yM389FbhlRQ','{action,drama}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00004','The Batman','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/p/o/poster_batman-1.jpg','https://youtu.be/761uRaAoW00','{action,crime,drama}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00005','The Sadness','https://phimnhua.com/wp-content/uploads/2022/04/phimnhua_1650248826.jpg','https://www.youtube.com/watch?v=axjme4v-xRo','{horror}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00006','Doctor Strange in the Multiverse of Madness','https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg','https://www.imdb.com/video/vi3877612057?playlistId=tt0111161&ref_=tt_pr_ov_vi','{action,adventure,fantasy}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00007','Fantastic Beasts: The Secrets of Dumbledore','https://i.bloganchoi.com/bloganchoi.com/wp-content/uploads/2022/04/review-phim-sinh-vat-huyen-bi-3-fantastic-beasts-3-2-696x1031.jpg?fit=700%2C20000&quality=95&ssl=1','https://youtu.be/Y9dr2zw-TXQ','{family,adventure,fantasy}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00008','The Adam Project','http://photos.q00gle.com/storage/files/images-2021/images-movies/09/622b6789e7084.jpg','https://youtu.be/IE8HIsIrq4o','{action,comedy,adventure}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00009','Spider-Man: No Way Home','https://gamek.mediacdn.vn/133514250583805952/2021/11/17/photo-1-1637118381839432740223.jpg','https://www.youtube.com/watch?v=OB3g37GTALc','{action,adventure,fantasy}','A');
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00010','Dune','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/u/dune-poster-1.jpg','https://youtu.be/8g18jFHCLXk','{action,adventure,drama}','A');
 
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00001','Galaxy Nguyen Du','116 Nguyễn Du, Quận 1, Tp.HCM, Thành phố Hồ Chí Minh','A','Galaxy','21.7','123.3');
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00002','Galaxy Tan Binh','246 Nguyễn Hồng Đào,Tân Bình,Thành phố Hồ Chí Minh','A','Galaxy','21.1137','3.3');
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00003','Galaxy Huynh Tan Phat','Lầu 2, TTTM Coopmart, số 1362 Huỳnh Tấn Phát, khu phố 1, Phường Phú Mỹ, Quận 7, Tp.Hồ Chí Minh','A','Galaxy','21.7','123.3');
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00004','Galaxy Quang Trung','Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung, P.11, Q. Gò Vấp, Tp.HCM','A','Galaxy','1.7','2.34');
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00005','CGV Hung Vuong',' Hùng Vương Plaza 126 Hùng Vương Quận 5 Tp. Hồ Chí Minh','A','CGV','15.4','5.6');
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00006','CGV Cresent Mall','Lầu 5, Crescent Mall Đại lộ Nguyễn Văn Linh, Phú Mỹ Hưng Quận 7 TP. Hồ Chí Minh','A','CGV','45.123','12.12');
-INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00007','Lotte Nam Sai Gon','Tầng 3, TTTM Lotte, số 469 đường Nguyễn Hữu Thọ, P.Tân Hưng, Q.7, TP.HCM, Việt Nam','A','Lotte','8.7','4.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00001','Galaxy Nguyen Du','116 Nguyễn Du, Quận 1, Tp.HCM, Thành phố Hồ Chí Minh','Galaxy','A','21.7','123.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00002','Galaxy Tan Binh','246 Nguyễn Hồng Đào,Tân Bình,Thành phố Hồ Chí Minh','Galaxy','A','21.1137','3.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00003','Galaxy Huynh Tan Phat','Lầu 2, TTTM Coopmart, số 1362 Huỳnh Tấn Phát, khu phố 1, Phường Phú Mỹ, Quận 7, Tp.Hồ Chí Minh','Galaxy','A','21.7','123.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00004','Galaxy Quang Trung','Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung, P.11, Q. Gò Vấp, Tp.HCM','Galaxy','A','1.7','2.34');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00005','CGV Hung Vuong',' Hùng Vương Plaza 126 Hùng Vương Quận 5 Tp. Hồ Chí Minh','CGV','A','15.4','5.6');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00006','CGV Cresent Mall','Lầu 5, Crescent Mall Đại lộ Nguyễn Văn Linh, Phú Mỹ Hưng Quận 7 TP. Hồ Chí Minh','CGV','A','45.123','12.12');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUES ('00007','Lotte Nam Sai Gon','Tầng 3, TTTM Lotte, số 469 đường Nguyễn Hữu Thọ, P.Tân Hưng, Q.7, TP.HCM, Việt Nam','Lotte','A','8.7','4.3');
 
 
 INSERT INTO modules (moduleid,modulename,status,path,resourcekey,icon,sequence,parent,displaymode) VALUES ('dashboard','Dashboard','A','/dashboard','dashboard','assignments',1,'', 'A');
