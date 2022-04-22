@@ -1,17 +1,17 @@
 create database backoffice;
-drop database backoffice;
+-- drop database backoffice;
 use backoffice;
 
 -- drop table films
 create table films(
-filmid character varying(40) primary key,
-title character varying(300) not null,
-description character varying(300),
-imageurl character varying(300),
-trailerurl character varying(300),
-categories character varying[],
+  filmid character varying(40) primary key,
+  title character varying(300) not null,
+  description character varying(300),
+  imageurl character varying(300),
+  trailerurl character varying(300),
+  categories character varying[],
   status char(1) not null,
-createdby character varying(40),
+  createdby character varying(40),
   createdat timestamp,
   updatedby character varying(40),
   updatedat timestamp
@@ -19,16 +19,16 @@ createdby character varying(40),
 
 --drop table categories
 create table categories(
-categoryid character varying(40) primary key,
-categoryname character varying(300) not null,
+  categoryid character varying(40) primary key,
+  categoryname character varying(300) not null,
   status char(1) not null,
-createdby varying(40),
+  createdby varying(40),
   createdat timestamp,
   updatedby varying(40),
   updatedat timestamp
 );
 
-
+--drop table cinema
 CREATE TABLE cinema (
   id varchar(40) PRIMARY KEY,
   name varchar(255) NOT NULL,
@@ -43,8 +43,6 @@ CREATE TABLE cinema (
   updatedat timestamp,
 );
 
--- insert into categories(categoryid, categoryname) values('0001','category 1');
--- insert into categories values('0002','category 2');
 -- insert into films(filmid,title,description, imageurl, trailerurl, categories) 
 -- values(
 -- 	'000001',
@@ -55,10 +53,6 @@ CREATE TABLE cinema (
 -- 	'{0001,0002}'
 -- )
 
-
--- alter table film_category add foreign key (filmid) references films (id);
--- alter table film_category add foreign key (categoryid) references categories (id);
--- ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Root/123';
 
 CREATE TABLE modules (
   moduleid varchar(40) PRIMARY KEY,
@@ -126,6 +120,39 @@ CREATE TABLE auditlog (
   status varchar(255),
   remark varchar(255)
 );
+
+
+
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('action','action','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('adventure','adventure','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('animated','animated','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('comedy','comedy','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('drama','drama','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('horror','horror','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('crime','crime','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('fantasy','fantasy','A');
+INSERT INTO categories (categoryid,categoryname,status) VALUE ('family','family','A');
+
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00001','The Shawshank Redemption','https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg','https://www.imdb.com/video/vi3877612057?playlistId=tt0111161&ref_=tt_pr_ov_vi','{drama}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00002','Thor: Love and Thunder','https://genk.mediacdn.vn/139269124445442048/2022/4/19/2-16503255592162067496114.jpg','https://www.youtube.com/watch?v=tgB1wUcmbbw','{drama,crime}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00003','Top Gun: Maverick','https://www.cgv.vn/media/catalog/product/cache/3/image/c5f0a1eff4c394a251036189ccddaacd/t/o/top_gun_maverick_-_poster_28.03_1_.jpg','https://www.youtube.com/watch?v=yM389FbhlRQ','{action,drama}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00004','The Batman','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/p/o/poster_batman-1.jpg','https://youtu.be/761uRaAoW00','{action,crime,drama}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00005','The Sadness','https://phimnhua.com/wp-content/uploads/2022/04/phimnhua_1650248826.jpg','https://www.youtube.com/watch?v=axjme4v-xRo','{horror}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00006','Doctor Strange in the Multiverse of Madness','https://m.media-amazon.com/images/M/MV5BMDFkYTc0MGEtZmNhMC00ZDIzLWFmNTEtODM1ZmRlYWMwMWFmXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_UY67_CR0,0,45,67_AL_.jpg','https://www.imdb.com/video/vi3877612057?playlistId=tt0111161&ref_=tt_pr_ov_vi','{action,adventure,fantasy}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00007','Fantastic Beasts: The Secrets of Dumbledore','https://i.bloganchoi.com/bloganchoi.com/wp-content/uploads/2022/04/review-phim-sinh-vat-huyen-bi-3-fantastic-beasts-3-2-696x1031.jpg?fit=700%2C20000&quality=95&ssl=1','https://youtu.be/Y9dr2zw-TXQ','{family,adventure,fantasy}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00008','The Adam Project','http://photos.q00gle.com/storage/files/images-2021/images-movies/09/622b6789e7084.jpg''https://youtu.be/IE8HIsIrq4o','{action,comedy,adventure}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00009','Spider-Man: No Way Home','https://gamek.mediacdn.vn/133514250583805952/2021/11/17/photo-1-1637118381839432740223.jpg','https://www.youtube.com/watch?v=OB3g37GTALc','{action,adventure,fantasy}','A')
+INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUE ('00010','Dune','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/u/dune-poster-1.jpg','https://youtu.be/8g18jFHCLXk','{action,adventure,drama}','A')
+
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00001','Galaxy Nguyen Du','116 Nguyễn Du, Quận 1, Tp.HCM, Thành phố Hồ Chí Minh','A','Galaxy','21.7','123.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00002','Galaxy Tan Binh','246 Nguyễn Hồng Đào,Tân Bình,Thành phố Hồ Chí Minh','A','Galaxy','21.1137','3.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00003','Galaxy Huynh Tan Phat','Lầu 2, TTTM Coopmart, số 1362 Huỳnh Tấn Phát, khu phố 1, Phường Phú Mỹ, Quận 7, Tp.Hồ Chí Minh','A','Galaxy','21.7','123.3');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00004','Galaxy Quang Trung','Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung, P.11, Q. Gò Vấp, Tp.HCM','A','Galaxy','1.7','2.34');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00005','CGV Hung Vuong',' Hùng Vương Plaza 126 Hùng Vương Quận 5 Tp. Hồ Chí Minh','A','CGV','15.4','5.6');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00006','CGV Cresent Mall','Lầu 5, Crescent Mall Đại lộ Nguyễn Văn Linh, Phú Mỹ Hưng Quận 7 TP. Hồ Chí Minh','A','CGV','45.123','12.12');
+INSERT INTO cinema (id, name, address, parent, status, lati, longi) VALUE ('00007','Lotte Nam Sai Gon','Tầng 3, TTTM Lotte, số 469 đường Nguyễn Hữu Thọ, P.Tân Hưng, Q.7, TP.HCM, Việt Nam','A','Lotte','8.7','4.3');
+
+
 INSERT INTO modules (moduleid,modulename,status,path,resourcekey,icon,sequence,parent,displaymode) VALUES ('dashboard','Dashboard','A','/dashboard','dashboard','assignments',1,'', 'A');
 INSERT INTO modules (moduleid,modulename,status,path,resourcekey,icon,sequence,parent,displaymode) VALUES ('admin','Admin','A','/admin','admin','contacts',2,'','I');
 INSERT INTO modules (moduleid,modulename,status,path,resourcekey,icon,sequence,parent,displaymode) VALUES ('setup','Setup','A','/setup','setup','settings',3,'','I');
@@ -156,32 +183,32 @@ INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phon
 INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00012','marc-andre.ter.stegen','marc-andre.ter.stegen@gmail.com','Marc-André ter Stegen','https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Marc-Andr%C3%A9_ter_Stegen.jpg/500px-Marc-Andr%C3%A9_ter_Stegen.jpg','I','M','0987654321','Mr','E');
 INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00013','sergino.dest','sergino.dest@gmail.com','Sergiño Dest','https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Sergino_Dest.jpg/440px-Sergino_Dest.jpg','I','M','0987654321','Mr','E');
 INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00014','gerard.pique','gerard.pique@gmail.com','Gerard Piqué','https://upload.wikimedia.org/wikipedia/commons/4/4e/Gerard_Piqu%C3%A9_2018.jpg','A','M','0987654321','Mr','M');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00015','ronald.araujo','ronald.araujo@gmail.com@gmail.com','Ronald Araújo','https://pbs.twimg.com/media/EtnqxaEU0AAc6A6.jpg','A','M','0987654321','Mr','M');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00016','sergio.busquets','sergio.busquets@gmail.com@gmail.com','Sergio Busquets','https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Sergio_Busquets_2018.jpg/440px-Sergio_Busquets_2018.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00017','antoine.griezmann','antoine.griezmann@gmail.com@gmail.com','Antoine Griezmann','https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Antoine_Griezmann_in_2018_%28cropped%29.jpg/440px-Antoine_Griezmann_in_2018_%28cropped%29.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00018','miralem.pjanic','miralem.pjanic@gmail.com@gmail.com','Miralem Pjanić','https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/20150331_2025_AUT_BIH_2130_Miralem_Pjani%C4%87.jpg/440px-20150331_2025_AUT_BIH_2130_Miralem_Pjani%C4%87.jpg','A','M','0987654321','Mrs','M');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00019','martin.braithwaite','martin.braithwaite@gmail.com@gmail.com','Martin Braithwaite','https://pbs.twimg.com/profile_images/1231549032943800320/WR769kKG_400x400.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00020','ousmane.dembele','ousmane.dembele@gmail.com@gmail.com','Ousmane Dembélé','https://upload.wikimedia.org/wikipedia/commons/7/77/Ousmane_Demb%C3%A9l%C3%A9_2018.jpg','A','M','0987654321','Ms','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00021','riqui.puig','riqui.puig@gmail.com@gmail.com','Riqui Puig','https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Bar%C3%A7a_Napoli_12_%28cropped%29.jpg/440px-Bar%C3%A7a_Napoli_12_%28cropped%29.jpg','A','M','0987654321','Ms','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00022','philip.coutinho','philip.coutinho@gmail.com@gmail.com','Philip Coutinho','https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Norberto_Murara_Neto_2019.jpg/440px-Norberto_Murara_Neto_2019.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00023','victor.lindelof','victor.lindelof@gmail.com@gmail.com','Victor Lindelöf','https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/CSKA-MU_2017_%286%29.jpg/440px-CSKA-MU_2017_%286%29.jpg','I','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00024','eric.bailly','eric.bailly@gmail.com@gmail.com','Eric Bailly','https://upload.wikimedia.org/wikipedia/commons/c/cf/Eric_Bailly_-_ManUtd.jpg','I','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00025','phil.jones','phil.jones@gmail.com@gmail.com','Phil Jones','https://upload.wikimedia.org/wikipedia/commons/f/fa/Phil_Jones_2018-06-28_1.jpg','I','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00026','harry.maguire','harry.maguire@gmail.com@gmail.com','Harry Maguire','https://upload.wikimedia.org/wikipedia/commons/b/be/Harry_Maguire_2018-07-11_1.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00027','paul.pogba','paul.pogba@gmail.com@gmail.com','Paul Pogba','https://upload.wikimedia.org/wikipedia/commons/b/be/Harry_Maguire_2018-07-11_1.jpg','I','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00028','edinson.cavani','edinson.cavani@gmail.com@gmail.com','Edinson Cavani','https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Edinson_Cavani_2018.jpg/440px-Edinson_Cavani_2018.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00029','juan.mata','juan.mata@gmail.com@gmail.com','Juan Mata','https://upload.wikimedia.org/wikipedia/commons/7/70/Ukr-Spain2015_%286%29.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00030','anthony.martial','anthony.martial@gmail.com@gmail.com','Anthony Martial','https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Anthony_Martial_27_September_2017_cropped.jpg/440px-Anthony_Martial_27_September_2017_cropped.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00031','marcus.rashford','marcus.rashford@gmail.com@gmail.com','Marcus Rashford','https://upload.wikimedia.org/wikipedia/commons/5/5e/Press_Tren_CSKA_-_MU_%283%29.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00032','mason.greenwood','mason.greenwood@gmail.com@gmail.com','Mason Greenwood','https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mason_Greenwood.jpeg/440px-Mason_Greenwood.jpeg','A','M','0987654321','Ms','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00033','lee.grant','lee.grant@gmail.com@gmail.com','Lee Grant','https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/LeeGrant09.jpg/400px-LeeGrant09.jpg','A','M','0987654321','Ms','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00034','jesse.lingard','jesse.lingard@gmail.com@gmail.com','Jesse Lingard','https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Jesse_Lingard_2018-06-13_1.jpg/440px-Jesse_Lingard_2018-06-13_1.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00035','keylor.navas','keylor.navas@gmail.com@gmail.com','Keylor Navas','https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Liver-RM_%288%29_%28cropped%29.jpg/440px-Liver-RM_%288%29_%28cropped%29.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00036','achraf.hakimi','achraf.hakimi@gmail.com@gmail.com','Achraf Hakimi','https://upload.wikimedia.org/wikipedia/commons/9/91/Iran-Morocco_by_soccer.ru_14_%28Achraf_Hakimi%29.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00037','presnel.kimpembe','presnel.kimpembe@gmail.com@gmail.com','Presnel Kimpembe','https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Presnel_Kimpembe.jpg/400px-Presnel_Kimpembe.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00038','sergio.ramos','sergio.ramos@gmail.com@gmail.com','Sergio Ramos','https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/FC_RB_Salzburg_versus_Real_Madrid_%28Testspiel%2C_7._August_2019%29_09.jpg/440px-FC_RB_Salzburg_versus_Real_Madrid_%28Testspiel%2C_7._August_2019%29_09.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00039','marquinhos','marquinhos@gmail.com@gmail.com','Marquinhos','https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Brasil_conquista_primeiro_ouro_ol%C3%ADmpico_nos_penaltis_1039278-20082016-_mg_4916_%28cropped%29.jpg/440px-Brasil_conquista_primeiro_ouro_ol%C3%ADmpico_nos_penaltis_1039278-20082016-_mg_4916_%28cropped%29.jpg','A','M','0987654321','Mr','E');
-INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00040','marco.verratti','marco.verratti@gmail.com@gmail.com','Marco Verratti','https://upload.wikimedia.org/wikipedia/commons/d/d0/Kiev-PSG_%289%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00015','ronald.araujo','ronald.araujo@gmail.com','Ronald Araújo','https://pbs.twimg.com/media/EtnqxaEU0AAc6A6.jpg','A','M','0987654321','Mr','M');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00016','sergio.busquets','sergio.busquets@gmail.com','Sergio Busquets','https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Sergio_Busquets_2018.jpg/440px-Sergio_Busquets_2018.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00017','antoine.griezmann','antoine.griezmann@gmail.com','Antoine Griezmann','https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Antoine_Griezmann_in_2018_%28cropped%29.jpg/440px-Antoine_Griezmann_in_2018_%28cropped%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00018','miralem.pjanic','miralem.pjanic@gmail.com','Miralem Pjanić','https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/20150331_2025_AUT_BIH_2130_Miralem_Pjani%C4%87.jpg/440px-20150331_2025_AUT_BIH_2130_Miralem_Pjani%C4%87.jpg','A','M','0987654321','Mrs','M');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00019','martin.braithwaite','martin.braithwaite@gmail.com','Martin Braithwaite','https://pbs.twimg.com/profile_images/1231549032943800320/WR769kKG_400x400.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00020','ousmane.dembele','ousmane.dembele@gmail.com','Ousmane Dembélé','https://upload.wikimedia.org/wikipedia/commons/7/77/Ousmane_Demb%C3%A9l%C3%A9_2018.jpg','A','M','0987654321','Ms','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00021','riqui.puig','riqui.puig@gmail.com','Riqui Puig','https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Bar%C3%A7a_Napoli_12_%28cropped%29.jpg/440px-Bar%C3%A7a_Napoli_12_%28cropped%29.jpg','A','M','0987654321','Ms','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00022','philip.coutinho','philip.coutinho@gmail.com','Philip Coutinho','https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Norberto_Murara_Neto_2019.jpg/440px-Norberto_Murara_Neto_2019.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00023','victor.lindelof','victor.lindelof@gmail.com','Victor Lindelöf','https://upload.wikimedia.org/wikipedia/commons/thumb/c/cc/CSKA-MU_2017_%286%29.jpg/440px-CSKA-MU_2017_%286%29.jpg','I','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00024','eric.bailly','eric.bailly@gmail.com','Eric Bailly','https://upload.wikimedia.org/wikipedia/commons/c/cf/Eric_Bailly_-_ManUtd.jpg','I','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00025','phil.jones','phil.jones@gmail.com','Phil Jones','https://upload.wikimedia.org/wikipedia/commons/f/fa/Phil_Jones_2018-06-28_1.jpg','I','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00026','harry.maguire','harry.maguire@gmail.com','Harry Maguire','https://upload.wikimedia.org/wikipedia/commons/b/be/Harry_Maguire_2018-07-11_1.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00027','paul.pogba','paul.pogba@gmail.com','Paul Pogba','https://upload.wikimedia.org/wikipedia/commons/b/be/Harry_Maguire_2018-07-11_1.jpg','I','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00028','edinson.cavani','edinson.cavani@gmail.com','Edinson Cavani','https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Edinson_Cavani_2018.jpg/440px-Edinson_Cavani_2018.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00029','juan.mata','juan.mata@gmail.com','Juan Mata','https://upload.wikimedia.org/wikipedia/commons/7/70/Ukr-Spain2015_%286%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00030','anthony.martial','anthony.martial@gmail.com','Anthony Martial','https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/Anthony_Martial_27_September_2017_cropped.jpg/440px-Anthony_Martial_27_September_2017_cropped.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00031','marcus.rashford','marcus.rashford@gmail.com','Marcus Rashford','https://upload.wikimedia.org/wikipedia/commons/5/5e/Press_Tren_CSKA_-_MU_%283%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00032','mason.greenwood','mason.greenwood@gmail.com','Mason Greenwood','https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Mason_Greenwood.jpeg/440px-Mason_Greenwood.jpeg','A','M','0987654321','Ms','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00033','lee.grant','lee.grant@gmail.com','Lee Grant','https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/LeeGrant09.jpg/400px-LeeGrant09.jpg','A','M','0987654321','Ms','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00034','jesse.lingard','jesse.lingard@gmail.com','Jesse Lingard','https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Jesse_Lingard_2018-06-13_1.jpg/440px-Jesse_Lingard_2018-06-13_1.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00035','keylor.navas','keylor.navas@gmail.com','Keylor Navas','https://upload.wikimedia.org/wikipedia/commons/thumb/c/c3/Liver-RM_%288%29_%28cropped%29.jpg/440px-Liver-RM_%288%29_%28cropped%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00036','achraf.hakimi','achraf.hakimi@gmail.com','Achraf Hakimi','https://upload.wikimedia.org/wikipedia/commons/9/91/Iran-Morocco_by_soccer.ru_14_%28Achraf_Hakimi%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00037','presnel.kimpembe','presnel.kimpembe@gmail.com','Presnel Kimpembe','https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Presnel_Kimpembe.jpg/400px-Presnel_Kimpembe.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00038','sergio.ramos','sergio.ramos@gmail.com','Sergio Ramos','https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/FC_RB_Salzburg_versus_Real_Madrid_%28Testspiel%2C_7._August_2019%29_09.jpg/440px-FC_RB_Salzburg_versus_Real_Madrid_%28Testspiel%2C_7._August_2019%29_09.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00039','marquinhos','marquinhos@gmail.com','Marquinhos','https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Brasil_conquista_primeiro_ouro_ol%C3%ADmpico_nos_penaltis_1039278-20082016-_mg_4916_%28cropped%29.jpg/440px-Brasil_conquista_primeiro_ouro_ol%C3%ADmpico_nos_penaltis_1039278-20082016-_mg_4916_%28cropped%29.jpg','A','M','0987654321','Mr','E');
+INSERT INTO users (userid,username,email,displayname,imageurl,status,gender,phone,title,position) VALUES ('00040','marco.verratti','marco.verratti@gmail.com','Marco Verratti','https://upload.wikimedia.org/wikipedia/commons/d/d0/Kiev-PSG_%289%29.jpg','A','M','0987654321','Mr','E');
 
 INSERT INTO userroles(userid, roleid) VALUES ('00001','admin');
 INSERT INTO userroles(userid, roleid) VALUES ('00003','admin');
