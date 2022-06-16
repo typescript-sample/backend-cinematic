@@ -15,6 +15,7 @@ export interface CinemaFilter extends Filter {
 export interface Cinema {
   cinemaId: string;
   cinemaName: string;
+  imageURL?: string;
   latitude?: string;
   longitude?: string;
   status?: string;
@@ -53,6 +54,7 @@ export const cinemaModel: Attributes = {
   status: {
     length: 1
   },
+  imageURL:{},
   createdBy: {},
   createdAt: {
     column: 'createdat',
