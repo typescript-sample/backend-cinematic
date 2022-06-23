@@ -1,4 +1,5 @@
 export const config = {
+  //8080
   port: 8080,
   secure: false,
   cookie: false,
@@ -44,7 +45,7 @@ export const config = {
     host: '127.0.0.1',
     port: 5432,
     user: 'postgres',
-    password: '12345',
+    password: '12345678',
     database: 'backoffice',
     multipleStatements: true,
   },

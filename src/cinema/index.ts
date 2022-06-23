@@ -1,6 +1,6 @@
 import { Log, Manager, Search } from 'onecore';
 import { DB, SearchBuilder } from 'query-core';
-import { Cinema, CinemaFilter, cinemaModel, CinemaRepository, CinemaService } from './cinema';
+import { Cinema, CinemaFilter, cinemaModel, CinemaRepository, CinemaService, Rate } from './cinema';
 import { CinemaController } from './cinema-controller';
 import { TemplateMap, useQuery } from 'query-mappers';
 export * from './cinema-controller';
@@ -13,6 +13,7 @@ export class CinemaManager extends Manager<Cinema, string, CinemaFilter> impleme
     super(search, repository);
   }
 }
+
 export function useCinemaService(db: DB, mapper?: TemplateMap): CinemaService {
   const query = useQuery('cinema', mapper, cinemaModel, true)
   const builder = new SearchBuilder<Cinema, CinemaFilter>(db.query, 'cinema', cinemaModel, db.driver, query);
