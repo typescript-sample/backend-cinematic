@@ -1,8 +1,9 @@
 import { AuthenticationController, PrivilegeController } from 'authen-express';
 import { initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, useAuthenticator, User, useUserRepository } from 'authen-service';
 import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources } from 'express-ext';
-import { useFilmController } from './film';
+import { useFilmController, useFilmRateController } from './film';
 import { FilmController } from './film/film-controller';
+import { FilmRateController } from './film/film-rate-controller';
 import { buildJwtError, generate, Payload, verify } from 'jsonwebtoken-plus';
 import { Conf, useLDAP } from 'ldap-plus';
 import { createChecker, DB } from 'query-core';
@@ -48,6 +49,7 @@ export interface Context {
   user: UserController;
   auditLog: AuditLogController;
   film: FilmController;
+  filmRate: FilmRateController;
   category: CategoryController;
   cinemaParent: CinemaParentController;
   cinema: CinemaController;
@@ -93,6 +95,7 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const auditLog = useAuditLogController(logger.error, db);
 
   const film = useFilmController(logger.error,db,mapper);
+  const filmRate = useFilmRateController(logger.error,db,mapper);
   const category = useCategoryController(logger.error, db, mapper);
 
   const cinemaParent = useCinemaParentController(logger.error, db, mapper)
@@ -106,5 +109,5 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const storageService = new GoogleStorageService(bucket, storageConfig, map);
   const uploadService = new SqlUploadSerive(pool, 'media', storageService.upload, storageService.delete, param, manager.query, manager.exec, manager.execBatch);
   const uploads = new UploadController(logger.error, uploadService);
-  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, film, category ,cinema,cinemaParent,uploads};
+  return { health, log, middleware, authorize: authorizer.authorize, authentication, privilege, role, user, auditLog, film, category ,cinema,cinemaParent,uploads, filmRate};
 }

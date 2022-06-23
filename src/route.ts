@@ -4,7 +4,7 @@ import { check } from 'express-ext';
 import multer from 'multer';
 import { del, get, patch, post, put, read, write } from 'security-express';
 import { Context } from './context';
-import { filmModel } from './film/film';
+import { filmModel, filmRateModel } from './film/film';
 import { L } from 'logger-core';
 
 export function route(app: Application, ctx: Context, secure: boolean): void {
@@ -47,6 +47,7 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   
 const checkCategory = check(categoryModel);
 const checkFilm = check(filmModel);
+const checkFilmRate = check(filmRateModel);
 app.get('/categories', ctx.category.all);
 app.post('/categories',checkCategory,ctx.category.create);
 app.get('/categories/search',checkCategory,ctx.category.search);
@@ -65,6 +66,10 @@ app.get('/films/:id',ctx.film.load);
 app.put('/films/:id',checkFilm,ctx.film.update);
 app.patch('/films/:id',checkFilm,ctx.film.patch );
 app.delete('/films/:id',checkFilm,ctx.film.delete);
+app.post('/films/rate',checkFilmRate,ctx.film.rate);
+
+app.post('/film-rate/search',ctx.filmRate.search);
+app.get('/film-rate/search',ctx.filmRate.search);
 
 const readCinemaParent = ctx.authorize('cinemaParent', read);
 const writeCinemaParent = ctx.authorize('cinemaParent', write);

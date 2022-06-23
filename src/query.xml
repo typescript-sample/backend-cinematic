@@ -120,4 +120,17 @@
       order by {sort}
     </if>
   </select>
+
+  <select id="filmRate">
+    select *
+    from filmrate
+    where
+    <if test="filmId != null">
+      filmId = (#{filmId}) and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
 </mapper>

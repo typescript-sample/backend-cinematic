@@ -111,6 +111,31 @@ CREATE TABLE auditlog (
   remark varchar(255)
 );
 
+CREATE TABLE filmInfo (
+  id varchar(255) PRIMARY KEY,
+  rate numeric DEFAULT 0,
+  rate1 integer DEFAULT 0,
+  rate2 integer DEFAULT 0,
+  rate3 integer DEFAULT 0,
+  rate4 integer DEFAULT 0,
+  rate5 integer DEFAULT 0,
+  rate6 integer DEFAULT 0,
+  rate7 integer DEFAULT 0,
+  rate8 integer DEFAULT 0,
+  rate9 integer DEFAULT 0,
+  rate10 integer DEFAULT 0,
+  viewCount integer DEFAULT 0
+);
+
+CREATE TABLE filmRate (
+  id varchar(255) PRIMARY KEY,
+  userId varchar(255),
+  filmId varchar(255),
+  rate integer DEFAULT 0,
+  rateTime date,
+  review: varchar(255)
+);
+
 
 
 INSERT INTO categories (categoryid,categoryname,status) VALUES('adventure','adventure','A');
