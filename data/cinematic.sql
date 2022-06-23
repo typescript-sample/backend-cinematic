@@ -35,13 +35,14 @@ CREATE TABLE cinema (
   address varchar(255) NOT NULL,
   parent varchar(40),
   status CHAR(1) NOT NULL,
-  latitude varchar(255),
-  longitude varchar(255),
+  latitude  Decimal(8,6),
+  longitude Decimal(9,6),
   imageURL text,
   createdby varchar(40),
   createdat timestamp,
   updatedby varchar(40),
-  updatedat timestamp
+  updatedat timestamp,
+  gallery text
 );
 
 CREATE TABLE modules (
@@ -158,13 +159,13 @@ INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('
 INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00009','Spider-Man: No Way Home','https://gamek.mediacdn.vn/133514250583805952/2021/11/17/photo-1-1637118381839432740223.jpg','https://www.youtube.com/watch?v=OB3g37GTALc','{action,adventure,fantasy}','A');
 INSERT INTO films (filmid,title,imageurl,trailerurl,categories,status) VALUES ('00010','Dune','https://www.cgv.vn/media/catalog/product/cache/1/image/c5f0a1eff4c394a251036189ccddaacd/d/u/dune-poster-1.jpg','https://youtu.be/8g18jFHCLXk','{action,adventure,drama}','A');
 
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00001','Galaxy Nguyen Du','116 Nguyễn Du, Quận 1, Tp.HCM, Thành phố Hồ Chí Minh','Galaxy','A','21.7','123.3', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nguyen-du-1_1557134449561.jpg');
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00002','Galaxy Tan Binh','246 Nguyễn Hồng Đào,Tân Bình,Thành phố Hồ Chí Minh','Galaxy','A','21.1137','3.3', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nguyen-du-2_1557134452480.jpg');
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00003','Galaxy Huynh Tan Phat','Lầu 2, TTTM Coopmart, số 1362 Huỳnh Tấn Phát, khu phố 1, Phường Phú Mỹ, Quận 7, Tp.Hồ Chí Minh','Galaxy','A','21.7','123.3', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nguyen-du-3_1557134455385.jpg');
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00004','Galaxy Quang Trung','Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung, P.11, Q. Gò Vấp, Tp.HCM','Galaxy','A','1.7','2.34', 'https://www.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nvq-01_1557130993556.jpg');
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00005','CGV Hung Vuong',' Hùng Vương Plaza 126 Hùng Vương Quận 5 Tp. Hồ Chí Minh','CGV','A','15.4','5.6', 'https://cdn.galaxycine.vn/media/2020/1/14/dsc08626_1578986801643.jpg');
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00006','CGV Cresent Mall','Lầu 5, Crescent Mall Đại lộ Nguyễn Văn Linh, Phú Mỹ Hưng Quận 7 TP. Hồ Chí Minh','CGV','A','45.123','12.12', 'https://saigondepot.vn/wp-content/uploads/2020/06/1558513559_Galaxy-Cinema-16-1024x825.jpg');
-INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00007','Lotte Nam Sai Gon','Tầng 3, TTTM Lotte, số 469 đường Nguyễn Hữu Thọ, P.Tân Hưng, Q.7, TP.HCM, Việt Nam','Lotte','A','8.7','4.3', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-ben-tre-2_1557133175911.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00001','Galaxy Nguyen Du','116 Nguyễn Du, Quận 1, Tp.HCM, Thành phố Hồ Chí Minh','Galaxy','A','106.688470','10.767920', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nguyen-du-1_1557134449561.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00002','Galaxy Tan Binh','246 Nguyễn Hồng Đào,Tân Bình,Thành phố Hồ Chí Minh','Galaxy','A','106.615760','10.765440', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nguyen-du-2_1557134452480.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00003','Galaxy Huynh Tan Phat','Lầu 2, TTTM Coopmart, số 1362 Huỳnh Tấn Phát, khu phố 1, Phường Phú Mỹ, Quận 7, Tp.Hồ Chí Minh','Galaxy','A','106.700980','10.776530', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nguyen-du-3_1557134455385.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00004','Galaxy Quang Trung','Lầu 3, TTTM CoopMart Foodcosa số 304A, Quang Trung, P.11, Q. Gò Vấp, Tp.HCM','Galaxy','A','106.668750','10.831360', 'https://www.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-nvq-01_1557130993556.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00005','CGV Hung Vuong',' Hùng Vương Plaza 126 Hùng Vương Quận 5 Tp. Hồ Chí Minh','CGV','A','106.686060','10.756610', 'https://cdn.galaxycine.vn/media/2020/1/14/dsc08626_1578986801643.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00006','CGV Cresent Mall','Lầu 5, Crescent Mall Đại lộ Nguyễn Văn Linh, Phú Mỹ Hưng Quận 7 TP. Hồ Chí Minh','CGV','A','106.700980','10.776530', 'https://saigondepot.vn/wp-content/uploads/2020/06/1558513559_Galaxy-Cinema-16-1024x825.jpg');
+INSERT INTO cinema (id, name, address, parent, status, latitude, longitude, imageURL) VALUES ('00007','Lotte Nam Sai Gon','Tầng 3, TTTM Lotte, số 469 đường Nguyễn Hữu Thọ, P.Tân Hưng, Q.7, TP.HCM, Việt Nam','Lotte','A','106.700980','10.776530', 'https://cdn.galaxycine.vn/media/2019/5/6/rapgiave-hinhrap-ben-tre-2_1557133175911.jpg');
 
 
 INSERT INTO modules (moduleid,modulename,status,path,resourcekey,icon,sequence,parent,displaymode) VALUES ('dashboard','Dashboard','A','/dashboard','dashboard','assignments',1,'', 'A');

@@ -12,9 +12,11 @@ export function useUserService(db: DB, mapper?: TemplateMap): UserService {
   const builder = new SearchBuilder<User, UserFilter>(db.query, 'users', userModel, db.driver, query);
   return new SqlUserService(builder.search, db);
 }
+
 export function useUserController(log: Log, db: DB, mapper?: TemplateMap): UserController {
   return new UserController(log, useUserService(db, mapper));
 }
+
 export class UserController extends Controller<User, string, UserFilter> {
   constructor(log: Log, private userService: UserService) {
     super(log, userService);
@@ -56,10 +58,12 @@ const userRoleModel: Attributes = {
     key: true
   },
 };
+
 interface UserRole {
   userId?: string;
   roleId: string;
 }
+
 export class SqlUserService extends Service<User, string, UserFilter> implements UserService {
   constructor(
     protected find: Search<User, UserFilter>,

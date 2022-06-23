@@ -1,9 +1,13 @@
 import { Controller, Log } from 'express-ext';
-import { Cinema, CinemaFilter, CinemaService } from './cinema';
+import { Cinema, CinemaFilter, CinemaService, Rate, rateModel } from './cinema';
 import { Request, Response } from 'express';
+import { createValidator } from 'xvalidators';
+import { Search, Validator } from 'onecore';
 
 const nodemailer = require("nodemailer");
 export class CinemaController extends Controller<Cinema, string, CinemaFilter> {
+  
+  //validator: Validator<Rate>;
   constructor(log: Log, userService: CinemaService) {
     super(log, userService);
   }
