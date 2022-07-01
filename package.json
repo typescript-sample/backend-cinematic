@@ -14,6 +14,7 @@
     "@google-cloud/storage": "^5.15.3",
     "authen-express": "^0.0.3",
     "authen-service": "^0.0.5",
+    "axios-core": "^0.0.4",
     "config-plus": "^0.0.4",
     "cookie-parser": "^1.4.6",
     "dotenv": "^10.0.0",
@@ -35,7 +36,9 @@
     "query-mappers": "0.0.3",
     "security-express": "^0.1.4",
     "types-validation": "^0.0.2",
+    "uione": "^0.0.21",
     "uuid": "^8.3.2",
+    "web-clients": "^0.1.24",
     "xmldom": "^0.6.0",
     "xvalidators": "^0.0.4"
   },

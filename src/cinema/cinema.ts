@@ -1,4 +1,5 @@
-import { Attributes, DateRange, Filter, Repository, Service, ViewRepository, ViewService} from 'onecore';
+import { Attributes, DateRange, Filter, Service, Search } from 'onecore';
+import { Repository } from 'query-core';
 
 export interface CinemaFilter extends Filter {
   cinemaId?: string;
@@ -11,6 +12,7 @@ export interface CinemaFilter extends Filter {
   parentCinema?: string;
   updatedby?: string;
   updatedat?: Date | DateRange;
+  info?: Info;
 }
 
 export interface Cinema {
@@ -27,17 +29,10 @@ export interface Cinema {
   updatedby?: string;
   updatedat?: Date;
   gallery?: string;
+  info?: Info;
 }
 
-export interface RateFilter extends Filter {
-  id: string;
-  review?: string;
-  cinemaId?: string;
-  userId?: string;
-  rateTime: Date;
-}
-
-export interface CinemaInfo {
+export interface Info {
   id: string;
   rate: number;
   rate1: number;
@@ -48,32 +43,38 @@ export interface CinemaInfo {
   viewCount: number;
 }
 
-export interface Rate {
-  id?: string;
-  cinemaId: string;
+export interface CinemaRate {
+  id: string;
   userId: string;
   rate: number;
   rateTime?: Date;
   review?: string;
 }
 
-export interface CinemaRepository extends Repository<Cinema, string> {
+export interface CinemaRateFilter extends Filter {
+  id?: string;
+  userId?: string;
+  rate?: number;
+  rateTime?: Date;
+  review?: string;
 }
+
+export interface CinemaRepository extends Repository<Cinema, string> { }
 
 export interface CinemaService extends Service<Cinema, string, CinemaFilter> {
-  // getCinemaByTypeInRadius?(type: string, radius: number): Promise<Cinema[]>;
-  // rate(rate: Rate): Promise<boolean>;
+  //rate(rate: CinemaRate): Promise<boolean>;
 }
 
-export interface RateService extends ViewService<Rate, string>{}
+export interface InfoRepository extends Repository<Info, string> { };
 
-export interface RateRepository extends Repository<Rate, string>{
-  save(rate: Rate): Promise<number>;
-}
+export interface CinemaRateRepository extends Repository<CinemaRate, string> { 
+  // search(rate: CinemaRateFilter): Promise<CinemaRate | null>;
+  // updateCinemaRate(rate: CinemaRateFilter): Promise<boolean>;
+};
 
-export interface CinemaInfoRepository extends Repository<CinemaInfo, string>{
-  save(info: CinemaInfo): Promise<number>;
-}
+export interface CinemaRateService extends Service<CinemaRate, string, CinemaRateFilter> { 
+
+};
 
 export const galleryModel: Attributes = {
   url: {
@@ -99,17 +100,17 @@ export const cinemaModel: Attributes = {
   longitude: {
     length: 255,
   },
-  address:{
+  address: {
     length: 255,
   },
-  parent:{
+  parent: {
     length: 40
   },
   status: {
     length: 1
   },
-  imageURL:{},
-  coverURL:{},
+  imageURL: {},
+  coverURL: {},
   createdBy: {},
   createdAt: {
     column: 'createdat',
@@ -123,18 +124,17 @@ export const cinemaModel: Attributes = {
   gallery: {
     column: 'gallery',
     type: 'array',
-    typeof : galleryModel,
+    typeof: galleryModel,
   }
 };
 
-export const rateModel: Attributes = {
+export const cinemaRateModel: Attributes = {
   id: {
-    key: true
-  },
-  cinemaId: {
+    key: true,
     required: true
   },
   userId: {
+    key: true,
     required: true
   },
   rate: {
@@ -147,10 +147,10 @@ export const rateModel: Attributes = {
   },
   review: {
     q: true,
-  },
+  }
 }
 
-export const cinemaInfoModel: Attributes = {
+export const infoModel: Attributes = {
   id: {
     key: true,
   },

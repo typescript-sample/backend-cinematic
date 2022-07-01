@@ -3,6 +3,7 @@ import { Film, FilmFilter, FilmService, FilmRate, filmRateModel } from "./film";
 import { Request, Response } from "express";
 import { Search, Validator } from 'onecore';
 import { createValidator } from 'xvalidators';
+
 export class FilmController extends Controller<Film, string, FilmFilter>{
   validator: Validator<FilmRate>;
   constructor(log: Log, private filmService: FilmService) {
@@ -15,7 +16,8 @@ export class FilmController extends Controller<Film, string, FilmFilter>{
   all(req: Request, res: Response) {
     if (this.filmService.all) {
       this.filmService.all()
-        .then(films => res.status(200).json(films)).catch(err => handleError(err, res, this.log));
+        .then(films => res.status(200).json(films))
+        .catch(err => handleError(err, res, this.log));
     }
   }
   rate(req: Request, res: Response) {
