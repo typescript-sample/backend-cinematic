@@ -18,7 +18,7 @@ export class SqlUploadSerive {
     public exec: (sql: string, args?: any[]) => Promise<number>,
     public execBatch: (statements: Statement[]) => Promise<number>,
   ) {
-    pool.connect().then(client => this.client = client);
+    //pool.connect().then(client => this.client = client);
     this.all = this.all.bind(this);
     this.insert = this.insert.bind(this);
     this.load = this.load.bind(this);

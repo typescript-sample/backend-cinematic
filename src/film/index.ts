@@ -14,7 +14,10 @@ import { v4 as uuidv4 } from 'uuid';
 import { FilmRateController } from "./film-rate-controller";
 
 export class FilmManager extends Manager<Film, string, FilmFilter> implements FilmService {
-  constructor(search: Search<Film, FilmFilter>, repository: FilmRepository, private infoRepository: FilmInfoRepository, private rateRepository: FilmRateRepository) {
+  constructor(search: Search<Film, FilmFilter>, 
+              repository: FilmRepository, 
+              private infoRepository: FilmInfoRepository, 
+              private rateRepository: FilmRateRepository) {
     super(search,repository);
   };
 
@@ -131,7 +134,6 @@ export function useFilmService(db: DB, mapper?: TemplateMap): FilmService {
 export function useFilmController(log: Log, db: DB, mapper?: TemplateMap): FilmController {
   return new FilmController(log, useFilmService(db, mapper));
 }
-
 
 export class FilmRateManager extends Manager<FilmRate, string, FilmRateFilter> implements FilmRateService {
   constructor(search: Search<FilmRate, FilmRateFilter>, repository: FilmRateRepository, public searchUseful: Search<UsefulFilm, UsefulFilmFilter>, public useful: UsefulFilmRepository) {

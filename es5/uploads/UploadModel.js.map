@@ -1,0 +1,1 @@
+{"version":3,"file":"UploadModel.js","sourceRoot":"","sources":["../../src/uploads/UploadModel.ts"],"names":[],"mappings":";;;AAEa,QAAA,WAAW,GAAU;IAChC,IAAI,EAAE,QAAQ;IACd,MAAM,EAAE,SAAS;IACjB,UAAU,EAAE;QACV,MAAM,EAAE;YACN,GAAG,EAAE,IAAI;YACT,KAAK,EAAE,OAAO;YACd,MAAM,EAAE,EAAE;SACX;QACD,IAAI,EAAE;YACJ,IAAI,EAAE,YAAY;SACnB;KACF;CACF,CAAC"}

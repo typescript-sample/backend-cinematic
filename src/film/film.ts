@@ -9,6 +9,7 @@ export interface FilmFilter extends Filter {
   trailerUrl?: string;
   status?: string;
 }
+
 export interface Film {
   filmId: string;
   title: string;
