@@ -37,19 +37,20 @@ export interface FilmInfo {
 }
 export interface FilmRate {
   id?: string;
-  filmId: string;
+  // filmId: string;
   userId: string;
   rate: number;
   rateTime?: Date;
   review?: string;
+  usefulCount?: number;
 }
 
 export interface FilmRateFilter extends Filter {
   id?: string;
   review?: string;
-  filmId?: string;
   userId?: string;
   rateTime?: Date;
+  usefulCount?: number;
 }
 
 export interface FilmRepository extends Repository<Film, string> {
@@ -62,8 +63,12 @@ export interface FilmInfoRepository extends Repository<FilmInfo, string> {
 }
 
 export interface FilmRateRepository extends Repository<FilmRate, string> {
+  deleteFilmRate(id: string, author: string, ctx?: any): Promise<boolean>
+  searchFilmRate(obj: FilmRate): Promise<FilmRate | null>
 }
 export interface FilmRateService extends Service<FilmRate, string, FilmRateFilter> {
+  usefulFilm(obj:UsefulFilmFilter): Promise<number>;
+  usefulSearch(obj:UsefulFilmFilter): Promise<number>;
 }
 
 export const filmModel: Attributes = {
@@ -149,23 +154,65 @@ export const filmInfoModel: Attributes = {
 export const filmRateModel: Attributes = {
   id: {
     key: true,
-  },
-  filmId: {
     required: true
   },
+  // filmId: {
+  //   required: true
+  // },
   userId: {
-    // required: true
+    key: true,
+    required: true
   },
   rate: {
     type: 'integer',
     min: 1,
     max: 10
   },
+  usefulCount:{
+    type: 'integer',
+    min: 0
+  },
   rateTime: {
     type: 'datetime',
   },
   review: {
     q: true,
+  },
+};
+
+//---------------------
+
+export interface UsefulFilmFilter extends Filter {
+  id: string;
+  author: string;
+  createdat?: Date;
+  updatedat?: Date;
+}
+export interface UsefulFilm {
+  id: string;
+  author: string;
+  createdat?: Date;
+  updatedat?: Date;
+}
+export interface UsefulFilmRepository extends Repository<UsefulFilm, string> {
+  deleteUseful(id: string, author: string, ctx?: any): Promise<boolean>
+  searchUseful(obj: UsefulFilm): Promise<UsefulFilm | null>
+}
+
+export const UsefulFilmModel: Attributes = {
+  id: {
+    required: true,
+    length: 255,
+  },
+  author: {
+    required: true,
+    length: 255,
+  },
+  createdAt: {
+    type: 'datetime'
+  },
+  updatedAt: {
+    type: 'datetime'
   },
 };
 

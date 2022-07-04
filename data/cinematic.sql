@@ -17,6 +17,14 @@ create table films(
   updatedat timestamp
 );
 
+create table if not exists usefulfilm(
+  id character varying(255) ,
+  author character varying(255),
+  createdat timestamp,
+  updatedat timestamp,
+  PRIMARY KEY (id, author)
+)
+
 --drop table categories
 create table categories(
   categoryid character varying(40) primary key,
@@ -128,13 +136,14 @@ CREATE TABLE filmInfo (
   viewCount integer DEFAULT 0
 );
 
-CREATE TABLE filmRate (
-  id varchar(255) PRIMARY KEY,
-  userId varchar(255),
-  filmId varchar(255),
+CREATE TABLE filmrate (
+  id varchar(255),
+  userid varchar(255),
   rate integer DEFAULT 0,
   rateTime date,
-  review: varchar(255)
+  review varchar(255),
+  usefulcount integer DEFAULT 0,
+  PRIMARY KEY (id , userid)
 );
 
 

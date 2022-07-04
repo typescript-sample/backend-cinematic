@@ -70,6 +70,8 @@ app.post('/films/rate',checkFilmRate,ctx.film.rate);
 
 app.post('/film-rate/search',ctx.filmRate.search);
 app.get('/film-rate/search',ctx.filmRate.search);
+app.post('/film-rate/useful',ctx.filmRate.usefulFilm);
+app.post('/film-rate/useful/search',ctx.filmRate.usefulSearch);
 
 const readCinemaParent = ctx.authorize('cinemaParent', read);
 const writeCinemaParent = ctx.authorize('cinemaParent', write);
