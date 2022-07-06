@@ -25,22 +25,22 @@ export class CinemaController extends Controller<Cinema, string, CinemaFilter> {
     }
   }
 
-  rate(req: Request, res: Response) {
-    const rate: CinemaRate = req.body;
-    console.log("add rate req: ");
-    console.log(rate);
+  // rate(req: Request, res: Response) {
+  //   const rate: CinemaRate = req.body;
+  //   console.log("add rate req: ");
+  //   console.log(rate);
 
-    rate.rateTime = new Date();
-    this.validator.validate(rate).then(errors => {
-      if (errors && errors.length > 0) {
-        res.status(getStatusCode(errors)).json(errors).end();
-      } else {
-        this.cinemaService.rate(rate).then(rs => {
-          res.json(rs).end();
-        }).catch(err => handleError(err, res, this.log));
-      }
-    }).catch(err => handleError(err, res, this.log))
-  }
+  //   rate.rateTime = new Date();
+  //   this.validator.validate(rate).then(errors => {
+  //     if (errors && errors.length > 0) {
+  //       res.status(getStatusCode(errors)).json(errors).end();
+  //     } else {
+  //       this.cinemaService.rate(rate).then(rs => {
+  //         res.json(rs).end();
+  //       }).catch(err => handleError(err, res, this.log));
+  //     }
+  //   }).catch(err => handleError(err, res, this.log))
+  // }
 
   
 }

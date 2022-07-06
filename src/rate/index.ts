@@ -25,11 +25,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     }
 
     async rate(rate: Rate): Promise<boolean> {
-        console.log(rate);
-        const id = rate.id;
-        const userId = rate.userId || '';
-        const rateId: RateId = { id, userId };
-
+        //console.log(rate);
         let info = await this.infoRepository.load(rate.id);
         if (!info) {
             let dbInfo = {
@@ -134,29 +130,4 @@ export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateC
     return new RateController(log, useRateService(db, mapper),);
 }
 
-
-// let info = await this.infoRepository.load(rate.id);
-// if (!info) {
-//     let dbInfo = {
-//         'id': rate.id,
-//         'rate': 0,
-//         'rate1': 0,
-//         'rate2': 0,
-//         'rate3': 0,
-//         'rate4': 0,
-//         'rate5': 0,
-//         'viewCount': 0,
-//     };
-//     await this.infoRepository.insert(dbInfo);
-//     info = await this.infoRepository.load(rate.id);
-// }
-// if (!info || typeof info[('rate' + rate.rate?.toString()) as keyof Info] === 'undefined') {
-//     return false;
-// }
-// const dbRate = this.repository.load(rateId);
-// console.log(dbRate);
-
-// if(!dbRate){
-//     const res = await this.repository.update(rate);
-// }
 
