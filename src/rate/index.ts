@@ -1,13 +1,12 @@
-import { infoModel, InfoRepository } from 'cinema/cinema';
 import { Log } from 'express-ext';
 import { Manager, Search } from 'onecore';
 import { buildCountQuery, buildToInsert, buildToInsertBatch, DB, postgres, Repository, SearchBuilder, Service, Statement } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
-import { Rate, RateFilter, RateId, rateModel, RateRepository, RateService } from './rate';
+import { Rate, RateFilter, RateId, rateModel, RateRepository, RateService, Info, infoModel, InfoRepository } from './rate';
 import { RateController } from './rate-controller';
 import { SqlRateRepository } from './sql-rate-repository';
-import { SqlInfoRepository } from '../cinema/sql-info-repository';
-import { Info } from '../cinema/cinema';
+import { SqlInfoRepository } from './sql-info-repository';
+import { buildToSave } from 'pg-extension';
 
 export * from './rate-controller';
 export * from './rate';
@@ -25,10 +24,11 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     }
 
     async rate(rate: Rate): Promise<boolean> {
-        //console.log(rate);
+        console.log(rate);
         let info = await this.infoRepository.load(rate.id);
+        let exist = true;
         if (!info) {
-            let dbInfo = {
+            info = {
                 'id': rate.id,
                 'rate': 0,
                 'rate1': 0,
@@ -38,54 +38,34 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
                 'rate5': 0,
                 'viewCount': 0,
             };
-            await this.infoRepository.insert(dbInfo);
-            info = await this.infoRepository.load(rate.id);
-            const res = await this.repository.insert(rate);
-            if (info) {
-                (info as any)['rate' + rate.rate?.toString()] += 1;
-                const sumRate = info.rate1 +
-                    info.rate2 * 2 +
-                    info.rate3 * 3 +
-                    info.rate4 * 4 +
-                    info.rate5 * 5;
-
-                const count = info.rate1 +
-                    info.rate2 +
-                    info.rate3 +
-                    info.rate4 +
-                    info.rate5;
-
-                info.rate = sumRate / count;
-                info.viewCount = count;
-                this.infoRepository.update(info);
-            }
-            return true;
-        } else {
-            const res = await this.repository.insert(rate);
-            console.log("res" + res);
-
-            if (res < 1) {
-                return false;
-            }
-            (info as any)['rate' + rate.rate?.toString()] += 1;
-            const sumRate = info.rate1 +
-                info.rate2 * 2 +
-                info.rate3 * 3 +
-                info.rate4 * 4 +
-                info.rate5 * 5;
-
-            const count = info.rate1 +
-                info.rate2 +
-                info.rate3 +
-                info.rate4 +
-                info.rate5;
-
-            info.rate = sumRate / count;
-            info.viewCount = count;
-            this.infoRepository.update(info);
-            return true;
+            exist = false;
+            // info = await this.infoRepository.load(rate.id);
         }
-        return false;
+        const res = await this.repository.insert(rate);
+        (info as any)['rate' + rate.rate?.toString()] += 1;
+        const sumRate = info.rate1 +
+            info.rate2 * 2 +
+            info.rate3 * 3 +
+            info.rate4 * 4 +
+            info.rate5 * 5;
+
+        const count = info.rate1 +
+            info.rate2 +
+            info.rate3 +
+            info.rate4 +
+            info.rate5;
+
+        info.rate = sumRate / count;
+        info.viewCount = count;
+        if (exist) {
+            console.log("update: " + exist);
+
+            await this.infoRepository.save(info);
+            await this.repository.update(rate);
+        } else {
+            await this.infoRepository.insert(info);
+        }
+        return true;
     }
 
     async update(rate: Rate): Promise<number> {
@@ -121,13 +101,11 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
 export function useRateService(db: DB, mapper?: TemplateMap): RateService {
     const query = useQuery('rates', mapper, rateModel, true);
     const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
-    const repository = new SqlRateRepository(db);
-    const infoRepository = new SqlInfoRepository(db);
+    const repository = new SqlRateRepository(db, 'rates');
+    const infoRepository = new SqlInfoRepository(db, 'info', buildToSave);
     return new RateManager(builder.search, repository, infoRepository);
 }
 
 export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {
     return new RateController(log, useRateService(db, mapper),);
 }
-
-
