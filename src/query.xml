@@ -125,8 +125,24 @@
     select *
     from filmrate
     where
-    <if test="filmId != null">
-      filmId = (#{filmId}) and
+    <if test="id != null">
+      id = (#{id}) and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="usefulfilm">
+    select *
+    from usefulfilm
+    where
+    <if test="id != null">
+      id = (#{id}) and
+    </if>
+    <if test="author != null">
+      author = (#{author}) and
     </if>
     1 = 1
     <if test="sort != null">
