@@ -102,8 +102,6 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/film-rate/search', ctx.filmRate.search);
   app.get('/film-rate/search', ctx.filmRate.search);
 
-
-
   // const readCinemaParent = ctx.authorize('cinemaParent', read);
   // const writeCinemaParent = ctx.authorize('cinemaParent', write);
 
@@ -128,20 +126,13 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.put('/cinema/:id', checkCinema, ctx.cinema.update);
   app.patch('/cinema/:id', checkCinema, ctx.cinema.patch);
   app.delete('/cinema/:id', checkCinema, ctx.cinema.delete);
-  // app.post('/cinema/rate',  ctx.cinema.rate);
-  // app.post('/cinema-rate/search', ctx.cinemaRate.search);
-  // app.get('/cinema-rate/search', ctx.cinemaRate.search);
 
-  // const readRate = ctx.authorize('rate', read);
-  // const writeRate = ctx.authorize('rate', write);
-  // app.get('/rates', ctx.rate.all);
   app.post('/rates', ctx.rate.rate);
-  app.post('/rates/:id', ctx.rate.search);
+  app.post('/rates/search', ctx.rate.search);
   app.get('/rates/:id/:userId', ctx.rate.load);
   app.put('/rates/:id/:userId', ctx.rate.update);
   app.post('/rates/useful/:id/:userid/:author', ctx.rate.setUseful);
   app.delete('/rates/useful/:id/:userid/:author', ctx.rate.removeUseful);
-  //app.get('/rates/useful/:id', ctx.rate.search);
 
   app.get('/uploads', ctx.uploads.all);
   app.get('/uploads/:id', ctx.uploads.load);

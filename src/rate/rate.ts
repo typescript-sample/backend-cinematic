@@ -55,6 +55,7 @@ export interface RateService extends Service<Rate, RateId, RateFilter> {
   rate(rate: Rate): Promise<boolean>;
   setUseful(id: string, userId: string, author: string, ctx?: any): Promise<number>;
   removeUseful(id: string, userId: string, author: string, ctx?: any): Promise<number>;
+  //getUsefulList(id: string, author: string): Promise<UsefulRate | null>;
 }
 
 export interface UsefulRateService extends Service<UsefulRate, UsefulRateId, UsefulRateFilter> {
@@ -117,6 +118,7 @@ export interface Info {
 
 export interface UsefulRateRepository {
   getUseful(id: string, userId: string, author: string): Promise<UsefulRate | null>;
+  //getUsefulByAuthor(id: string, author: string): Promise<UsefulRate | null>;
   removeUseful(id: string, userId: string, author: string, ctx?: any): Promise<number>;
   save(obj: UsefulRate, ctx?: any): Promise<number>;
 };

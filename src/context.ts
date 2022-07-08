@@ -28,7 +28,6 @@ import { CinemaRateController } from 'cinema/cinema-rate-controller';
 import { CinemaController } from './cinema/cinema-controller';
 import { RateController } from './rate/rate-controller';
 import { useRateController } from './rate';
-import { UsefulRateController } from './rate/useful-controller';
 
 resources.createValidator = createValidator;
 resources.check = check;

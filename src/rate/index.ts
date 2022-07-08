@@ -8,7 +8,7 @@ import { SqlRateRepository } from './sql-rate-repository';
 import { SqlInfoRepository } from './sql-info-repository';
 import { buildToSave } from 'pg-extension';
 import { SqlUsefulRateRepository } from './sql-useful-repository';
-
+import { buildQuery } from './query';
 export * from './rate-controller';
 export * from './rate';
 export { RateController };
@@ -60,9 +60,10 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
         });
     }
     async rate(rate: Rate): Promise<boolean> {
-        if (rate.usefulCount) {
-            rate.usefulCount = 0;
-        }
+       
+        // if (rate.usefulCount) {
+        //     rate.usefulCount = 0;
+        // }
         console.log(rate);
         let info = await this.infoRepository.load(rate.id);
         if (!info) {
@@ -78,6 +79,8 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
             };
         }
         const exist = await this.repository.getRate(rate.id, rate.userId);
+        console.log(exist);
+        
         const r = (exist ? exist.rate : 0);
         (info as any)['rate' + rate.rate?.toString()] += 1;
         const sumRate = info.rate1 +
@@ -94,6 +97,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
 
         info.rate = sumRate / count;
         info.viewCount = count;
+        rate.usefulCount = 0;
         await this.infoRepository.save(info);
         await this.repository.save(rate);
         return true;
@@ -101,8 +105,8 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
 }
 
 export function useRateService(db: DB, mapper?: TemplateMap): RateService {
-    const query = useQuery('rates', mapper, rateModel, true);
-    const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
+    //const query = useQuery('rate', mapper, rateModel, true);
+    const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, buildQuery);
     const repository = new SqlRateRepository(db, 'rates', buildToSave);
     const infoRepository = new SqlInfoRepository(db, 'info', buildToSave);
     const usefulRateRepository = new SqlUsefulRateRepository(db, 'usefulrates', usefulRateModel  , buildToSave);

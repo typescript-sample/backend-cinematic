@@ -168,14 +168,26 @@
 
   <select id="rate">
     select *
-    from rate
+    from rates
     where
     <if test="id != null">
       id = (#{id}) and
     </if> 
     <if test="userId != null">
       userId = (#{userId}) and
-    </if>  
+    </if> 
+    <if test="rate != null">
+      rate = (#{rate}) and
+    </if>   
+    <if test="ratetime != null">
+      ratetime = (#{ratetime}) and
+    </if>   
+    <if test="review != null">
+      review like (#{review}) and
+    </if>
+    <if test="usefulCount != null">
+      usefulCount >= (#{usefulCount}) and
+    </if>    
     1 = 1
     <if test="sort != null">
       order by {sort}
