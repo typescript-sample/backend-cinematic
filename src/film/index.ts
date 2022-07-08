@@ -14,11 +14,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { FilmRateController } from "./film-rate-controller";
 
 export class FilmManager extends Manager<Film, string, FilmFilter> implements FilmService {
-  constructor(search: Search<Film, FilmFilter>, 
-              repository: FilmRepository, 
-              private infoRepository: FilmInfoRepository, 
-              private rateRepository: FilmRateRepository) {
-    super(search,repository);
+  constructor(search: Search<Film, FilmFilter>,
+    repository: FilmRepository,
+    private infoRepository: FilmInfoRepository,
+    private rateRepository: FilmRateRepository) {
+    super(search, repository);
   };
 
   load(id: string): Promise<Film | null> {
@@ -38,15 +38,14 @@ export class FilmManager extends Manager<Film, string, FilmFilter> implements Fi
   }
 
   async rate(rate: FilmRate): Promise<boolean> {
-    
-    if(rate.id)
-    {
-      
+
+    if (rate.id) {
+
       let info = await this.infoRepository.load(rate.id);
 
       if (!info) {
-        let dbInfo = { 
-          'id':rate.id,
+        let dbInfo = {
+          'id': rate.id,
           'rate': 0,
           'rate1': 0,
           'rate2': 0,
@@ -64,62 +63,60 @@ export class FilmManager extends Manager<Film, string, FilmFilter> implements Fi
         info = await this.infoRepository.load(rate.id);
       }
 
-      if(!info || typeof info[('rate' + rate.rate.toString()) as keyof FilmInfo] === 'undefined')
-      {
+      if (!info || typeof info[('rate' + rate.rate.toString()) as keyof FilmInfo] === 'undefined') {
         console.log('123');
         return false;
       }
       if (rate.id) {
         const dbRate = await this.rateRepository.searchFilmRate(rate);
-        
+
         if (dbRate) {
           (info as any)['rate' + dbRate.rate.toString()] -= 1;
           dbRate.rate = rate.rate;
           dbRate.review = rate.review;
           const res = await this.rateRepository.update(dbRate);
-          
+
           if (res < 1) {
             return false;
           }
         }
-        else
-        {
+        else {
           const res = await this.rateRepository.insert(rate);
           if (res < 1) {
             return false;
           }
         }
-        
+
       } else {
-          return false;
+        return false;
       }
       (info as any)['rate' + rate.rate.toString()] += 1;
-      const sumRate = info.rate1 + 
-                      info.rate2 * 2 + 
-                      info.rate3 * 3 + 
-                      info.rate4 * 4 + 
-                      info.rate5 * 5 +
-                      info.rate6 * 6 +
-                      info.rate7 * 7 +
-                      info.rate8 * 8 +
-                      info.rate9 * 9 +
-                      info.rate10 * 10;
-      const count = info.rate1 + 
-                    info.rate2 + 
-                    info.rate3 + 
-                    info.rate4 + 
-                    info.rate5 +
-                    info.rate6 +
-                    info.rate7 +
-                    info.rate8 +
-                    info.rate9 +
-                    info.rate10;
+      const sumRate = info.rate1 +
+        info.rate2 * 2 +
+        info.rate3 * 3 +
+        info.rate4 * 4 +
+        info.rate5 * 5 +
+        info.rate6 * 6 +
+        info.rate7 * 7 +
+        info.rate8 * 8 +
+        info.rate9 * 9 +
+        info.rate10 * 10;
+      const count = info.rate1 +
+        info.rate2 +
+        info.rate3 +
+        info.rate4 +
+        info.rate5 +
+        info.rate6 +
+        info.rate7 +
+        info.rate8 +
+        info.rate9 +
+        info.rate10;
       info.rate = sumRate / count;
       info.viewCount = count;
       this.infoRepository.update(info);
       return true;
     }
-    
+
     return false;
   }
 }
@@ -136,11 +133,17 @@ export function useFilmController(log: Log, db: DB, mapper?: TemplateMap): FilmC
 }
 
 export class FilmRateManager extends Manager<FilmRate, string, FilmRateFilter> implements FilmRateService {
-  constructor(search: Search<FilmRate, FilmRateFilter>, repository: FilmRateRepository, public searchUseful: Search<UsefulFilm, UsefulFilmFilter>, public useful: UsefulFilmRepository) {
-      super(search, repository);
+  constructor(search: Search<FilmRate, FilmRateFilter>,
+    repository: FilmRateRepository,
+    public searchUseful: Search<UsefulFilm, UsefulFilmFilter>,
+    public useful: UsefulFilmRepository) {
+    super(search, repository);
   }
+
   async usefulFilm(obj: UsefulFilmFilter): Promise<number> {
-    const data = await this.useful.searchUseful(obj)
+    const data = await this.useful.searchUseful(obj);
+    console.log({ data });
+
     let isInsert = false
     if (data?.id) {
       const rs = await this.useful.deleteUseful(data.id, data.author)
@@ -157,7 +160,22 @@ export class FilmRateManager extends Manager<FilmRate, string, FilmRateFilter> i
     }
     const filmRate = await this.repository.load(obj.id)
     if (filmRate) {
-      isInsert ? filmRate.usefulCount ? filmRate.usefulCount += 1 : filmRate.usefulCount = 1 : filmRate.usefulCount ? filmRate.usefulCount -= 1 :  filmRate.usefulCount = 0;
+      isInsert ? filmRate.usefulCount ? filmRate.usefulCount += 1 : filmRate.usefulCount = 1 : filmRate.usefulCount ? filmRate.usefulCount -= 1 : filmRate.usefulCount = 0;
+
+      // if (isInsert) {
+      //   if (filmRate.usefulCount) {
+      //     filmRate.usefulCount += 1
+      //   } else {
+      //     filmRate.usefulCount = 1
+      //   }
+      // } else {
+      //   if (filmRate.usefulCount) {
+      //     filmRate.usefulCount -= 1
+      //   } else {
+      //     filmRate.usefulCount = 0
+      //   }
+      // }
+
       const rs = await this.repository.update(filmRate);
       if (rs === 1) {
         return isInsert ? 1 : 2;///1:insert
@@ -167,8 +185,7 @@ export class FilmRateManager extends Manager<FilmRate, string, FilmRateFilter> i
   }
   async usefulSearch(obj: UsefulFilmFilter): Promise<number> {
     const data = await this.useful.searchUseful(obj)
-    if(data?.id)
-    {
+    if (data?.id) {
       return 1;
     }
     return 0;

@@ -169,6 +169,13 @@ CREATE TABLE rates(
   primary key(id, userid);
 )
 
+CREATE TABLE usefulrates(
+	id character varying(255),
+	userid character varying(255),
+	author character varying(255),
+	reviewtime timestamp,
+	primary key(id, userid, author)
+)
 
 INSERT INTO categories (categoryid,categoryname,status) VALUES('adventure','adventure','A');
 INSERT INTO categories (categoryid,categoryname,status) VALUES ('animated','animated','A');

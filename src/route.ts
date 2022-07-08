@@ -139,7 +139,9 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/rates/:id', ctx.rate.search);
   app.get('/rates/:id/:userId', ctx.rate.load);
   app.put('/rates/:id/:userId', ctx.rate.update);
-
+  app.post('/rates/useful/:id/:userid/:author', ctx.rate.setUseful);
+  app.delete('/rates/useful/:id/:userid/:author', ctx.rate.removeUseful);
+  //app.get('/rates/useful/:id', ctx.rate.search);
 
   app.get('/uploads', ctx.uploads.all);
   app.get('/uploads/:id', ctx.uploads.load);

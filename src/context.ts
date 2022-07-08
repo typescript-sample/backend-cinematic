@@ -28,7 +28,7 @@ import { CinemaRateController } from 'cinema/cinema-rate-controller';
 import { CinemaController } from './cinema/cinema-controller';
 import { RateController } from './rate/rate-controller';
 import { useRateController } from './rate';
-
+import { UsefulRateController } from './rate/useful-controller';
 
 resources.createValidator = createValidator;
 resources.check = check;
@@ -61,6 +61,7 @@ export interface Context {
   cinemaRate: CinemaRateController;
   uploads: UploadController;
   rate: RateController;
+  //useful: UsefulRateController;
 }
 
 const credentials = {
@@ -110,7 +111,7 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const cinemaRate = useCinemaRateController(logger.error, db, mapper);
 
   const rate = useRateController(logger.error, db, mapper);
-
+  //const useful = usefulRateController(logger.error, db, mapper);
   // const healthChecker2  =new Checker2('mongo',"https://localhost:443/health",5000);
   // const health2 = new HealthController2([healthChecker2])
   const manager = new PoolManager(pool);
