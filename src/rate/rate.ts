@@ -3,42 +3,73 @@ import { Repository } from 'query-core';
 
 export interface RateId {
   id: string;
-  userId: string;
+  author: string;
 }
 export interface Rate {
   id: string;
-  userId?: string;
-  rate?: number;
-  rateTime?: Date;
-  review?: string;
+  author: string;
+  rate: number;
+  rateTime: Date;
+  review: string;
+  usefulCount: number;
 }
-export interface RateFilter extends Filter {
+
+export interface UsefulRateId {
+  id: string;
+  author: string;
+  userId: string;
+}
+
+export interface UsefulRate {
+  id: string;
+  author: string;
+  userId: string;
+  reviewTime: Date;
+}
+
+export interface UsefulRateFilter extends Filter {
   id?: string;
   userId?: string;
+  author?: string;
+  reviewTime?: Date;
+}
+
+export interface RateFilter extends Filter {
+  id?: string;
+  author?: string;
   rate: number;
   rateTime?: Date;
   review?: string;
+  usefulCount?: number;
+}
+export interface RateRepository extends Repository<Rate, RateId> {
+  save(obj: Rate, ctx?: any): Promise<number>;
+  getRate(id: string, author: string): Promise<Rate | null>;
+  increaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
+  decreaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
+};
+
+export interface RateService extends Service<Rate, RateId, RateFilter> {
+  getRate(id: string, author: string): Promise<Rate | null>;
+  rate(rate: Rate): Promise<boolean>;
+  setUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
+  removeUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
 }
 
-export interface RateRepository extends Repository<Rate, RateId> {
-  // searchRate(rate: RateFilter): Promise<Rate | null>;
-  // updateRate(rate: RateFilter): Promise<boolean>;
-};
-export interface RateService extends Service<Rate, RateId, RateFilter> {
-  // searchRate(rate: RateFilter): Promise<Rate | null>;
-  // updateRate(rate: RateFilter): Promise<boolean>;
-  rate(rate: Rate): Promise<boolean>;
-  update(rate: Rate): Promise<number>;
+export interface UsefulRateService extends Service<UsefulRate, UsefulRateId, UsefulRateFilter> {
+  setUseful(id: string, author: string, userId: string,): Promise<number>;
 }
 
 export const rateModel: Attributes = {
   id: {
     key: true,
-    required: true
+    required: true,
+    match: 'equal'
   },
-  userId: {
+  author: {
     key: true,
-    required: true
+    required: true,
+    match: 'equal'
   },
   rate: {
     type: 'integer',
@@ -50,6 +81,28 @@ export const rateModel: Attributes = {
   },
   review: {
     q: true,
+  },
+  usefulCount: {
+    type: 'integer',
+    min: 0
+  }
+}
+
+export const usefulRateModel: Attributes = {
+  id: {
+    key: true,
+    required: true
+  },
+  userId: {
+    key: true,
+    required: true
+  },
+  author: {
+    key: true,
+    required: true
+  },
+  reviewTime: {
+    type: 'datetime',
   },
 }
 
@@ -63,9 +116,18 @@ export interface Info {
   rate5: number;
   viewCount: number;
 }
+
+export interface UsefulRateRepository {
+  getUseful(id: string, userId: string, author: string): Promise<UsefulRate | null>;
+  //getUsefulByAuthor(id: string, author: string): Promise<UsefulRate | null>;
+  removeUseful(id: string, userId: string, author: string, ctx?: any): Promise<number>;
+  save(obj: UsefulRate, ctx?: any): Promise<number>;
+};
+
 export interface InfoRepository extends Repository<Info, string> {
   save(obj: Info, ctx?: any): Promise<number>;
 };
+
 export const infoModel: Attributes = {
   id: {
     key: true,

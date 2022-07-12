@@ -166,15 +166,60 @@
     </if>
   </select>
 
-  <select id="rate">
+  <select id="rates">
+    select r.*
+    <if test="userId != null">
+      ,
+      case
+        when u.userId is not null then true
+        else false
+      end
+        as disable
+    </if>   
+    from rates r
+    <if test="userId != null">
+      left join usefulrates u 
+        on u.id = r.id
+        and u.author = r.author
+        and u.userId = #{userId}
+    </if> 
+    where
+    <if test="id != null">
+      r.id = #{id} and
+    </if> 
+    <if test="author != null">
+      r.author = #{author} and
+    </if> 
+    <if test="rate != null">
+      r.rate = #{rate} and
+    </if>   
+    <if test="ratetime != null">   
+      r.ratetime >= (#{ratetime}) and
+    </if>   
+    <if test="review != null">
+      r.review like #{review} and
+    </if>
+    <if test="usefulCount != null">
+      r.usefulCount >= (#{usefulCount}) and
+    </if>    
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="usefulrates">
     select *
-    from rate
+    from usefulrates
     where
     <if test="id != null">
       id = (#{id}) and
     </if> 
     <if test="userId != null">
       userId = (#{userId}) and
+    </if>  
+    <if test="author != null">
+      author = (#{author}) and
     </if>  
     1 = 1
     <if test="sort != null">

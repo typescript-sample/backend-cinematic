@@ -162,13 +162,21 @@ CREATE TABLE info(
 
 CREATE TABLE rates(
   id varchar(255),
-  userid varchar(255),
+  author varchar(255),
   rate integer,
   ratetime timestamp,
-  review text
-  primary key(id, userid);
+  review text,
+  usefulcount integer,
+  primary key(id, author)
 )
 
+CREATE TABLE usefulrates(
+  id varchar(255),
+  author varchar(255),
+  userid varchar(255),
+  reviewtime timestamp,
+  primary key(id,author,userid)
+)
 
 INSERT INTO categories (categoryid,categoryname,status) VALUES('adventure','adventure','A');
 INSERT INTO categories (categoryid,categoryname,status) VALUES ('animated','animated','A');

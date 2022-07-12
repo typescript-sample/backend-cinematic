@@ -132,14 +132,13 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   // app.post('/cinema-rate/search', ctx.cinemaRate.search);
   // app.get('/cinema-rate/search', ctx.cinemaRate.search);
 
-  // const readRate = ctx.authorize('rate', read);
-  // const writeRate = ctx.authorize('rate', write);
-  // app.get('/rates', ctx.rate.all);
   app.post('/rates', ctx.rate.rate);
-  app.post('/rates/:id', ctx.rate.search);
+  app.get('/rates/search', ctx.rate.search);
+  app.post('/rates/search', ctx.rate.search);
   app.get('/rates/:id/:userId', ctx.rate.load);
   app.put('/rates/:id/:userId', ctx.rate.update);
-
+  app.post('/rates/useful/:id/:userid/:author', ctx.rate.setUseful);
+  app.delete('/rates/useful/:id/:userid/:author', ctx.rate.removeUseful);
 
   app.get('/uploads', ctx.uploads.all);
   app.get('/uploads/:id', ctx.uploads.load);
