@@ -6,14 +6,14 @@ export function buildQuery(s: RateFilter): Statement {
     const where = [];
     const params = [];
     let i = 1;
-
+ 
     if (s.id && s.id.length > 0) {
         where.push(`id = $${i++}`);
         params.push(s.id);
     }
-    if (s.userId && s.userId.length > 0) {
-        where.push(`userid = $${i++}`);
-        params.push(s.userId);
+    if (s.author && s.author.length > 0) {
+        where.push(`author = $${i++}`);
+        params.push(s.author);
     }
     if (s.rate && s.rate > 0) {
         where.push(`rate = $${i++}`);

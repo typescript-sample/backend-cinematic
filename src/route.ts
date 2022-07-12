@@ -128,6 +128,7 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.delete('/cinema/:id', checkCinema, ctx.cinema.delete);
 
   app.post('/rates', ctx.rate.rate);
+  app.get('/rates/search', ctx.rate.search);
   app.post('/rates/search', ctx.rate.search);
   app.get('/rates/:id/:userId', ctx.rate.load);
   app.put('/rates/:id/:userId', ctx.rate.update);

@@ -23,8 +23,8 @@ export class RateController extends Controller<Rate, RateId, RateFilter>{
 
     load(req: Request, res: Response) {
         const id = req.params.id;
-        const userId = req.params.userId;
-        const rateId: RateId = { id, userId };
+        const author = req.params.author;
+        const rateId: RateId = { id, author };
         this.rateService.load(rateId).then(rates => {
             if (rates) {
                 return res.status(200).json(rates).end();
@@ -50,11 +50,9 @@ export class RateController extends Controller<Rate, RateId, RateFilter>{
 
     setUseful(req: Request, res: Response) {
         const id = req.params.id;
-        const userId = req.params.userid;
         const author = req.params.author;
-        //const usefulId: UsefulRateId = {id, userId, author};
-
-        this.rateService.setUseful(id, userId, author).then(rs => {
+        const userId = req.params.userid;
+        this.rateService.setUseful(id, author, userId).then(rs => {
             return res.status(200).json(rs).end();
         }).catch(err => handleError(err, res, this.log));
 
@@ -62,9 +60,9 @@ export class RateController extends Controller<Rate, RateId, RateFilter>{
 
     removeUseful(req: Request, res: Response) {
         const id = req.params.id;
-        const userId = req.params.userid;
         const author = req.params.author;
-        this.rateService.removeUseful(id, userId, author).then(rs => {
+        const userId = req.params.userid;
+        this.rateService.removeUseful(id, author, userId).then(rs => {
             return res.status(200).json(rs).end();
         }).catch(err => handleError(err, res, this.log));
     }

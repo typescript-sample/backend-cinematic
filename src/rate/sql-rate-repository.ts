@@ -8,8 +8,8 @@ export class SqlRateRepository extends Repository<Rate, RateId> implements RateR
         this.save = this.save.bind(this);
         this.getRate = this.getRate.bind(this);
     }
-    getRate(id: string, userId: string, ctx?: any): Promise<Rate | null> {
-        return this.query<Rate>(`select * from ${this.table} where id = ${this.param(1)} and userId = ${this.param(2)}`, [id, userId], this.map, undefined, ctx).then(rates => {
+    getRate(id: string, author: string, ctx?: any): Promise<Rate | null> {
+        return this.query<Rate>(`select * from ${this.table} where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], this.map, undefined, ctx).then(rates => {
             return rates && rates.length > 0 ? rates[0] : null;
         })
     }
@@ -23,12 +23,12 @@ export class SqlRateRepository extends Repository<Rate, RateId> implements RateR
         } else {
             return Promise.resolve(0);
         }
+    } 
+    increaseUsefulCount(id: string, author: string, ctx?: any): Promise<number> {
+        return this.exec(`update ${this.table} set usefulCount = usefulCount + 1 where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], ctx);
     }
-    increaseUsefulCount(id: string, userId: string, ctx?: any): Promise<number> {
-        return this.exec(`update ${this.table} set usefulCount = usefulCount + 1 where id = ${this.param(1)} and userId = ${this.param(2)}`, [id, userId], ctx);
-    }
-    decreaseUsefulCount(id: string, userId: string, ctx?: any): Promise<number> {
-        return this.exec(`update ${this.table} set usefulCount = usefulCount - 1 where id = ${this.param(1)} and userId = ${this.param(2)}`, [id, userId], ctx);
+    decreaseUsefulCount(id: string, author: string, ctx?: any): Promise<number> {
+        return this.exec(`update ${this.table} set usefulCount = usefulCount - 1 where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], ctx);
     }
    
 }
