@@ -10,7 +10,6 @@ export class SqlInfoRepository extends Repository<Info, string> implements InfoR
     async save(obj: Info, ctx?: any): Promise<number> {
         const stmt = await this.buildToSave(obj, this.table, this.attributes);
         if (stmt) {
-            console.log(stmt.query);
             return this.exec(stmt.query, stmt.params, ctx);
         } else {
             return Promise.resolve(0);

@@ -130,10 +130,24 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/rates', ctx.rate.rate);
   app.get('/rates/search', ctx.rate.search);
   app.post('/rates/search', ctx.rate.search);
-  app.get('/rates/:id/:userId', ctx.rate.load);
-  app.put('/rates/:id/:userId', ctx.rate.update);
-  app.post('/rates/useful/:id/:userid/:author', ctx.rate.setUseful);
-  app.delete('/rates/useful/:id/:userid/:author', ctx.rate.removeUseful);
+  app.post('/rates/reply/search', ctx.reply.search)
+  app.put('/rates/:id/:author', ctx.rate.updateRate);
+  app.get('/rates/:id/:author', ctx.rate.load);
+  app.post('/rates/useful/:id/:author/:userid', ctx.rate.setUseful);
+  app.delete('/rates/useful/:id/:author/:userid', ctx.rate.removeUseful);
+  app.post('/rates/reply/:id/:author/:userid', ctx.rate.reply);
+  app.delete('/rates/reply/:id/:author/:userid', ctx.rate.removeReply);
+  app.put('/rates/reply/:id/:author/:userid', ctx.rate.updateReply);
+
+  app.post('/appreciation/search', ctx.appreciation.search);
+  app.post('/appreciation/reply/search', ctx.reply.search);
+  app.post('/appreciation', ctx.appreciation.create)
+  app.post('/appreciation/:id/:author', ctx.appreciation.load);
+  app.put('/appreciation/:id/:author', ctx.appreciation.update);
+  app.patch('/appreciation/:id/:author', ctx.appreciation.patch);
+  app.post('/appreciation/reply/:id/:author/:userid', ctx.appreciation.reply);
+  app.delete('/appreciation/reply/:id/:author/:userid', ctx.appreciation.removeReply);
+  app.put('/appreciation/reply/:id/:author/:userid', ctx.appreciation.updateReply);
 
   app.get('/uploads', ctx.uploads.all);
   app.get('/uploads/:id', ctx.uploads.load);

@@ -5,59 +5,63 @@ export interface RateId {
   id: string;
   author: string;
 }
+
 export interface Rate {
   id: string;
   author: string;
   rate: number;
-  rateTime: Date;
+  time: Date;
   review: string;
   usefulCount: number;
-}
-
-export interface UsefulRateId {
-  id: string;
-  author: string;
-  userId: string;
-}
-
-export interface UsefulRate {
-  id: string;
-  author: string;
-  userId: string;
-  reviewTime: Date;
-}
-
-export interface UsefulRateFilter extends Filter {
-  id?: string;
-  userId?: string;
-  author?: string;
-  reviewTime?: Date;
+  replyCount: number;
 }
 
 export interface RateFilter extends Filter {
   id?: string;
   author?: string;
   rate: number;
-  rateTime?: Date;
+  time?: Date;
   review?: string;
   usefulCount?: number;
+  replyCount?: number;
 }
+
 export interface RateRepository extends Repository<Rate, RateId> {
   save(obj: Rate, ctx?: any): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
   increaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
   decreaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
+  increaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
+  decreaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
 };
 
 export interface RateService extends Service<Rate, RateId, RateFilter> {
   getRate(id: string, author: string): Promise<Rate | null>;
+  updateRate(rate: Rate): Promise<number>;
   rate(rate: Rate): Promise<boolean>;
   setUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
   removeUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
+  reply(reply: Reply): Promise<boolean>;
+  removeReply(id: string, author: string, userId: string, ctx?: any): Promise<number>;
+  updateReply(reply: Reply): Promise<number>;
 }
 
-export interface UsefulRateService extends Service<UsefulRate, UsefulRateId, UsefulRateFilter> {
-  setUseful(id: string, author: string, userId: string,): Promise<number>;
+export interface ReplyRepository extends Repository<Reply, ReplyId> {
+  getReply(id: string, author: string, userId: string): Promise<Reply | null>;
+  save(obj: Reply, ctx?: any): Promise<number>;
+  removeReply(id: string, author: string, userId: string, ctx?: any): Promise<number>;
+}
+
+export interface ReplyService extends Service<Reply, ReplyId, ReplyFilter> {
+}
+
+export interface RateReactionRepository {
+  getUseful(id: string, author: string, userId: string): Promise<RateReaction | null>;
+  removeUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
+  save(obj: RateReaction, ctx?: any): Promise<number>;
+}
+
+export interface RateReactionService extends Service<RateReaction, RateReactionId, RateReactionFilter> { 
 }
 
 export const rateModel: Attributes = {
@@ -76,7 +80,7 @@ export const rateModel: Attributes = {
     min: 1,
     max: 5
   },
-  rateTime: {
+  time: {
     type: 'datetime',
   },
   review: {
@@ -85,15 +89,37 @@ export const rateModel: Attributes = {
   usefulCount: {
     type: 'integer',
     min: 0
+  },
+  replyCount: {
+    type: 'integer',
+    min: 0
   }
 }
 
-export const usefulRateModel: Attributes = {
+export interface RateReactionId {
+  id: string;
+  author: string;
+  userId: string;
+}
+
+export interface RateReaction {
+  id: string;
+  author: string;
+  userId: string;
+  time: Date;
+  reaction:number;
+}
+
+export interface RateReactionFilter extends Filter {
+  id?: string;
+  author?: string;
+  userId?: string;
+  time?: Date;
+  reaction?: number;
+}
+
+export const rateReactionModel: Attributes = {
   id: {
-    key: true,
-    required: true
-  },
-  userId: {
     key: true,
     required: true
   },
@@ -101,9 +127,16 @@ export const usefulRateModel: Attributes = {
     key: true,
     required: true
   },
-  reviewTime: {
+  userId: {
+    key: true,
+    required: true
+  },
+  time: {
     type: 'datetime',
   },
+  reaction: { 
+    type: 'integer',
+  }
 }
 
 export interface Info {
@@ -116,13 +149,6 @@ export interface Info {
   rate5: number;
   viewCount: number;
 }
-
-export interface UsefulRateRepository {
-  getUseful(id: string, userId: string, author: string): Promise<UsefulRate | null>;
-  //getUsefulByAuthor(id: string, author: string): Promise<UsefulRate | null>;
-  removeUseful(id: string, userId: string, author: string, ctx?: any): Promise<number>;
-  save(obj: UsefulRate, ctx?: any): Promise<number>;
-};
 
 export interface InfoRepository extends Repository<Info, string> {
   save(obj: Info, ctx?: any): Promise<number>;
@@ -153,4 +179,48 @@ export const infoModel: Attributes = {
   rate5: {
     type: 'number',
   },
+}
+
+export interface ReplyId {
+  id: string;
+  author: string;
+  userId: string;
+}
+
+export interface Reply {
+  id: string;
+  author: string;
+  userId: string;
+  review: string;
+  time: Date;
+}
+
+export interface ReplyFilter extends Filter {
+  id?: string;
+  author?: string;
+  userId?: string;
+  review?: string;
+  time?: Date;
+}
+
+export const replyModel: Attributes = {
+  id: {
+    key: true,
+    required: true,
+    match: 'equal'
+  },
+  author: {
+    key: true,
+    required: true,
+    match: 'equal'
+  },
+  userId: {
+    key: true,
+    required: true,
+    match: 'equal'
+  },
+  review: {},
+  time: {
+    type: 'datetime'
+  }
 }
