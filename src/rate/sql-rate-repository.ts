@@ -7,6 +7,10 @@ export class SqlRateRepository extends Repository<Rate, RateId> implements RateR
         super(db, table, rateModel);
         this.save = this.save.bind(this);
         this.getRate = this.getRate.bind(this);
+        this.increaseUsefulCount = this.increaseUsefulCount.bind(this);
+        this.decreaseUsefulCount = this.decreaseUsefulCount.bind(this);
+        this.increaseReplyCount = this.increaseReplyCount.bind(this);
+        this.decreaseReplyCount = this.decreaseReplyCount.bind(this);
     }
     getRate(id: string, author: string, ctx?: any): Promise<Rate | null> {
         return this.query<Rate>(`select * from ${this.table} where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], this.map, undefined, ctx).then(rates => {
@@ -14,8 +18,6 @@ export class SqlRateRepository extends Repository<Rate, RateId> implements RateR
         })
     }
     save(obj: Rate, ctx?: any): Promise<number> {
-        console.log({obj});
-        
         const stmt = this.buildToSave(obj, this.table, this.attributes);
         if (stmt) {
             console.log(stmt.query);
@@ -29,6 +31,12 @@ export class SqlRateRepository extends Repository<Rate, RateId> implements RateR
     }
     decreaseUsefulCount(id: string, author: string, ctx?: any): Promise<number> {
         return this.exec(`update ${this.table} set usefulCount = usefulCount - 1 where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], ctx);
+    }
+    increaseReplyCount(id: string, author: string, ctx?: any): Promise<number>{
+        return this.exec(`update ${this.table} set replyCount = replyCount + 1 where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], ctx);
+    }
+    decreaseReplyCount(id: string, author: string, ctx?: any): Promise<number>{
+        return this.exec(`update ${this.table} set replyCount = replyCount - 1 where id = ${this.param(1)} and author = ${this.param(2)}`, [id, author], ctx);
     }
    
 }

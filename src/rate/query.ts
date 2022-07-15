@@ -19,9 +19,9 @@ export function buildQuery(s: RateFilter): Statement {
         where.push(`rate = $${i++}`);
         params.push(s.rate);
     }
-    if (s.rateTime && s.rateTime) {
-        where.push(`rateTime = $${i++}`);
-        params.push(s.rateTime);
+    if (s.time && s.time) {
+        where.push(`time = $${i++}`);
+        params.push(s.time);
     }
     if (s.review && s.review) {
         where.push(`review ilike $${i++}`);

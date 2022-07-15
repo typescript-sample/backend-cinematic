@@ -171,14 +171,14 @@
     <if test="userId != null">
       ,
       case
-        when u.userId is not null then true
+        when u.reaction = 1 then true
         else false
       end
         as disable
     </if>   
     from rates r
     <if test="userId != null">
-      left join usefulrates u 
+      left join ratereaction u 
         on u.id = r.id
         and u.author = r.author
         and u.userId = #{userId}
@@ -194,7 +194,7 @@
       r.rate = #{rate} and
     </if>   
     <if test="ratetime != null">   
-      r.ratetime >= (#{ratetime}) and
+      r.time >= #{time} and
     </if>   
     <if test="review != null">
       r.review like #{review} and
@@ -202,6 +202,40 @@
     <if test="usefulCount != null">
       r.usefulCount >= (#{usefulCount}) and
     </if>    
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="reply">
+    select *
+    from reply
+    where
+    <if test="id != null">
+      id = #{id} and
+    </if> 
+    <if test="author != null">
+      author = #{author} and
+    </if> 
+     <if test="userId != null">
+      userId = #{userId} and
+    </if>
+    <if test="description != null">
+      description ilike #{description} and
+    </if>
+    <if test="createAt != null">
+      createAt >= #{createAt} and
+    </if>
+    <if test="updateAt != null">
+      updateAt >= #{updateAt} and
+    </if>
+    <if test="usefulCount != null">
+      replyCount >= #{replyCount} and
+    </if>
+    <if test="replyCount != null">
+      replyCount >= #{replyCount} and
+    </if>
     1 = 1
     <if test="sort != null">
       order by {sort}
@@ -226,4 +260,59 @@
       order by {sort}
     </if>
   </select>
+
+  <select id="ratereaction">
+    select *
+    from ratereaction
+    where
+    <if test="id != null">
+      id = #{id} and
+    </if> 
+    <if test="userId != null">
+      userId = #{userId} and
+    </if>  
+    <if test="author != null">
+      author = #{author} and
+    </if>  
+    <if test="time != null">
+      time >= #{time} and
+    </if>  
+    <if test="reaction != null">
+      reaction = #{reaction} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="appreciation">
+    select *
+    from appreciation
+    where
+    <if test="id != null">
+      id = #{id} and
+    </if> 
+    <if test="author != null">
+      author = #{author} and
+    </if> 
+    <if test="title != null">
+      title ilike #{title} and
+    </if> 
+    <if test="description != null">
+      description ilike #{description} and
+    </if>
+    <if test="createAt != null">
+      createAt >= #{createAt} and
+    </if>
+    <if test="replyCount != null">
+      replyCount >= #{replyCount} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  
 </mapper>

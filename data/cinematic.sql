@@ -164,19 +164,43 @@ CREATE TABLE rates(
   id varchar(255),
   author varchar(255),
   rate integer,
-  ratetime timestamp,
+  time timestamp,
   review text,
-  usefulcount integer,
+  usefulcount integer default 0,
+  replycount integer default 0,
   primary key(id, author)
 )
 
-CREATE TABLE usefulrates(
-  id varchar(255),
-  author varchar(255),
-  userid varchar(255),
-  reviewtime timestamp,
-  primary key(id,author,userid)
+CREATE TABLE ratereaction(
+	id varchar(255),
+	author varchar(255),
+	userid varchar(255),
+	time timestamp,
+	reaction smallint,
+	primary key(id, author, userid)
 )
+
+CREATE TABLE appreciation(
+	id varchar(255),
+	author varchar(255),
+	title text,
+	description text,
+	createat timestamp,
+	replycount integer default 0,
+	primary key(id, author)
+);
+
+CREATE TABLE reply(
+	id varchar(255),	
+	author varchar(255),
+	userid varchar(255),
+	review text,
+	time timestamp,
+	primary key(id, author, userid)
+)
+
+insert into reply values ('00001','PNc1_4Bbo','00001', 'cmt1','2022-07-12 15:08:41.397','2022-07-13 15:08:41.397','0','0');
+insert into reply values ('00002','PNc1_4Bbo','00002', 'cmt2','2022-07-12 15:08:41.397','2022-07-13 15:08:41.397','0','0');
 
 INSERT INTO categories (categoryid,categoryname,status) VALUES('adventure','adventure','A');
 INSERT INTO categories (categoryid,categoryname,status) VALUES ('animated','animated','A');
