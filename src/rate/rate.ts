@@ -1,4 +1,4 @@
-import { Attributes, Filter, Search, Service } from 'onecore';
+import { Attributes, Filter, Service } from 'onecore';
 import { Repository } from 'query-core';
 
 export interface RateId {
@@ -33,7 +33,7 @@ export interface RateRepository extends Repository<Rate, RateId> {
   decreaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
   increaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
   decreaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
-};
+}
 
 export interface RateService extends Service<Rate, RateId, RateFilter> {
   getRate(id: string, author: string): Promise<Rate | null>;
@@ -61,7 +61,7 @@ export interface RateReactionRepository {
   save(obj: RateReaction, ctx?: any): Promise<number>;
 }
 
-export interface RateReactionService extends Service<RateReaction, RateReactionId, RateReactionFilter> { 
+export interface RateReactionService extends Service<RateReaction, RateReactionId, RateReactionFilter> {
 }
 
 export const rateModel: Attributes = {
@@ -94,7 +94,7 @@ export const rateModel: Attributes = {
     type: 'integer',
     min: 0
   }
-}
+};
 
 export interface RateReactionId {
   id: string;
@@ -107,7 +107,7 @@ export interface RateReaction {
   author: string;
   userId: string;
   time: Date;
-  reaction:number;
+  reaction: number;
 }
 
 export interface RateReactionFilter extends Filter {
@@ -134,10 +134,10 @@ export const rateReactionModel: Attributes = {
   time: {
     type: 'datetime',
   },
-  reaction: { 
+  reaction: {
     type: 'integer',
   }
-}
+};
 
 export interface Info {
   id: string;
@@ -152,7 +152,7 @@ export interface Info {
 
 export interface InfoRepository extends Repository<Info, string> {
   save(obj: Info, ctx?: any): Promise<number>;
-};
+}
 
 export const infoModel: Attributes = {
   id: {
@@ -179,7 +179,7 @@ export const infoModel: Attributes = {
   rate5: {
     type: 'number',
   },
-}
+};
 
 export interface ReplyId {
   id: string;
@@ -223,4 +223,4 @@ export const replyModel: Attributes = {
   time: {
     type: 'datetime'
   }
-}
+};

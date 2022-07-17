@@ -1,5 +1,4 @@
 export const config = {
-  //8080
   port: 8080,
   secure: false,
   cookie: false,

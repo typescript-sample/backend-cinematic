@@ -1,18 +1,14 @@
-import { Log, Manager, Search, Mapper } from 'onecore';
-import { buildCountQuery, buildToInsert, buildToInsertBatch, DB, postgres, Repository, SearchBuilder, Service, Statement } from 'query-core';
-import { Cinema, CinemaFilter, cinemaModel, CinemaRepository, CinemaService, CinemaRate,InfoRepository, CinemaRateRepository, Info, CinemaRateService, cinemaRateModel, CinemaRateFilter } from './cinema'; // rate
-import {Rate, RateFilter, RateService, RateRepository } from '../rate';
-import { CinemaController } from './cinema-controller';
+import { Log, Manager, Search } from 'onecore';
+import { DB, SearchBuilder } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
+import { Cinema, CinemaFilter, cinemaModel, CinemaRate, CinemaRateFilter, cinemaRateModel, CinemaRateRepository, CinemaRateService, CinemaRepository, CinemaService, InfoRepository } from './cinema'; // rate
+import { CinemaController } from './cinema-controller';
 export * from './cinema-controller';
 export { CinemaController };
-import { SqlCinemaRepository } from './sql-cinema-repository';
-import { query } from "pg-extension";
-import { SqlInfoRepository } from './sql-info-repository';
-import { SqlCinemaRateRepository } from './sql-cinema-rate-repository';
 import { CinemaRateController } from './cinema-rate-controller';
-import { v4 as uuidv4 } from 'uuid';
-import { check } from 'types-validation';
+import { SqlCinemaRateRepository } from './sql-cinema-rate-repository';
+import { SqlCinemaRepository } from './sql-cinema-repository';
+import { SqlInfoRepository } from './sql-info-repository';
 
 export class CinemaManager extends Manager<Cinema, string, CinemaFilter> implements CinemaService {
   constructor(search: Search<Cinema, CinemaFilter>,
@@ -21,8 +17,7 @@ export class CinemaManager extends Manager<Cinema, string, CinemaFilter> impleme
     private rateRepository: CinemaRateRepository) {
     super(search, repository);
     this.search = this.search.bind(this);
-  };
-
+  }
 
   load(id: string): Promise<Cinema | null> {
     return this.repository.load(id).then(cinema => {
@@ -35,14 +30,14 @@ export class CinemaManager extends Manager<Cinema, string, CinemaFilter> impleme
             cinema.info = info;
           }
           return cinema;
-        })
+        });
       }
     });
   }
 }
 
 export function useCinemaService(db: DB, mapper?: TemplateMap): CinemaService {
-  const query = useQuery('cinema', mapper, cinemaModel, true)
+  const query = useQuery('cinema', mapper, cinemaModel, true);
   const builder = new SearchBuilder<Cinema, CinemaFilter>(db.query, 'cinema', cinemaModel, db.driver, query);
   const repository = new SqlCinemaRepository(db);
   const infoRepository = new SqlInfoRepository(db);
@@ -70,5 +65,3 @@ export function useCinemaRateService(db: DB, mapper?: TemplateMap): CinemaRateSe
 export function useCinemaRateController(log: Log, db: DB, mapper?: TemplateMap): CinemaRateController {
   return new CinemaRateController(log, useCinemaRateService(db, mapper));
 }
-
-

@@ -2,6 +2,7 @@ import { merge } from 'config-plus';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import express, { json, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import { loadTemplates, MiddlewareLogger } from 'express-ext';
 import http from 'http';
 import { createLogger } from 'logger-core';
@@ -14,7 +15,6 @@ import { buildTemplates, trim } from 'query-mappers';
 import { config, env } from './config';
 import { useContext } from './context';
 import { route } from './route';
-import { Request, Response } from 'express';
 export interface AccessConfig {
   origin: string | string[];
   credentials: string | string[];
@@ -35,7 +35,6 @@ export function allow(access: AccessConfig): (req: Request, res: Response, next:
   };
 }
 
-
 dotenv.config();
 const conf = merge(config, process.env, env, process.env.ENV);
 
@@ -48,11 +47,8 @@ const templates = loadTemplates(conf.template, buildTemplates, trim, ['./src/que
 const pool = new Pool(config.db);
 // const pool = createPool(config.db);
 const db = log(new PoolManager(pool), conf.log.db, logger, 'postgres');
-const ctx = useContext(db, logger, middleware, conf,pool, templates);
+const ctx = useContext(db, logger, middleware, conf, pool, templates);
 route(app, ctx, conf.secure);
 http.createServer(app).listen(conf.port, () => {
   console.log('Start server at port ' + conf.port);
 });
-
-
-

@@ -1,13 +1,8 @@
-import { Controller, handleError, Log, getStatusCode } from "express-ext";
-import {
-    replyModel, Reply, ReplyFilter, ReplyId, ReplyRepository, ReplyService
-} from './appreciation';
-import { Request, Response } from 'express';
-import { Search, Validator } from 'onecore';
-import { createValidator } from 'xvalidators';
+import { Controller, Log } from 'express-ext';
+import { Reply, ReplyFilter, ReplyId, ReplyService } from './appreciation';
 
-export class AppreciationReplyController extends Controller<Reply, ReplyId, ReplyFilter>{
-    constructor(log: Log, protected replyService: ReplyService) {
-        super(log, replyService);
-    }
+export class AppreciationReplyController extends Controller<Reply, ReplyId, ReplyFilter> {
+  constructor(log: Log, protected replyService: ReplyService) {
+    super(log, replyService);
+  }
 }

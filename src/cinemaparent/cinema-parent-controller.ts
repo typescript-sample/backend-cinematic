@@ -5,5 +5,4 @@ export class CinemaParentController extends Controller<CinemaParent, string, Cin
   constructor(log: Log, userService: CinemaParentService) {
     super(log, userService);
   }
- 
 }
