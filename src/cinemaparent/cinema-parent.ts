@@ -44,7 +44,6 @@ export const CinemaParentModel: Attributes = {
   logo: {
     length: 255
   },
-
   createdBy: {},
   createdAt: {
     column: 'createdat',

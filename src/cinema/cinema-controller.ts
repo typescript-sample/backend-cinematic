@@ -1,19 +1,15 @@
-import { Controller, Log, handleError, queryParam, getStatusCode } from 'express-ext';
-import { Cinema, CinemaFilter, CinemaService, CinemaRate, cinemaRateModel } from './cinema';
 import { Request, Response } from 'express';
-import { Search, Validator } from 'onecore';
+import { Controller, handleError, Log } from 'express-ext';
+import { Validator } from 'onecore';
 import { createValidator } from 'xvalidators';
-import { Rate, RateFilter, RateService, RateController, RateRepository } from '../rate';
+import { Cinema, CinemaFilter, CinemaRate, cinemaRateModel, CinemaService } from './cinema';
 
 export class CinemaController extends Controller<Cinema, string, CinemaFilter> {
-
   validator: Validator<CinemaRate>;
-
   constructor(log: Log, private cinemaService: CinemaService) {
     super(log, cinemaService);
-    this.array = ["status"];
+    this.array = ['status'];
     this.all = this.all.bind(this);
-    //this.rate = this.rate.bind(this);
     this.validator = createValidator<CinemaRate>(cinemaRateModel);
   }
 

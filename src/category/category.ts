@@ -4,14 +4,14 @@ import { Repository } from 'query-core';
 export interface CategoryFilter extends Filter {
   id?: string;
   categoryName?: string;
-  status?:string;
+  status?: string;
 }
 export interface Category {
   categoryId: string;
   categoryName: string;
-  status:string;
+  status: string;
 }
-export interface CategoryRepository extends Repository<Category, string>{
+export interface CategoryRepository extends Repository<Category, string> {
 
 }
 export interface CategoryService extends Service<Category, string, CategoryFilter> {
@@ -23,12 +23,12 @@ export const categoryModel: Attributes = {
   categoryId: {
     key: true,
     length: 40,
-    q:true,
+    q: true,
   },
   categoryName: {
     required: true,
     length: 300,
-    q:true
+    q: true
   },
   status: {
     match: 'equal',

@@ -1,8 +1,8 @@
 import { Log, Manager, Search } from 'onecore';
 import { DB, SearchBuilder } from 'query-core';
+import { TemplateMap, useQuery } from 'query-mappers';
 import { CinemaParent, CinemaParentFilter, CinemaParentModel, CinemaParentRepository, CinemaParentService } from './cinema-parent';
 import { CinemaParentController } from './cinema-parent-controller';
-import { TemplateMap, useQuery } from 'query-mappers';
 export * from './cinema-parent-controller';
 export { CinemaParentController };
 
@@ -12,12 +12,6 @@ export class CinemaParentManager extends Manager<CinemaParent, string, CinemaPar
   constructor(search: Search<CinemaParent, CinemaParentFilter>, repository: CinemaParentRepository) {
     super(search, repository);
   }
-
-  test(obj: CinemaParent, ctx?: any): Promise<number> {
-    return new Promise(()=>1);
-    // return this.repository.insert(obj, ctx);
-  }
-
 }
 export function useCinemaParentService(db: DB, mapper?: TemplateMap): CinemaParentService {
   const query = useQuery('cinemaParent', mapper, CinemaParentModel, true);

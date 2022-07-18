@@ -1,16 +1,16 @@
-import { Controller, handleError, Log, queryParam, getStatusCode } from "express-ext";
-import { Film, FilmFilter, FilmService, FilmRate, filmRateModel } from "./film";
-import { Request, Response } from "express";
-import { Search, Validator } from 'onecore';
+import { Request, Response } from 'express';
+import { Controller, getStatusCode, handleError, Log } from 'express-ext';
+import { Validator } from 'onecore';
 import { createValidator } from 'xvalidators';
+import { Film, FilmFilter, FilmRate, filmRateModel, FilmService } from './film';
 
-export class FilmController extends Controller<Film, string, FilmFilter>{
+export class FilmController extends Controller<Film, string, FilmFilter> {
   validator: Validator<FilmRate>;
   constructor(log: Log, private filmService: FilmService) {
     super(log, filmService);
-    this.array= ["status"];
+    this.array = ['status'];
     this.all = this.all.bind(this);
-    this.rate= this.rate.bind(this);
+    this.rate = this.rate.bind(this);
     this.validator = createValidator<FilmRate>(filmRateModel);
   }
   all(req: Request, res: Response) {
@@ -33,5 +33,4 @@ export class FilmController extends Controller<Film, string, FilmFilter>{
       }
     }).catch(err => handleError(err, res, this.log));
   }
-  
 }
