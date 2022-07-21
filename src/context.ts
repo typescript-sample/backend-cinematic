@@ -27,7 +27,7 @@ import { FilmController } from './film/film-controller';
 import { FilmRateController } from './film/film-rate-controller';
 import { useRateController, useRateCommentController } from './rate';
 import { RateController } from './rate/rate-controller';
-import { RateCommentController } from './rate/reply-controller';
+import { RateCommentController } from './rate/comment-controller';
 import { RoleController, useRoleController } from './role';
 import { SqlUploadSerive } from './uploads/SqlUploadsService';
 import { UploadController } from './uploads/UploadController';
