@@ -1,15 +1,16 @@
 import { Attributes, Statement } from 'pg-extension';
 import { DB, Repository } from 'query-core';
-import { Info, infoModel, InfoRepository } from './rate';
+import { RateComment, RateCommentId, rateCommentModel, RateCommentRepository} from './rate';
 
-export class SqlInfoRepository extends Repository<Info, string> implements InfoRepository {
+export class SqlRateCommentRepository extends Repository<RateComment, string> implements RateCommentRepository {
   constructor(db: DB, table: string, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
-    super(db, table, infoModel);
+    super(db, table, rateCommentModel);
     this.save = this.save.bind(this);
   }
-  async save(obj: Info, ctx?: any): Promise<number> {
-    const stmt = await this.buildToSave(obj, this.table, this.attributes);
+  save(obj: RateComment, ctx?: any): Promise<number> {
+    const stmt = this.buildToSave(obj, this.table, this.attributes);
     if (stmt) {
+      console.log(stmt.query);
       return this.exec(stmt.query, stmt.params, ctx);
     } else {
       return Promise.resolve(0);

@@ -5,6 +5,4 @@ export class SqlCinemaParentRepository extends Repository<CinemaParent, string> 
   constructor(db: DB) {
     super(db, 'CinemaParent', CinemaParentModel);
   }
-
-  
 }

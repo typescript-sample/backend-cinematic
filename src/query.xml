@@ -242,25 +242,6 @@
     </if>
   </select>
 
-  <select id="usefulrates">
-    select *
-    from usefulrates
-    where
-    <if test="id != null">
-      id = (#{id}) and
-    </if> 
-    <if test="userId != null">
-      userId = (#{userId}) and
-    </if>  
-    <if test="author != null">
-      author = (#{author}) and
-    </if>  
-    1 = 1
-    <if test="sort != null">
-      order by {sort}
-    </if>
-  </select>
-
   <select id="ratereaction">
     select *
     from ratereaction
@@ -279,6 +260,34 @@
     </if>  
     <if test="reaction != null">
       reaction = #{reaction} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="ratecomment">
+    select *
+    from rate_comments
+    where
+    <if test="commentId != null">
+      commentId = #{commentId} and
+    </if> 
+    <if test="id != null">
+      id = #{id} and
+    </if> 
+    <if test="author != null">
+      author = #{author} and
+    </if> 
+    <if test="userId != null">
+      userId = #{userId} and
+    </if>   
+    <if test="comment != null">
+      comment ilike #{comment} and
+    </if>  
+    <if test="time != null">
+      time >= #{time} and
     </if>
     1 = 1
     <if test="sort != null">

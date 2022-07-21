@@ -1,37 +1,37 @@
+import { Storage } from '@google-cloud/storage';
 import { AuthenticationController, PrivilegeController } from 'authen-express';
 import { initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, useAuthenticator, User, useUserRepository } from 'authen-service';
+import { CategoryController } from 'category/category-controller';
+import { CinemaRateController } from 'cinema/cinema-rate-controller';
 import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources } from 'express-ext';
-import { useFilmController, useFilmRateController } from './film';
-import { FilmController } from './film/film-controller';
-import { FilmRateController } from './film/film-rate-controller';
+import { GoogleStorageService, map, StorageConfig } from 'google-storage';
 import { buildJwtError, generate, Payload, verify } from 'jsonwebtoken-plus';
 import { Conf, useLDAP } from 'ldap-plus';
+import { Pool } from 'pg';
+import { param, PoolManager } from 'pg-extension';
 import { createChecker, DB } from 'query-core';
 import { TemplateMap } from 'query-mappers';
 import { Authorize, Authorizer, PrivilegeLoader, useToken } from 'security-express';
 import { check } from 'types-validation';
 import { createValidator } from 'xvalidators';
-import { AuditLogController, useAuditLogController } from './audit-log';
-import { RoleController, useRoleController } from './role';
-import { UserController, useUserController } from './user';
-import { CategoryController } from 'category/category-controller';
-import { useCategoryController } from './category';
-import { CinemaParentController, useCinemaParentController } from './cinemaparent';
-import { useCinemaController, useCinemaRateController } from './cinema';
-import { UploadController } from './uploads/UploadController';
-import { SqlUploadSerive } from './uploads/SqlUploadsService';
-import { GoogleStorageService, StorageConfig, map } from 'google-storage';
-import { Pool } from 'pg';
-import { Storage } from '@google-cloud/storage';
-import { param, PoolManager } from 'pg-extension';
-import { CinemaRateController } from 'cinema/cinema-rate-controller';
-import { CinemaController } from './cinema/cinema-controller';
-import { RateController } from './rate/rate-controller';
-import { useRateController, useReplyController } from './rate';
 import { useAppreciationController, useAppreciationReplyController } from './appreciation';
 import { AppreciationController } from './appreciation/appreciation-controller';
-import { ReplyController } from './rate/reply-controller';
-import { AppreciationReplyController } from './appreciation/reply-controller'
+import { AppreciationReplyController } from './appreciation/reply-controller';
+import { AuditLogController, useAuditLogController } from './audit-log';
+import { useCategoryController } from './category';
+import { useCinemaController, useCinemaRateController } from './cinema';
+import { CinemaController } from './cinema/cinema-controller';
+import { CinemaParentController, useCinemaParentController } from './cinemaparent';
+import { useFilmController, useFilmRateController } from './film';
+import { FilmController } from './film/film-controller';
+import { FilmRateController } from './film/film-rate-controller';
+import { useRateController, useRateCommentController } from './rate';
+import { RateController } from './rate/rate-controller';
+import { RateCommentController } from './rate/reply-controller';
+import { RoleController, useRoleController } from './role';
+import { SqlUploadSerive } from './uploads/SqlUploadsService';
+import { UploadController } from './uploads/UploadController';
+import { UserController, useUserController } from './user';
 resources.createValidator = createValidator;
 resources.check = check;
 
@@ -65,7 +65,7 @@ export interface Context {
   rate: RateController;
   appreciation: AppreciationController;
   appreciationReply: AppreciationReplyController;
-  reply: ReplyController;
+  comment: RateCommentController;
 }
 
 const credentials = {
@@ -110,14 +110,14 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const filmRate = useFilmRateController(logger.error, db, mapper);
   const category = useCategoryController(logger.error, db, mapper);
 
-  const cinemaParent = useCinemaParentController(logger.error, db, mapper)
+  const cinemaParent = useCinemaParentController(logger.error, db, mapper);
   const cinema = useCinemaController(logger.error, db, mapper);
   const cinemaRate = useCinemaRateController(logger.error, db, mapper);
 
   const rate = useRateController(logger.error, db, mapper);
   const appreciation = useAppreciationController(logger.error, db, mapper);
   const appreciationReply = useAppreciationReplyController(logger.error, db, mapper);
-  const reply = useReplyController(logger.error, db, mapper);
+  const comment = useRateCommentController(logger.error, db, mapper);
   // const healthChecker2  =new Checker2('mongo',"https://localhost:443/health",5000);
   // const health2 = new HealthController2([healthChecker2])
   const manager = new PoolManager(pool);
@@ -127,5 +127,5 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const storageService = new GoogleStorageService(bucket, storageConfig, map);
   const uploadService = new SqlUploadSerive(pool, 'media', storageService.upload, storageService.delete, param, manager.query, manager.exec, manager.execBatch);
   const uploads = new UploadController(logger.error, uploadService);
-  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, filmRate, cinemaRate, rate, appreciation, appreciationReply,reply };
+  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, filmRate, cinemaRate, rate, appreciation, appreciationReply, comment };
 }

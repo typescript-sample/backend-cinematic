@@ -1,5 +1,4 @@
 export const config = {
-  //8080
   port: 8080,
   secure: false,
   cookie: false,
@@ -42,12 +41,20 @@ export const config = {
     // user: 'root',
     // password: 'Root/123',
     // database: 'backoffice',
-    user: 'postgres',
-    host: 'localhost',
-    database: 'backoffice',
-    password: '12345678',
+
+    user: 'dqcpsquyjmmxkb',
+    host: 'ec2-54-228-125-183.eu-west-1.compute.amazonaws.com',
+    database: 'd8maa489i4calm',
+    password: '1093639f514498fbf09e803d98714b853849704783dc052aa1ef2039c60fe6e0',
+    // user: 'postgres',
+    // host: 'localhost',
+    // database: 'backoffice',
+    // password: '12345678',
     port: 5432,
     multipleStatements: true,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   },
   template: true,
   auth: {

@@ -1,4 +1,4 @@
-import { Attributes, Filter, Search, Service } from 'onecore';
+import { Attributes, Filter, Service } from 'onecore';
 import { Repository } from 'query-core';
 
 export interface FilmFilter extends Filter {
@@ -18,7 +18,7 @@ export interface Film {
   imageUrl?: string;
   trailerUrl?: string;
   categories?: string[];
-  info?: FilmInfo
+  info?: FilmInfo;
 }
 
 export interface FilmInfo {
@@ -64,12 +64,12 @@ export interface FilmInfoRepository extends Repository<FilmInfo, string> {
 }
 
 export interface FilmRateRepository extends Repository<FilmRate, string> {
-  deleteFilmRate(id: string, author: string, ctx?: any): Promise<boolean>
-  searchFilmRate(obj: FilmRate): Promise<FilmRate | null>
+  deleteFilmRate(id: string, author: string, ctx?: any): Promise<boolean>;
+  searchFilmRate(obj: FilmRate): Promise<FilmRate | null>;
 }
 export interface FilmRateService extends Service<FilmRate, string, FilmRateFilter> {
-  usefulFilm(obj:UsefulFilmFilter): Promise<number>;
-  usefulSearch(obj:UsefulFilmFilter): Promise<number>;
+  usefulFilm(obj: UsefulFilmFilter): Promise<number>;
+  usefulSearch(obj: UsefulFilmFilter): Promise<number>;
 }
 
 export const filmModel: Attributes = {
@@ -81,7 +81,6 @@ export const filmModel: Attributes = {
     required: true,
     length: 300,
     q: true
-
   },
   description: {
     length: 300,
@@ -96,7 +95,7 @@ export const filmModel: Attributes = {
     type: 'primitives',
   },
   status: {
-    match: "equal",
+    match: 'equal',
     length: 1
   },
   createdBy: {},
@@ -169,7 +168,7 @@ export const filmRateModel: Attributes = {
     min: 1,
     max: 10
   },
-  usefulCount:{
+  usefulCount: {
     type: 'integer',
     min: 0
   },
@@ -181,7 +180,7 @@ export const filmRateModel: Attributes = {
   },
 };
 
-//---------------------
+// ---------------------
 
 export interface UsefulFilmFilter extends Filter {
   id: string;
@@ -196,8 +195,8 @@ export interface UsefulFilm {
   updatedat?: Date;
 }
 export interface UsefulFilmRepository extends Repository<UsefulFilm, string> {
-  deleteUseful(id: string, author: string, ctx?: any): Promise<boolean>
-  searchUseful(obj: UsefulFilm): Promise<UsefulFilm | null>
+  deleteUseful(id: string, author: string, ctx?: any): Promise<boolean>;
+  searchUseful(obj: UsefulFilm): Promise<UsefulFilm | null>;
 }
 
 export const UsefulFilmModel: Attributes = {

@@ -18,7 +18,6 @@ export class SqlUploadSerive {
     public exec: (sql: string, args?: any[]) => Promise<number>,
     public execBatch: (statements: Statement[]) => Promise<number>,
   ) {
-    //pool.connect().then(client => this.client = client);
     this.all = this.all.bind(this);
     this.insert = this.insert.bind(this);
     this.load = this.load.bind(this);
@@ -98,12 +97,12 @@ export class SqlUploadSerive {
             return 1;
           }
         });
-      } else
+      } else {
         return 1;
-    })
-      .catch((err) => {
-        throw err;
-      });
+      }
+    }).catch((err) => {
+      throw err;
+    });
   }
   getUser(id: string): Promise<User> {
     return this.query<User>('select * from users where userid = $1', [id]).then(res => {

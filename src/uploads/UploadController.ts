@@ -34,7 +34,7 @@ export class UploadController {
     });
   }
   upload(req: Request, res: Response) {
-    if (!req || !req.file) return
+    if (!req || !req.file) { return; }
     const fileName = req.file.originalname;
     const fileBuffer = req.file.buffer;
     const fileType = req.file.mimetype;
@@ -46,7 +46,7 @@ export class UploadController {
     ).catch(e => handleError(e, res, this.log));
   }
   remove(req: Request, res: Response) {
-    const { url = "", userId = "" } = req.query;
+    const { url = '', userId = '' } = req.query;
     const fileName = getFileName(url.toString());
     this.uploadService.deleteFile(userId.toString(), fileName, url.toString()).then(result =>
       res.status(200).json(result)

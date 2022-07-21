@@ -190,17 +190,17 @@ CREATE TABLE appreciation(
 	primary key(id, author)
 );
 
-CREATE TABLE reply(
-	id varchar(255),	
-	author varchar(255),
-	userid varchar(255),
-	review text,
-	time timestamp,
-	primary key(id, author, userid)
-)
+CREATE TABLE rate_comments(
+  commentid serial,
+  id varchar(255),
+  author varchar(255),
+  userId varchar(255),
+  comment text,
+  time timestamp,
+  primary key(commentid)
+);
 
-insert into reply values ('00001','PNc1_4Bbo','00001', 'cmt1','2022-07-12 15:08:41.397','2022-07-13 15:08:41.397','0','0');
-insert into reply values ('00002','PNc1_4Bbo','00002', 'cmt2','2022-07-12 15:08:41.397','2022-07-13 15:08:41.397','0','0');
+yM389FbhlRQ
 
 INSERT INTO categories (categoryid,categoryname,status) VALUES('adventure','adventure','A');
 INSERT INTO categories (categoryid,categoryname,status) VALUES ('animated','animated','A');

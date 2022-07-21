@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-const https = require('https')
+import https from 'https';
 
 export type HealthStatus = 'UP' | 'DOWN';
 export interface HealthMap {
@@ -14,11 +14,10 @@ export interface AnyMap {
   [key: string]: any;
 }
 export interface HttpsResult {
-  statusCode: number,
-  data?: AnyMap,
-  statusMessage: string
+  statusCode: number;
+  data?: AnyMap;
+  statusMessage: string;
 }
-
 
 export interface HealthChecker {
   name(): string;
@@ -36,17 +35,16 @@ function getHealth(url: string, timeout: number): Promise<AnyMap> {
       });
 
       res.on('end', () => {
-        console.log(data)
-        resolve({ statusCode: res.statusCode, data: { data }, statusMessage: res.statusMessage })
+        console.log(data);
+        resolve({ statusCode: res.statusCode, data: { data }, statusMessage: res.statusMessage });
       });
 
     }).on('error', (e: any) => {
-      let error: AnyMap = { statusCode: 500, statusMessage: e }
-      return error
-    })
-
-    setTimeout(() => resolve({ statusCode: 408, statusMessage: 'Time out' }), timeout)
-  })
+      const error: AnyMap = { statusCode: 500, statusMessage: e };
+      return error;
+    });
+    setTimeout(() => resolve({ statusCode: 408, statusMessage: 'Time out' }), timeout);
+  });
 }
 
 export class Checker2 {
@@ -78,10 +76,6 @@ export class Checker2 {
   }
 }
 
-
-
-
-
 export async function health(checkers: Checker2[]): Promise<Health> {
   const p: Health = { status: 'UP' };
   p.details = {};
@@ -89,12 +83,12 @@ export async function health(checkers: Checker2[]): Promise<Health> {
   try {
     const r = await checkers[0].check();
 
-    if (r && r.statusCode == 200) {
+    if (r && r.statusCode === 200) {
       sub.status = 'UP';
     }
-    if (r && r.statusCode != 200) {
+    if (r && r.statusCode !== 200) {
       sub.status = 'DOWN';
-      sub.data = r.statusMessage
+      sub.data = r.statusMessage;
       p.status = 'DOWN';
     }
     p.details[checkers[0].name()] = { ...sub };
@@ -107,7 +101,6 @@ export async function health(checkers: Checker2[]): Promise<Health> {
   }
   return p;
 }
-
 
 export class HealthController2 {
   constructor(protected checkers: Checker2[]) {
