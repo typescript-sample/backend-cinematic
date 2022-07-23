@@ -1,6 +1,6 @@
-import { Attributes, Statement } from 'pg-extension';
-import { DB, Repository } from 'query-core';
-import { RateComment, RateCommentId, rateCommentModel, RateCommentRepository} from './rate';
+import { Repository } from 'query-core';
+import { Attributes, DB, Statement } from './core';
+import { RateComment, rateCommentModel, RateCommentRepository} from './rate';
 
 export class SqlRateCommentRepository extends Repository<RateComment, string> implements RateCommentRepository {
   constructor(db: DB, table: string, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {

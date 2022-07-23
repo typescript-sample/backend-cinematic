@@ -1,5 +1,5 @@
-import { Attributes, Statement } from 'pg-extension';
-import { DB, Repository } from 'query-core';
+import { Repository } from 'query-core';
+import { Attributes, DB, Statement } from './core';
 import { Rate, RateId, rateModel, RateRepository } from './rate';
 
 export class SqlRateRepository extends Repository<Rate, RateId> implements RateRepository {

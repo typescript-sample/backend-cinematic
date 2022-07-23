@@ -1,5 +1,5 @@
-import { Attributes, Statement, StringMap } from 'pg-extension';
-import { DB, metadata } from 'query-core';
+import { metadata } from 'query-core';
+import { Attributes, DB, Statement, StringMap } from './core';
 import { RateReaction, RateReactionRepository } from './rate';
 
 export class SqlRateReactionRepository implements RateReactionRepository {

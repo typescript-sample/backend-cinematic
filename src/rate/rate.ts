@@ -1,5 +1,4 @@
-import { Attributes, Filter, SearchResult, Service } from 'onecore';
-import { Repository } from 'query-core';
+import { Attributes, Filter, Repository, Service } from './core';
 
 export interface RateId {
   id: string;
@@ -42,7 +41,7 @@ export interface RateService extends Service<Rate, RateId, RateFilter> {
   setUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
   removeUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
   comment(comment: RateComment): Promise<boolean>;
-  removeComment(id: string,author: string, ctx?: any): Promise<number>;
+  removeComment(id: string, author: string, ctx?: any): Promise<number>;
   updateComment(comment: RateComment): Promise<number>;
 }
 

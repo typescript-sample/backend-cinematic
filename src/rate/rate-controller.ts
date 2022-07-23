@@ -19,7 +19,7 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
     this.removeComment = this.removeComment.bind(this);
     this.updateComment = this.updateComment.bind(this);
     this.updateRate = this.updateRate.bind(this);
-    this.search = this.search.bind(this)
+    this.search = this.search.bind(this);
     this.validator = createValidator<Rate>(rateModel);
     this.rateCommentValidator = createValidator<RateComment>(rateCommentModel);
   }
@@ -94,7 +94,7 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
   }
 
   updateComment(req: Request, res: Response) {
-    const commentId = req.params.commentid; 
+    const commentId = req.params.commentid;
     const id = req.params.id;
     const author = req.params.author;
     const userId = req.params.userid;

@@ -1,5 +1,5 @@
-import { Attributes, Statement } from 'pg-extension';
-import { DB, Repository } from 'query-core';
+import { Repository } from 'query-core';
+import { Attributes, DB, Statement } from './core';
 import { Info, infoModel, InfoRepository } from './rate';
 
 export class SqlInfoRepository extends Repository<Info, string> implements InfoRepository {

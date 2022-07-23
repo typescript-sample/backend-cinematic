@@ -1,25 +1,45 @@
-import { Log } from 'express-ext';
-import { Manager, Search } from 'onecore';
-import { buildToSave } from 'pg-extension';
-import { DB, SearchBuilder } from 'query-core';
-import { TemplateMap, useQuery } from 'query-mappers';
-import { RateCommentController } from './comment-controller';
+import { SearchBuilder } from 'query-core';
+import { Attributes, DB, Manager, Search, Statement, StringMap } from './core';
 import {
   InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentRepository, RateCommentService, RateFilter, RateId, rateModel,
   RateReaction, rateReactionModel, RateReactionRepository, RateRepository, RateService
 } from './rate';
-import { RateController } from './rate-controller';
 import { SqlInfoRepository } from './sql-info-repository';
 import { SqlRateRepository } from './sql-rate-repository';
 import { SqlRateCommentRepository } from './sql-ratecomment-repository';
 import { SqlRateReactionRepository } from './sql-ratereaction-repository';
-export * from './rate-controller';
 export * from './rate';
-export { RateController };
-export { RateCommentController };
 
+export type LikeType = 'like' | 'ilike';
+export type Query = <S>(filter: S, bparam: LikeType | ((i: number) => string), sn?: string, buildSort?: (sort?: string, map?: Attributes | StringMap) => string, attrs?: Attributes) => Statement | undefined;
+export interface Parameter {
+  name: string;
+  type: string;
+}
+export interface StringFormat {
+  texts: string[];
+  parameters: Parameter[];
+}
+export interface Template {
+  name?: string | null;
+  text: string;
+  templates: TemplateNode[];
+}
+export interface TemplateNode {
+  type: string;
+  text: string;
+  property: string | null;
+  encode?: string | null;
+  value: string | null;
+  format: StringFormat;
+  array?: string | null;
+  separator?: string | null;
+  suffix?: string | null;
+  prefix?: string | null;
+}
+export type TemplateMap = Map<string, Template>;
 export class RateManager extends Manager<Rate, RateId, RateFilter> implements RateService {
-  constructor(search: Search<Rate, RateFilter>, public rateCommentSearch: Search<RateComment, RateCommentFilter>,
+  constructor(search: Search<Rate, RateFilter>,
     public repository: RateRepository,
     private infoRepository: InfoRepository,
     private rateCommentRepository: RateCommentRepository,
@@ -162,21 +182,13 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
   }
 }
 
-export function useRateService(db: DB, mapper?: TemplateMap): RateService {
-  const query = useQuery('rates', mapper, rateModel, true);
-  const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
+export function useRateService(db: DB, buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, rateQuery: Query): RateService {
+  const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, rateQuery);
   const repository = new SqlRateRepository(db, 'rates', buildToSave);
   const infoRepository = new SqlInfoRepository(db, 'info', buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, buildToSave);
-
-  const queryRateComment = useQuery('ratecomment', mapper, rateCommentModel, true);
-  const builderRateComment = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, queryRateComment);
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', buildToSave);
-  return new RateManager(builder.search, builderRateComment.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
-}
-
-export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {
-  return new RateController(log, useRateService(db, mapper));
+  return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
 export class RateCommentManager extends Manager<RateComment, string, RateCommentFilter> implements RateCommentService {
@@ -186,16 +198,8 @@ export class RateCommentManager extends Manager<RateComment, string, RateComment
   }
 }
 
-export function useRateCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
-  const query = useQuery('ratecomment', mapper, rateCommentModel, true);
-  const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, query);
+export function useRateCommentService(db: DB, buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, commentQuery: Query): RateCommentService {
+  const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, commentQuery);
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', buildToSave);
   return new RateCommentManager(builder.search, rateCommentRepository);
 }
-
-
-export function useRateCommentController(log: Log, db: DB, mapper?: TemplateMap): RateCommentController {
-  return new RateCommentController(log, useRateCommentService(db, mapper));
-}
-
-

@@ -1,4 +1,4 @@
-import { Statement } from 'query-core';
+import { Statement } from './core';
 import { RateFilter } from './rate';
 
 export function buildQuery(s: RateFilter): Statement {
