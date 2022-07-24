@@ -156,6 +156,7 @@ export class ViewManager<T, ID> implements ViewService<T, ID> {
     return (this.r.exist ? this.r.exist(id, ctx) : Promise.resolve(false));
   }
 }
+// tslint:disable-next-line:max-classes-per-file
 export class GenericManager<T, ID> extends ViewManager<T, ID> implements GenericService<T, ID, number> {
   constructor(protected repository: Repository<T, ID>) {
     super(repository);
@@ -182,6 +183,7 @@ export class GenericManager<T, ID> extends ViewManager<T, ID> implements Generic
   }
 }
 export type Search<T, F> = (s: F, limit?: number, offset?: number | string, fields?: string[]) => Promise<SearchResult<T>>;
+// tslint:disable-next-line:max-classes-per-file
 export class Manager<T, ID, F extends Filter> extends GenericManager<T, ID> implements GenericSearchService<T, ID, number, F> {
   constructor(public find: Search<T, F>, repo: Repository<T, ID>) {
     super(repo);

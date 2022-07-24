@@ -9,10 +9,7 @@ import {
   RateReaction, rateReactionModel, RateReactionRepository, RateRepository, RateService
 } from './rate';
 import { RateController } from './rate-controller';
-import { SqlInfoRepository } from './sql-info-repository';
-import { SqlRateRepository } from './sql-rate-repository';
-import { SqlRateCommentRepository } from './sql-ratecomment-repository';
-import { SqlRateReactionRepository } from './sql-ratereaction-repository';
+import { SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from './sql-rate-repository';
 export * from './rate-controller';
 export * from './rate';
 export { RateController };
@@ -179,6 +176,7 @@ export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateC
   return new RateController(log, useRateService(db, mapper));
 }
 
+// tslint:disable-next-line:max-classes-per-file
 export class RateCommentManager extends Manager<RateComment, string, RateCommentFilter> implements RateCommentService {
   constructor(search: Search<RateComment, RateCommentFilter>,
     protected replyRepository: RateCommentRepository) {
@@ -192,7 +190,6 @@ export function useRateCommentService(db: DB, mapper?: TemplateMap): RateComment
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', buildToSave);
   return new RateCommentManager(builder.search, rateCommentRepository);
 }
-
 
 export function useRateCommentController(log: Log, db: DB, mapper?: TemplateMap): RateCommentController {
   return new RateCommentController(log, useRateCommentService(db, mapper));

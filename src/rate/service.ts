@@ -4,10 +4,7 @@ import {
   InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentRepository, RateCommentService, RateFilter, RateId, rateModel,
   RateReaction, rateReactionModel, RateReactionRepository, RateRepository, RateService
 } from './rate';
-import { SqlInfoRepository } from './sql-info-repository';
-import { SqlRateRepository } from './sql-rate-repository';
-import { SqlRateCommentRepository } from './sql-ratecomment-repository';
-import { SqlRateReactionRepository } from './sql-ratereaction-repository';
+import { SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from './sql-rate-repository';
 export * from './rate';
 
 export type LikeType = 'like' | 'ilike';
@@ -191,6 +188,7 @@ export function useRateService(db: DB, buildToSave: <T>(obj: T, table: string, a
   return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
+// tslint:disable-next-line:max-classes-per-file
 export class RateCommentManager extends Manager<RateComment, string, RateCommentFilter> implements RateCommentService {
   constructor(search: Search<RateComment, RateCommentFilter>,
     protected replyRepository: RateCommentRepository) {
