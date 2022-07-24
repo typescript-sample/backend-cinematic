@@ -1,3 +1,4 @@
+import { ShortComment } from 'rate';
 import { Manager, Search } from './core';
 import {
   InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId,
@@ -96,6 +97,12 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
         return 0;
       } else {
         comment.updatedAt = new Date();
+        const c: ShortComment = {comment: exist.comment, time: exist.time};
+        if (!comment.histories || comment.histories.length === 0) {
+          comment.histories = [c];
+        } else {
+          comment.histories.push(c);
+        }
         return this.rateCommentRepository.update(comment);
       }
     });
