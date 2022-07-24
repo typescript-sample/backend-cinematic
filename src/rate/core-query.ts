@@ -115,24 +115,3 @@ export interface RateComment {
 export interface RateCommentRepository extends Repository<RateComment, string> {
   save(obj: RateComment, ctx?: any): Promise<number>;
 }
-
-export const rateReactionModel: Attributes = {
-  id: {
-    key: true,
-    required: true
-  },
-  author: {
-    key: true,
-    required: true
-  },
-  userId: {
-    key: true,
-    required: true
-  },
-  time: {
-    type: 'datetime',
-  },
-  reaction: {
-    type: 'integer',
-  }
-};

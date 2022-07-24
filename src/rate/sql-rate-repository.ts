@@ -3,6 +3,26 @@ import { Attributes, DB, Statement, StringMap } from 'query-core';
 import { Info, InfoRepository, Rate, RateComment, RateCommentRepository, RateId, RateReaction, RateReactionRepository, RateRepository } from './core-query';
 
 export * from './core-query';
+export const rateReactionModel: Attributes = {
+  id: {
+    key: true,
+    required: true
+  },
+  author: {
+    key: true,
+    required: true
+  },
+  userId: {
+    key: true,
+    required: true
+  },
+  time: {
+    type: 'datetime',
+  },
+  reaction: {
+    type: 'integer',
+  }
+};
 
 export class SqlInfoRepository extends Repository<Info, string> implements InfoRepository {
   constructor(db: DB, table: string, attributes: Attributes, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
