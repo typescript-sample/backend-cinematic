@@ -1,4 +1,4 @@
-import { Attributes, Filter, Repository, Service } from './core';
+import { Attributes, Filter, Repository, Service, ViewRepository } from './core';
 
 export interface RateId {
   id: string;
@@ -28,8 +28,6 @@ export interface RateFilter extends Filter {
 export interface RateRepository extends Repository<Rate, RateId> {
   save(obj: Rate, ctx?: any): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
-  increaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
-  decreaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
 }
 
 export interface RateService extends Service<Rate, RateId, RateFilter> {
@@ -38,7 +36,7 @@ export interface RateService extends Service<Rate, RateId, RateFilter> {
   rate(rate: Rate): Promise<boolean>;
   setUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
   removeUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
-  comment(comment: RateComment): Promise<boolean>;
+  comment(comment: RateComment): Promise<number>;
   removeComment(id: string, author: string, ctx?: any): Promise<number>;
   updateComment(comment: RateComment): Promise<number>;
 }
@@ -49,12 +47,11 @@ export interface RateReactionRepository {
 }
 
 export interface RateCommentRepository extends Repository<RateComment, string> {
-  // save(obj: RateComment, ctx?: any): Promise<number>;
+  remove(commentId: string, id: string, author: string): Promise<number>;
 }
 
 export interface RateCommentService extends Service<RateComment, string, RateCommentFilter> {
 }
-
 
 export const rateModel: Attributes = {
   id: {
@@ -126,7 +123,7 @@ export interface Info {
   viewCount: number;
 }
 
-export interface InfoRepository extends Repository<Info, string> {
+export interface InfoRepository extends ViewRepository<Info, string> {
   save(obj: Info, ctx?: any): Promise<number>;
 }
 
@@ -141,6 +138,12 @@ export interface RateComment {
   id: string;
   author: string;
   userId: string;
+  comment: string;
+  time: Date;
+  updatedAt?: Date;
+  history?: ShortComment;
+}
+export interface ShortComment {
   comment: string;
   time: Date;
 }

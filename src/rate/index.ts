@@ -18,9 +18,9 @@ export function useRateService(db: DB, mapper?: TemplateMap): RateService {
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
   const repository = new SqlRateRepository(db, 'rates', rateModel, buildToSave);
   const infoRepository = new SqlInfoRepository(db, 'info', infoModel, buildToSave);
-  const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'id', 'author', 'usefulCount');
+  const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'usefulCount', 'author', 'id');
 
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, buildToSave);
+  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
   return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
@@ -31,7 +31,7 @@ export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateC
 export function useRateCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
   const query = useQuery('ratecomment', mapper, rateCommentModel, true);
   const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, query);
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, buildToSave);
+  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
   return new RateCommentManager(builder.search, rateCommentRepository);
 }
 

@@ -84,10 +84,8 @@ export interface Repository<T, ID> extends ViewRepository<T, ID> {
 export interface RateRepository extends Repository<Rate, RateId> {
   save(obj: Rate, ctx?: any): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
-  increaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
-  decreaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
 }
-export interface InfoRepository extends Repository<Info, string> {
+export interface InfoRepository extends ViewRepository<Info, string> {
   save(obj: Info, ctx?: any): Promise<number>;
 }
 export interface RateReaction {
@@ -108,7 +106,13 @@ export interface RateComment {
   userId: string;
   comment: string;
   time: Date;
+  updatedAt?: Date;
+  history?: ShortComment;
+}
+export interface ShortComment {
+  comment: string;
+  time: Date;
 }
 export interface RateCommentRepository extends Repository<RateComment, string> {
-  // save(obj: RateComment, ctx?: any): Promise<number>;
+  remove(commentId: string, id: string, author: string): Promise<number>;
 }

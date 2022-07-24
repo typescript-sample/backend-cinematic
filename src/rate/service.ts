@@ -21,18 +21,6 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     this.updateComment = this.updateComment.bind(this);
     this.updateRate = this.updateRate.bind(this);
   }
-
-  getRate(id: string, author: string): Promise<Rate | null> {
-    return this.repository.getRate(id, author);
-  }
-
-  setUseful(id: string, author: string, userId: string): Promise<number> {
-    return this.rateReactionRepository.save(id, author, userId, 1);
-  }
-  removeUseful(id: string, author: string, userId: string): Promise<number> {
-    return this.rateReactionRepository.remove(id, author, userId);
-  }
-
   async rate(rate: Rate): Promise<boolean> {
     let info = await this.infoRepository.load(rate.id);
     if (!info) {
@@ -69,48 +57,49 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     await this.repository.save(rate);
     return true;
   }
-
-  async comment(comment: RateComment): Promise<boolean> {
-    const checkRate = await this.repository.getRate(comment.id, comment.author);
-    if (!checkRate) {
-      return false;
-    } else {
-      comment.time ? comment.time = comment.time : comment.time = new Date();
-      const wait = await this.rateCommentRepository.insert(comment);
-      await this.repository.increaseReplyCount(comment.id, comment.author);
-      return true;
-    }
+  getRate(id: string, author: string): Promise<Rate | null> {
+    return this.repository.getRate(id, author);
   }
 
-  removeComment(commentId: string, author: string, ctx?: any): Promise<number> {
-    return this.rateCommentRepository.load(commentId).then(exist => {
-      if (exist) {
-        return this.rateCommentRepository.delete(commentId).then(res => {
-          if (res > 0) {
-            return this.repository.decreaseReplyCount(exist.id, author);
-          } else {
-            return 0;
-          }
-        });
-      } else {
+  setUseful(id: string, author: string, userId: string): Promise<number> {
+    return this.rateReactionRepository.save(id, author, userId, 1);
+  }
+  removeUseful(id: string, author: string, userId: string): Promise<number> {
+    return this.rateReactionRepository.remove(id, author, userId);
+  }
+  comment(comment: RateComment): Promise<number> {
+    return this.repository.getRate(comment.id, comment.author).then(checkRate => {
+      if (!checkRate) {
         return 0;
+      } else {
+        comment.time ? comment.time = comment.time : comment.time = new Date();
+        return this.rateCommentRepository.insert(comment);
       }
     });
   }
-
+  removeComment(commentId: string, userId: string): Promise<number> {
+    return this.rateCommentRepository.load(commentId).then(comment => {
+      if (comment) {
+        if (userId === comment.author || userId === comment.userId) {
+          return this.rateCommentRepository.remove(commentId, comment.id, comment.author);
+        } else {
+          return -2;
+        }
+      } else {
+        return -1;
+      }
+    });
+  }
   updateComment(comment: RateComment): Promise<number> {
     return this.rateCommentRepository.load(comment.commentId).then(exist => {
       if (!exist) {
         return 0;
       } else {
-        const commentId = exist.commentId;
-        comment.commentId = commentId;
-        comment.time ? comment.time = comment.time : comment.time = new Date();
+        comment.updatedAt = new Date();
         return this.rateCommentRepository.update(comment);
       }
     });
   }
-
   updateRate(rate: Rate): Promise<number> {
     return this.repository.getRate(rate.id, rate.author).then(exist => {
       if (exist) {
@@ -122,16 +111,6 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     });
   }
 }
-/*
-export function useRateService(db: DB, buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, rateQuery: Query): RateService {
-  const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, rateQuery);
-  const repository = new SqlRateRepository(db, 'rates', rateModel, buildToSave);
-  const infoRepository = new SqlInfoRepository(db, 'info', infoModel, buildToSave);
-  const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, buildToSave);
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, buildToSave);
-  return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
-}
-*/
 // tslint:disable-next-line:max-classes-per-file
 export class RateCommentManager extends Manager<RateComment, string, RateCommentFilter> implements RateCommentService {
   constructor(search: Search<RateComment, RateCommentFilter>,
@@ -139,10 +118,3 @@ export class RateCommentManager extends Manager<RateComment, string, RateComment
     super(search, replyRepository);
   }
 }
-/*
-export function useRateCommentService(db: DB, buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, commentQuery: Query): RateCommentService {
-  const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, commentQuery);
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', attrs, buildToSave);
-  return new RateCommentManager(builder.search, rateCommentRepository);
-}
-*/
