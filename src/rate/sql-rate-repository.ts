@@ -1,9 +1,6 @@
 import { metadata, Repository } from 'query-core';
 import { Attributes, DB, Statement, StringMap } from 'query-core';
-import { Rate, RateId, RateRepository } from './core-query';
-import { Info, InfoRepository } from './core-query';
-import { RateComment, RateCommentRepository} from './core-query';
-import { RateReaction, RateReactionRepository } from './core-query';
+import { Info, InfoRepository, Rate, RateComment, RateCommentRepository, RateId, RateReaction, RateReactionRepository, RateRepository } from './core-query';
 
 export * from './core-query';
 

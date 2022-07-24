@@ -1,38 +1,10 @@
-import { Attributes, Manager, Search, Statement, StringMap } from './core';
+import { Manager, Search } from './core';
 import {
   InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId,
   RateReaction, RateReactionRepository, RateRepository, RateService
 } from './rate';
 export * from './rate';
 
-export type LikeType = 'like' | 'ilike';
-export type Query = <S>(filter: S, bparam: LikeType | ((i: number) => string), sn?: string, buildSort?: (sort?: string, map?: Attributes | StringMap) => string, attrs?: Attributes) => Statement | undefined;
-export interface Parameter {
-  name: string;
-  type: string;
-}
-export interface StringFormat {
-  texts: string[];
-  parameters: Parameter[];
-}
-export interface Template {
-  name?: string | null;
-  text: string;
-  templates: TemplateNode[];
-}
-export interface TemplateNode {
-  type: string;
-  text: string;
-  property: string | null;
-  encode?: string | null;
-  value: string | null;
-  format: StringFormat;
-  array?: string | null;
-  separator?: string | null;
-  suffix?: string | null;
-  prefix?: string | null;
-}
-export type TemplateMap = Map<string, Template>;
 export class RateManager extends Manager<Rate, RateId, RateFilter> implements RateService {
   constructor(search: Search<Rate, RateFilter>,
     public repository: RateRepository,
