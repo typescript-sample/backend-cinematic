@@ -49,7 +49,7 @@ export interface RateReactionRepository {
 }
 
 export interface RateCommentRepository extends Repository<RateComment, string> {
-  save(obj: RateComment, ctx?: any): Promise<number>;
+  // save(obj: RateComment, ctx?: any): Promise<number>;
 }
 
 export interface RateCommentService extends Service<RateComment, string, RateCommentFilter> {

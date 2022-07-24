@@ -110,5 +110,5 @@ export interface RateComment {
   time: Date;
 }
 export interface RateCommentRepository extends Repository<RateComment, string> {
-  save(obj: RateComment, ctx?: any): Promise<number>;
+  // save(obj: RateComment, ctx?: any): Promise<number>;
 }

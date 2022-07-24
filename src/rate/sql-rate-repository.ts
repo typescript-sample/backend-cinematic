@@ -41,15 +41,6 @@ export class SqlInfoRepository extends Repository<Info, string> implements InfoR
 export class SqlRateCommentRepository extends Repository<RateComment, string> implements RateCommentRepository {
   constructor(db: DB, table: string, attrs: Attributes, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
     super(db, table, attrs);
-    this.save = this.save.bind(this);
-  }
-  save(obj: RateComment, ctx?: any): Promise<number> {
-    const stmt = this.buildToSave(obj, this.table, this.attributes);
-    if (stmt) {
-      return this.exec(stmt.query, stmt.params, ctx);
-    } else {
-      return Promise.resolve(0);
-    }
   }
 }
 // tslint:disable-next-line:max-classes-per-file
