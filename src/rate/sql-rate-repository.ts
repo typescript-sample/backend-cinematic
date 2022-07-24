@@ -1,13 +1,15 @@
 import { metadata, Repository } from 'query-core';
-import { Attributes, DB, Statement, StringMap } from './core';
-import { Rate, RateId, rateModel, RateRepository } from './rate';
-import { Info, infoModel, InfoRepository } from './rate';
-import { RateComment, rateCommentModel, RateCommentRepository} from './rate';
-import { RateReaction, RateReactionRepository } from './rate';
+import { Attributes, DB, Statement, StringMap } from 'query-core';
+import { Rate, RateId, RateRepository } from './core-query';
+import { Info, InfoRepository } from './core-query';
+import { RateComment, RateCommentRepository} from './core-query';
+import { RateReaction, RateReactionRepository } from './core-query';
+
+export * from './core-query';
 
 export class SqlInfoRepository extends Repository<Info, string> implements InfoRepository {
-  constructor(db: DB, table: string, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
-    super(db, table, infoModel);
+  constructor(db: DB, table: string, attributes: Attributes, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
+    super(db, table, attributes);
     this.save = this.save.bind(this);
   }
   async save(obj: Info, ctx?: any): Promise<number> {
@@ -21,14 +23,13 @@ export class SqlInfoRepository extends Repository<Info, string> implements InfoR
 }
 // tslint:disable-next-line:max-classes-per-file
 export class SqlRateCommentRepository extends Repository<RateComment, string> implements RateCommentRepository {
-  constructor(db: DB, table: string, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
-    super(db, table, rateCommentModel);
+  constructor(db: DB, table: string, attrs: Attributes, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
+    super(db, table, attrs);
     this.save = this.save.bind(this);
   }
   save(obj: RateComment, ctx?: any): Promise<number> {
     const stmt = this.buildToSave(obj, this.table, this.attributes);
     if (stmt) {
-      console.log(stmt.query);
       return this.exec(stmt.query, stmt.params, ctx);
     } else {
       return Promise.resolve(0);
@@ -66,8 +67,8 @@ export class SqlRateReactionRepository implements RateReactionRepository {
 
 // tslint:disable-next-line:max-classes-per-file
 export class SqlRateRepository extends Repository<Rate, RateId> implements RateRepository {
-  constructor(db: DB, table: string, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
-    super(db, table, rateModel);
+  constructor(db: DB, table: string, attributes: Attributes, protected buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined) {
+    super(db, table, attributes);
     this.save = this.save.bind(this);
     this.getRate = this.getRate.bind(this);
     this.increaseUsefulCount = this.increaseUsefulCount.bind(this);
@@ -83,7 +84,6 @@ export class SqlRateRepository extends Repository<Rate, RateId> implements RateR
   save(obj: Rate, ctx?: any): Promise<number> {
     const stmt = this.buildToSave(obj, this.table, this.attributes);
     if (stmt) {
-      console.log(stmt.query);
       return this.exec(stmt.query, stmt.params, ctx);
     } else {
       return Promise.resolve(0);

@@ -1,10 +1,8 @@
-import { SearchBuilder } from 'query-core';
-import { Attributes, DB, Manager, Search, Statement, StringMap } from './core';
+import { Attributes, Manager, Search, Statement, StringMap } from './core';
 import {
-  InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentRepository, RateCommentService, RateFilter, RateId, rateModel,
-  RateReaction, rateReactionModel, RateReactionRepository, RateRepository, RateService
+  InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId,
+  RateReaction, RateReactionRepository, RateRepository, RateService
 } from './rate';
-import { SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from './sql-rate-repository';
 export * from './rate';
 
 export type LikeType = 'like' | 'ilike';
@@ -178,16 +176,16 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     });
   }
 }
-
+/*
 export function useRateService(db: DB, buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, rateQuery: Query): RateService {
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, rateQuery);
-  const repository = new SqlRateRepository(db, 'rates', buildToSave);
-  const infoRepository = new SqlInfoRepository(db, 'info', buildToSave);
+  const repository = new SqlRateRepository(db, 'rates', rateModel, buildToSave);
+  const infoRepository = new SqlInfoRepository(db, 'info', infoModel, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, buildToSave);
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', buildToSave);
+  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, buildToSave);
   return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
-
+*/
 // tslint:disable-next-line:max-classes-per-file
 export class RateCommentManager extends Manager<RateComment, string, RateCommentFilter> implements RateCommentService {
   constructor(search: Search<RateComment, RateCommentFilter>,
@@ -195,9 +193,10 @@ export class RateCommentManager extends Manager<RateComment, string, RateComment
     super(search, replyRepository);
   }
 }
-
+/*
 export function useRateCommentService(db: DB, buildToSave: <T>(obj: T, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, commentQuery: Query): RateCommentService {
   const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, commentQuery);
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', buildToSave);
+  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', attrs, buildToSave);
   return new RateCommentManager(builder.search, rateCommentRepository);
 }
+*/

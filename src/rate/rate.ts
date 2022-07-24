@@ -61,6 +61,7 @@ export interface RateCommentRepository extends Repository<RateComment, string> {
 export interface RateCommentService extends Service<RateComment, string, RateCommentFilter> {
 }
 
+
 export const rateModel: Attributes = {
   id: {
     key: true,
@@ -93,64 +94,6 @@ export const rateModel: Attributes = {
   }
 };
 
-export interface RateReactionId {
-  id: string;
-  author: string;
-  userId: string;
-}
-
-export interface RateReaction {
-  id: string;
-  author: string;
-  userId: string;
-  time: Date;
-  reaction: number;
-}
-
-export interface RateReactionFilter extends Filter {
-  id?: string;
-  author?: string;
-  userId?: string;
-  time?: Date;
-  reaction?: number;
-}
-
-export const rateReactionModel: Attributes = {
-  id: {
-    key: true,
-    required: true
-  },
-  author: {
-    key: true,
-    required: true
-  },
-  userId: {
-    key: true,
-    required: true
-  },
-  time: {
-    type: 'datetime',
-  },
-  reaction: {
-    type: 'integer',
-  }
-};
-
-export interface Info {
-  id: string;
-  rate: number;
-  rate1: number;
-  rate2: number;
-  rate3: number;
-  rate4: number;
-  rate5: number;
-  viewCount: number;
-}
-
-export interface InfoRepository extends Repository<Info, string> {
-  save(obj: Info, ctx?: any): Promise<number>;
-}
-
 export const infoModel: Attributes = {
   id: {
     key: true,
@@ -177,6 +120,42 @@ export const infoModel: Attributes = {
     type: 'number',
   },
 };
+export interface RateReactionId {
+  id: string;
+  author: string;
+  userId: string;
+}
+
+export interface RateReaction {
+  id: string;
+  author: string;
+  userId: string;
+  time: Date;
+  reaction: number;
+}
+
+export interface RateReactionFilter extends Filter {
+  id?: string;
+  author?: string;
+  userId?: string;
+  time?: Date;
+  reaction?: number;
+}
+
+export interface Info {
+  id: string;
+  rate: number;
+  rate1: number;
+  rate2: number;
+  rate3: number;
+  rate4: number;
+  rate5: number;
+  viewCount: number;
+}
+
+export interface InfoRepository extends Repository<Info, string> {
+  save(obj: Info, ctx?: any): Promise<number>;
+}
 
 export interface RateCommentId {
   id: string;
@@ -201,7 +180,6 @@ export interface RateCommentFilter extends Filter {
   comment?: string;
   time?: Date;
 }
-
 export const rateCommentModel: Attributes = {
   commentId: {
     key: true
@@ -218,9 +196,10 @@ export const rateCommentModel: Attributes = {
     required: true,
     match: 'equal'
   },
-  comment: {},
+  comment: {
+    length: 500
+  },
   time: {
     type: 'datetime'
   }
 };
-
