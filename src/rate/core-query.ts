@@ -107,7 +107,7 @@ export interface RateComment {
   comment: string;
   time: Date;
   updatedAt?: Date;
-  history?: ShortComment;
+  histories?: ShortComment[];
 }
 export interface ShortComment {
   comment: string;
