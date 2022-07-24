@@ -18,7 +18,7 @@ export function useRateService(db: DB, mapper?: TemplateMap): RateService {
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
   const repository = new SqlRateRepository(db, 'rates', rateModel, buildToSave);
   const infoRepository = new SqlInfoRepository(db, 'info', infoModel, buildToSave);
-  const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, buildToSave);
+  const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'id', 'author', 'usefulCount');
 
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, buildToSave);
   return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);

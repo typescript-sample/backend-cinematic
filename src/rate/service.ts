@@ -1,7 +1,7 @@
 import { Manager, Search } from './core';
 import {
   InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId,
-  RateReaction, RateReactionRepository, RateRepository, RateService
+  RateReactionRepository, RateRepository, RateService
 } from './rate';
 export * from './rate';
 
@@ -27,36 +27,10 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
   }
 
   setUseful(id: string, author: string, userId: string): Promise<number> {
-    return this.rateReactionRepository.getUseful(id, author, userId).then(exist => {
-      if (exist) {
-        return 0;
-      } else {
-        const useful: RateReaction = { id, userId, author, time: new Date(), reaction: 1 };
-        return this.rateReactionRepository.save(useful).then(res => {
-          if (res > 0) {
-            return this.repository.increaseUsefulCount(id, author);
-          } else {
-            return 0;
-          }
-        });
-      }
-    });
+    return this.rateReactionRepository.save(id, author, userId, 1);
   }
-
   removeUseful(id: string, author: string, userId: string): Promise<number> {
-    return this.rateReactionRepository.getUseful(id, author, userId).then(exist => {
-      if (exist) {
-        return this.rateReactionRepository.removeUseful(id, author, userId).then(res => {
-          if (res > 0) {
-            return this.repository.decreaseUsefulCount(id, author);
-          } else {
-            return 0;
-          }
-        });
-      } else {
-        return 0;
-      }
-    });
+    return this.rateReactionRepository.remove(id, author, userId);
   }
 
   async rate(rate: Rate): Promise<boolean> {
@@ -141,7 +115,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     return this.repository.getRate(rate.id, rate.author).then(exist => {
       if (exist) {
         rate.time ? rate.time = rate.time : rate.time = new Date();
-        return this.repository.save(rate);
+        return this.repository.update(rate);
       } else {
         return 0;
       }

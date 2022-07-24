@@ -28,8 +28,6 @@ export interface RateFilter extends Filter {
 export interface RateRepository extends Repository<Rate, RateId> {
   save(obj: Rate, ctx?: any): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
-  increaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
-  decreaseUsefulCount(id: string, author: string, ctx?: any): Promise<number>;
   increaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
   decreaseReplyCount(id: string, author: string, ctx?: any): Promise<number>;
 }
@@ -46,12 +44,8 @@ export interface RateService extends Service<Rate, RateId, RateFilter> {
 }
 
 export interface RateReactionRepository {
-  getUseful(id: string, author: string, userId: string): Promise<RateReaction | null>;
-  removeUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
-  save(obj: RateReaction, ctx?: any): Promise<number>;
-}
-
-export interface RateReactionService extends Service<RateReaction, RateReactionId, RateReactionFilter> {
+  remove(id: string, author: string, userId: string, ctx?: any): Promise<number>;
+  save(id: string, author: string, userId: string, type: number): Promise<number>;
 }
 
 export interface RateCommentRepository extends Repository<RateComment, string> {
@@ -120,27 +114,6 @@ export const infoModel: Attributes = {
     type: 'number',
   },
 };
-export interface RateReactionId {
-  id: string;
-  author: string;
-  userId: string;
-}
-
-export interface RateReaction {
-  id: string;
-  author: string;
-  userId: string;
-  time: Date;
-  reaction: number;
-}
-
-export interface RateReactionFilter extends Filter {
-  id?: string;
-  author?: string;
-  userId?: string;
-  time?: Date;
-  reaction?: number;
-}
 
 export interface Info {
   id: string;
