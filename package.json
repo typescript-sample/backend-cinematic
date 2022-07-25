@@ -32,7 +32,7 @@
     "pg": "^8.7.3",
     "pg-core": "^0.1.15",
     "pg-extension": "^0.1.1",
-    "query-core": "^0.1.18",
+    "query-core": "^0.1.22",
     "query-mappers": "0.0.3",
     "security-express": "^0.1.4",
     "ts-node-dev": "^2.0.0",
