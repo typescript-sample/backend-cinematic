@@ -156,6 +156,14 @@ export interface RateCommentFilter extends Filter {
   comment?: string;
   time?: Date;
 }
+export const commentModel: Attributes = {
+  comment: {
+    length: 500
+  },
+  time: {
+    type: 'datetime'
+  }
+};
 export const rateCommentModel: Attributes = {
   commentId: {
     key: true
@@ -177,5 +185,12 @@ export const rateCommentModel: Attributes = {
   },
   time: {
     type: 'datetime'
+  },
+  updatedAt: {
+    type: 'datetime'
+  },
+  histories: {
+    type: 'array',
+    typeof: commentModel
   }
 };

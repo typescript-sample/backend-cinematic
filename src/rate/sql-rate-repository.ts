@@ -123,15 +123,16 @@ export class SqlRateReactionRepository implements RateReactionRepository {
     const stmt = buildToInsert(obj, this.table, this.attributes, this.db.param);
     if (stmt) {
       return this.exist(id, author, userId).then(ok => {
-        if (ok) {
+        if (ok === false) {         
           const query = `update ${this.parent} set ${this.col} = ${this.col} + 1 where ${this.id} = ${this.db.param(1)} and ${this.author} = ${this.db.param(2)}`;
           const s2: Statement = {query, params: [id, author]};
-          return this.db.execBatch([stmt, s2]);
+          const res = this.db.execBatch([stmt, s2]); 
+          return res
         } else {
           return Promise.resolve(0);
         }
       });
-    } else {
+    } else { 
       return Promise.resolve(0);
     }
   }
