@@ -92,18 +92,19 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     });
   }
   updateComment(comment: RateComment): Promise<number> {
-    return this.rateCommentRepository.load(comment.commentId).then(exist => {
+    return this.rateCommentRepository.load(comment.commentId).then(exist => {      
       if (!exist) {
         return 0;
       } else {
-        comment.updatedAt = new Date();
-        const c: ShortComment = {comment: exist.comment, time: exist.time};
-        if (!comment.histories || comment.histories.length === 0) {
-          comment.histories = [c];
+        exist.updatedAt = new Date();
+        exist.comment = comment.comment;
+        const c: ShortComment = { comment: exist.comment, time: exist.time };        
+        if (exist.histories && exist.histories.length > 0) {
+          exist.histories.push(c);
         } else {
-          comment.histories.push(c);
+          exist.histories = [c];
         }
-        return this.rateCommentRepository.update(comment);
+        return this.rateCommentRepository.update(exist);
       }
     });
   }

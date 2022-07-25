@@ -194,9 +194,11 @@ CREATE TABLE rate_comments(
   commentid serial,
   id varchar(255),
   author varchar(255),
-  userId varchar(255),
+  userid varchar(255),
   comment text,
   time timestamp,
+  updatedat timestamp,
+  histories jsonb[],
   primary key(commentid)
 );
 

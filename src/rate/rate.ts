@@ -155,6 +155,8 @@ export interface RateCommentFilter extends Filter {
   userId?: string;
   comment?: string;
   time?: Date;
+  updatedAt?: Date;
+  histories?: ShortComment[];
 }
 export const commentModel: Attributes = {
   comment: {
@@ -170,21 +172,25 @@ export const rateCommentModel: Attributes = {
   },
   id: {
     required: true,
+    noupdate: true,
     match: 'equal'
   },
   author: {
     required: true,
+    noupdate: true,
     match: 'equal'
   },
   userId: {
     required: true,
+    noupdate: true,
     match: 'equal'
   },
   comment: {
     length: 500
   },
   time: {
-    type: 'datetime'
+    type: 'datetime',
+    noupdate: true,
   },
   updatedAt: {
     type: 'datetime'
