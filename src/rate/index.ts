@@ -19,7 +19,7 @@ export { RateController };
 export { RateCommentController };
 
 export class RateManager extends Manager<Rate, RateId, RateFilter> implements RateService {
-  constructor(search: Search<Rate, RateFilter>, public rateCommentSearch: Search<RateComment, RateCommentFilter>,
+  constructor(search: Search<Rate, RateFilter>,
     public repository: RateRepository,
     private infoRepository: InfoRepository,
     private rateCommentRepository: RateCommentRepository,
@@ -169,11 +169,8 @@ export function useRateService(db: DB, mapper?: TemplateMap): RateService {
   const repository = new SqlRateRepository(db, 'rates', buildToSave);
   const infoRepository = new SqlInfoRepository(db, 'info', buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, buildToSave);
-
-  const queryRateComment = useQuery('ratecomment', mapper, rateCommentModel, true);
-  const builderRateComment = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, queryRateComment);
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', buildToSave);
-  return new RateManager(builder.search, builderRateComment.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
+  return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
 export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {

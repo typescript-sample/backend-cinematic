@@ -1,5 +1,5 @@
 import { Attributes, Filter, SearchResult, Service } from 'onecore';
-import { Repository } from 'query-core';
+import { Repository, SearchService } from 'query-core';
 
 export interface RateId {
   id: string;
@@ -59,7 +59,7 @@ export interface RateCommentRepository extends Repository<RateComment, string> {
   save(obj: RateComment, ctx?: any): Promise<number>;
 }
 
-export interface RateCommentService extends Service<RateComment, string, RateCommentFilter> {
+export interface RateCommentService extends Service<RateComment,string,RateCommentFilter> {
 }
 
 export const rateModel: Attributes = {

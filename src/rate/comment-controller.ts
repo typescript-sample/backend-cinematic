@@ -6,3 +6,4 @@ export class RateCommentController extends Controller<RateComment, string, RateC
     super(log, rateCommentService);
   }
 }
+
