@@ -2,7 +2,7 @@ import { ShortComment } from 'rate';
 import { Manager, Search } from './core';
 import {
   InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId,
-  RateReactionRepository, RateRepository, RateService
+  RateReactionRepository, RateRepository, RateService, ShortRate
 } from './rate';
 export * from './rate';
 
@@ -23,6 +23,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     this.updateRate = this.updateRate.bind(this);
   }
   async rate(rate: Rate): Promise<boolean> {
+    rate.time = new Date();
     let info = await this.infoRepository.load(rate.id);
     if (!info) {
       info = {
@@ -37,7 +38,18 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
       };
     }
     const exist = await this.repository.getRate(rate.id, rate.author);
-    const r = (exist ? exist.rate : 0);
+    let r = 0;
+    if (exist) {
+      r = exist.rate;
+      const sr: ShortRate = {review: exist.review, rate: exist.rate, time: exist.time};
+      if (exist.histories && exist.histories.length > 0) {
+        const history = exist.histories;
+        history.push(sr);
+        rate.histories = history;
+      } else {
+        rate.histories = [sr];
+      }
+    }
     (info as any)['rate' + rate.rate?.toString()] += 1;
     const sumRate = info.rate1 +
       info.rate2 * 2 +

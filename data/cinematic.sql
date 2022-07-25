@@ -168,6 +168,7 @@ CREATE TABLE rates(
   review text,
   usefulcount integer default 0,
   replycount integer default 0,
+  histories jsonb[],
   primary key(id, author)
 )
 

@@ -13,8 +13,13 @@ export interface Rate {
   review: string;
   usefulCount: number;
   replyCount: number;
+  histories?: ShortRate[];
 }
-
+export interface ShortRate {
+  rate: number;
+  time: Date;
+  review: string;
+}
 export interface RateFilter extends Filter {
   id?: string;
   author?: string;
@@ -52,7 +57,16 @@ export interface RateCommentRepository extends Repository<RateComment, string> {
 
 export interface RateCommentService extends Service<RateComment,string,RateCommentFilter> {
 }
-
+export const rateHistoryModel: Attributes = {
+  rate: {
+    type: 'integer'
+  },
+  time: {
+    type: 'datetime',
+  },
+  review: {
+  },
+};
 export const rateModel: Attributes = {
   id: {
     key: true,
@@ -82,6 +96,10 @@ export const rateModel: Attributes = {
   replyCount: {
     type: 'integer',
     min: 0
+  },
+  histories: {
+    type: 'array',
+    typeof: rateHistoryModel
   }
 };
 
