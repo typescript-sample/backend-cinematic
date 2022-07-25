@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { Controller, getStatusCode, handleError, Log } from 'express-ext';
 import { Validator } from 'onecore';
 import { createValidator } from 'xvalidators';
-import { Rate, RateComment, rateCommentModel, RateFilter, RateId, rateModel, RateService } from './rate';
+import { Rate, RateComment, rateCommentModel, RateFilter, RateId, rateModel, RateService } from 'rate5';
 
 export class RateController extends Controller<Rate, RateId, RateFilter> {
   validator: Validator<Rate>;

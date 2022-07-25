@@ -35,6 +35,7 @@
     "query-core": "^0.1.22",
     "query-mappers": "0.0.3",
     "rate-query": "^0.0.2",
+    "rate5": "^0.0.1",
     "security-express": "^0.1.4",
     "ts-node-dev": "^2.0.0",
     "types-validation": "^0.0.2",
