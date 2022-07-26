@@ -8,8 +8,12 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
   validator: Validator<Rate>;
   rateCommentValidator: Validator<RateComment>;
 
-  constructor(log: Log, protected rateService: RateService) {
+  constructor(log: Log, protected rateService: RateService, private generate: () => string, commentId: string, userId: string, author: string, id: string) {
     super(log, rateService);
+    this.id = (id && id.length > 0 ? 'id' : id);
+    this.author = (author && author.length > 0 ? 'author' : author);
+    this.userId = (userId && userId.length > 0 ? 'userId' : userId);
+    this.commentId = (commentId && commentId.length > 0 ? 'commentId' : commentId);
     this.load = this.load.bind(this);
     this.update = this.update.bind(this);
     this.rate = this.rate.bind(this);
@@ -23,16 +27,19 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
     this.validator = createValidator<Rate>(rateModel);
     this.rateCommentValidator = createValidator<RateComment>(rateCommentModel);
   }
+  protected id: string;
+  protected author: string;
+  protected userId: string;
+  protected commentId: string;
 
   load(req: Request, res: Response) {
-    const id = req.params.id;
-    const author = req.params.author;
-    const rateId: RateId = { id, author };
-    this.rateService.load(rateId).then(rates => {
-      if (rates) {
-        return res.status(200).json(rates).end();
+    const id = req.params[this.id];
+    const author = req.params[this.author];
+    this.rateService.getRate(id, author).then(rate => {
+      if (rate) {
+        return res.status(200).json(rate).end();
       } else {
-        return res.status(200).json({}).end();
+        return res.status(401).json(null).end();
       }
     }).catch(err => handleError(err, res, this.log));
   }
@@ -56,27 +63,27 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
     const author = req.params.author;
     const userId = req.params.userid;
     console.log(req.params);
-    
-    
+  
     this.rateService.setUseful(id, author, userId).then(rs => {
       return res.status(200).json(rs).end();
     }).catch(err => handleError(err, res, this.log));
   }
 
   removeUseful(req: Request, res: Response) {
-    const id = req.params.id;
-    const author = req.params.author;
-    const userId = req.params.userid;
+    const id = req.params[this.id];
+    const author = req.params[this.author];
+    const userId = req.params[this.userId];
     this.rateService.removeUseful(id, author, userId).then(rs => {
       return res.status(200).json(rs).end();
     }).catch(err => handleError(err, res, this.log));
   }
 
   comment(req: Request, res: Response) {
-    const id = req.params.id;
-    const author = req.params.author;
-    const userId = req.params.userid;
-    const comment: RateComment = { id, author, userId, ...req.body };
+    const id = req.params[this.id];
+    const author = req.params[this.author];
+    const userId = req.params[this.userId];
+    const commentId = this.generate();
+    const comment: RateComment = { commentId, id, author, userId, ...req.body };
     this.rateCommentValidator.validate(comment).then(errors => {
       if (errors && errors.length > 0) {
         res.status(getStatusCode(errors)).json(errors).end();
@@ -89,18 +96,18 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
   }
 
   removeComment(req: Request, res: Response) {
-    const commentId = req.params.commentid;
-    const author = req.params.author;
+    const commentId = req.params[this.commentId];
+    const author = req.params[this.author];
     this.rateService.removeComment(commentId, author).then(reply => {
       return res.status(200).json(reply).end();
     }).catch(err => handleError(err, res, this.log));
   }
 
   updateComment(req: Request, res: Response) {
-    const commentId = req.params.commentid;
-    const id = req.params.id;
-    const author = req.params.author;
-    const userId = req.params.userid;
+    const id = req.params[this.id];
+    const author = req.params[this.author];
+    const userId = req.params[this.userId];
+    const commentId = req.params[this.commentId];
     const comment: RateComment = {commentId, id, author, userId, ...req.body };
     this.rateCommentValidator.validate(comment).then(errors => {
       if (errors && errors.length > 0) {
