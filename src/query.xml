@@ -85,7 +85,7 @@
     from cinema
     where
     <if test="id != null">
-      id = (#{id}) and
+      id = #{id} and
     </if>
     <if test="name != null">
       name ilike #{name} and

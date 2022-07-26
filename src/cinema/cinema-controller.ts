@@ -20,6 +20,4 @@ export class CinemaController extends Controller<Cinema, string, CinemaFilter> {
         .catch(err => handleError(err, res, this.log));
     }
   }
-
-  
 }
