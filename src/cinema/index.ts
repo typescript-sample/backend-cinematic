@@ -1,6 +1,7 @@
 import { Log, Manager, Search } from 'onecore';
 import { DB, SearchBuilder } from 'query-core';
 import { buildToSave } from 'pg-extension';
+import shortid from 'shortid';
 import { TemplateMap, useQuery } from 'query-mappers';
 import {
   Info, infoModel, InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentService, RateFilter,
@@ -64,7 +65,7 @@ export function useCinemaRateService(db: DB, mapper?: TemplateMap): RateService 
 }
 
 export function useCinemaRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {
-  return new RateController(log, useCinemaRateService(db, mapper));
+  return new RateController(log, useCinemaRateService(db, mapper), generate, 'commentId', 'userId', 'author', 'id');
 }
 
 export function useCinemaRateCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
@@ -76,4 +77,7 @@ export function useCinemaRateCommentService(db: DB, mapper?: TemplateMap): RateC
 
 export function useRateCommentController(log: Log, db: DB, mapper?: TemplateMap): RateCommentController {
   return new RateCommentController(log, useCinemaRateCommentService(db, mapper));
+}
+export function generate(): string {
+  return shortid.generate();
 }
