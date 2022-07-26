@@ -34,11 +34,12 @@ export interface RateFilmsFilter extends Filter {
 }
 
 export interface RateFilmsRepository extends Repository<RateFilms, RateFilmId> {
-
 }
 
 export interface RateFilmsService extends Service<RateFilms, RateFilmId, RateFilmsFilter> {
+}
 
+export interface InfoRepository extends ViewRepository<RateFilmsInfo, string> {
 }
 
 export const rateFilmHistoriesModel: Attributes = {
@@ -89,9 +90,23 @@ export const rateFilmsModel: Attributes = {
     }
 }
 
-export interface Rate
+export interface RateFilmsInfo {
+    id: string;
+    rate: number;
+    rate1: number;
+    rate2: number;
+    rate3: number;
+    rate4: number;
+    rate5: number;
+    rate6: number;
+    rate7: number;
+    rate8: number;
+    rate9: number;
+    rate10: number;
+    viewCount: number;
+}
 
-export const rateInfoFilmsModel: Attributes = {
+export const rateFilmsInfoModel: Attributes = {
     id: {
         key: true,
     },

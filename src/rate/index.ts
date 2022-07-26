@@ -2,7 +2,7 @@ import { Log } from 'express-ext';
 import { buildToSave } from 'pg-extension';
 import { DB, SearchBuilder } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
-import { infoModel, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentService, RateFilter, RateCommentManager, RateManager, rateModel, RateService } from 'rate5';
+import { Info, infoModel, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentService, RateFilter, RateCommentManager, RateManager, rateModel, RateService } from 'rate5';
 import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from 'rate-query';
 import { RateCommentController } from './comment-controller';
 import { RateController } from './rate-controller';
@@ -15,7 +15,7 @@ export function useRateService(db: DB, mapper?: TemplateMap): RateService {
   const query = useQuery('rates', mapper, rateModel, true);
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
   const repository = new SqlRateRepository(db, 'rates', rateModel, buildToSave);
-  const infoRepository = new SqlInfoRepository(db, 'info', infoModel, buildToSave);
+  const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'usefulCount', 'author', 'id');
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
   return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);

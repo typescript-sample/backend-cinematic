@@ -115,6 +115,20 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   // const readCinema = ctx.authorize('cinema', read);
   // const writeCinema = ctx.authorize('cinema', write);
   // get(app, '/cinemaParent', readCinemaParent, ctx.cinemaParent.all, secure);
+  app.get('/cinema/comment/search', ctx.comment.search);
+  app.post('/cinema/comment/search', ctx.comment.search);
+  app.post('/cinema/rates', ctx.rate.rate);
+  app.get('/cinema/rates/search', ctx.rate.search);
+  app.post('/cinema/rates/search', ctx.rate.search);
+  app.get('/cinema/rates/comment/search', ctx.comment.search);
+  app.post('/cinema/rates/comment/search', ctx.comment.search);
+  app.put('/cinema/rates/:id/:author', ctx.rate.updateRate);
+  app.get('/cinema/rates/:id/:author', ctx.rate.load);
+  app.post('/cinema/rates/useful/:id/:author/:userid', ctx.rate.setUseful);
+  app.delete('/cinema/rates/useful/:id/:author/:userid', ctx.rate.removeUseful);
+  app.post('/cinema/rates/comment/:id/:author/:userid', ctx.rate.comment);
+  app.delete('/cinema/rates/comment/:commentid/:author', ctx.rate.removeComment);
+  app.put('/cinema/rates/comment/:commentid/:id/:author/:userid', ctx.rate.updateComment);
 
   app.get('/cinema', ctx.cinema.all);
   app.post('/cinema', checkCinema, ctx.cinema.create);
@@ -124,21 +138,6 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.put('/cinema/:id', checkCinema, ctx.cinema.update);
   app.patch('/cinema/:id', checkCinema, ctx.cinema.patch);
   app.delete('/cinema/:id', checkCinema, ctx.cinema.delete);
-
-  app.get('/comment/search', ctx.comment.search);
-  app.post('/comment/search', ctx.comment.search);
-  app.post('/rates', ctx.rate.rate);
-  app.get('/rates/search', ctx.rate.search);
-  app.post('/rates/search', ctx.rate.search);
-  app.get('/rates/comment/search', ctx.comment.search);
-  app.post('/rates/comment/search', ctx.comment.search);
-  app.put('/rates/:id/:author', ctx.rate.updateRate);
-  app.get('/rates/:id/:author', ctx.rate.load);
-  app.post('/rates/useful/:id/:author/:userid', ctx.rate.setUseful);
-  app.delete('/rates/useful/:id/:author/:userid', ctx.rate.removeUseful);
-  app.post('/rates/comment/:id/:author/:userid', ctx.rate.comment);
-  app.delete('/rates/comment/:commentid/:author', ctx.rate.removeComment);
-  app.put('/rates/comment/:commentid/:id/:author/:userid', ctx.rate.updateComment);
 
   app.post('/appreciation/search', ctx.appreciation.search);
   app.post('/appreciation/reply/search', ctx.comment.search);

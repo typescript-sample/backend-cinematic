@@ -62,14 +62,11 @@ export interface CinemaRateFilter extends Filter {
 export interface CinemaRepository extends Repository<Cinema, string> { }
 
 export interface CinemaService extends Service<Cinema, string, CinemaFilter> {
-  // rate(rate: CinemaRate): Promise<boolean>;
 }
 
 export interface InfoRepository extends Repository<Info, string> { }
 
 export interface CinemaRateRepository extends Repository<CinemaRate, string> {
-  // search(rate: CinemaRateFilter): Promise<CinemaRate | null>;
-  // updateCinemaRate(rate: CinemaRateFilter): Promise<boolean>;
 }
 
 export interface CinemaRateService extends Service<CinemaRate, string, CinemaRateFilter> {
@@ -91,7 +88,6 @@ export const cinemaModel: Attributes = {
     length: 40
   },
   name: {
-    required: true,
     length: 255,
   },
   latitude: {

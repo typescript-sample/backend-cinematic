@@ -2,7 +2,7 @@ import { Storage } from '@google-cloud/storage';
 import { AuthenticationController, PrivilegeController } from 'authen-express';
 import { initializeStatus, PrivilegeRepository, PrivilegesReader, SqlAuthConfig, useAuthenticator, User, useUserRepository } from 'authen-service';
 import { CategoryController } from 'category/category-controller';
-import { CinemaRateController } from 'cinema/cinema-rate-controller';
+//import { CinemaRateController } from 'cinema/cinema-rate-controller';
 import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources } from 'express-ext';
 import { GoogleStorageService, map, StorageConfig } from 'google-storage';
 import { buildJwtError, generate, Payload, verify } from 'jsonwebtoken-plus';
@@ -19,13 +19,13 @@ import { AppreciationController } from './appreciation/appreciation-controller';
 import { AppreciationReplyController } from './appreciation/reply-controller';
 import { AuditLogController, useAuditLogController } from './audit-log';
 import { useCategoryController } from './category';
-import { useCinemaController, useCinemaRateController } from './cinema';
+import { useCinemaController, useCinemaRateController, useRateCommentController } from './cinema';
 import { CinemaController } from './cinema/cinema-controller';
 import { CinemaParentController, useCinemaParentController } from './cinemaparent';
 import { useFilmController, useFilmRateController } from './film';
 import { FilmController } from './film/film-controller';
 import { FilmRateController } from './film/film-rate-controller';
-import { useRateCommentController, useRateController } from './rate';
+// import { useRateCommentController, useRateController } from './rate';
 import { RateCommentController } from './rate/comment-controller';
 import { RateController } from './rate/rate-controller';
 import { RoleController, useRoleController } from './role';
@@ -60,7 +60,7 @@ export interface Context {
   category: CategoryController;
   cinemaParent: CinemaParentController;
   cinema: CinemaController;
-  cinemaRate: CinemaRateController;
+  // cinemaRate: CinemaRateController;
   uploads: UploadController;
   rate: RateController;
   appreciation: AppreciationController;
@@ -113,8 +113,8 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const cinemaParent = useCinemaParentController(logger.error, db, mapper);
   const cinema = useCinemaController(logger.error, db, mapper);
   const cinemaRate = useCinemaRateController(logger.error, db, mapper);
-
-  const rate = useRateController(logger.error, db, mapper);
+  // const rate = useRateController(logger.error, db, mapper);
+  const rate = useCinemaRateController(logger.error, db, mapper);
   const appreciation = useAppreciationController(logger.error, db, mapper);
   const appreciationReply = useAppreciationReplyController(logger.error, db, mapper);
   const comment = useRateCommentController(logger.error, db, mapper);
@@ -127,5 +127,5 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const storageService = new GoogleStorageService(bucket, storageConfig, map);
   const uploadService = new SqlUploadSerive(pool, 'media', storageService.upload, storageService.delete, param, manager.query, manager.exec, manager.execBatch);
   const uploads = new UploadController(logger.error, uploadService);
-  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, filmRate, cinemaRate, rate, appreciation, appreciationReply, comment };
+  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, filmRate, rate, appreciation, appreciationReply, comment };
 }
