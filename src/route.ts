@@ -123,11 +123,11 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/cinema/rates/comment/search', ctx.comment.search);
   app.put('/cinema/rates/:id/:author', ctx.rate.updateRate);
   app.get('/cinema/rates/:id/:author', ctx.rate.load);
-  app.post('/cinema/rates/useful/:id/:author/:userid', ctx.rate.setUseful);
-  app.delete('/cinema/rates/useful/:id/:author/:userid', ctx.rate.removeUseful);
-  app.post('/cinema/rates/comment/:id/:author/:userid', ctx.rate.comment);
-  app.delete('/cinema/rates/comment/:commentid/:author', ctx.rate.removeComment);
-  app.put('/cinema/rates/comment/:commentid/:id/:author/:userid', ctx.rate.updateComment);
+  app.post('/cinema/rates/useful/:id/:author/:userId', ctx.rate.setUseful);
+  app.delete('/cinema/rates/useful/:id/:author/:userId', ctx.rate.removeUseful);
+  app.post('/cinema/rates/comment/:id/:author/:userId', ctx.rate.comment);
+  app.delete('/cinema/rates/comment/:commentId/:author', ctx.rate.removeComment);
+  app.put('/cinema/rates/comment/:commentId/:id/:author/:userId', ctx.rate.updateComment);
 
   app.post('/films/rates', ctx.rate.rate);
 
