@@ -10,28 +10,3 @@ import { RateController } from './rate-controller';
 export * from './rate-controller';
 export { RateController };
 export { RateCommentController };
-
-export function useRateService(db: DB, mapper?: TemplateMap): RateService {
-  const query = useQuery('rates', mapper, rateModel, true);
-  const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
-  const repository = new SqlRateRepository(db, 'rates', rateModel, buildToSave);
-  const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
-  const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'usefulCount', 'author', 'id');
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
-  return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
-}
-
-export function useRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {
-  return new RateController(log, useRateService(db, mapper));
-}
-
-export function useRateCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
-  const query = useQuery('ratecomment', mapper, rateCommentModel, true);
-  const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, query);
-  const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
-  return new RateCommentManager(builder.search, rateCommentRepository);
-}
-
-export function useRateCommentController(log: Log, db: DB, mapper?: TemplateMap): RateCommentController {
-  return new RateCommentController(log, useRateCommentService(db, mapper));
-}

@@ -2,7 +2,7 @@ import { Application } from 'express';
 import { check } from 'express-ext';
 import multer from 'multer';
 import { categoryModel } from './category/category';
-import { cinemaModel, cinemaRateModel } from './cinema/cinema';
+import { cinemaModel } from './cinema/cinema';
 import { Context } from './context';
 import { filmModel, filmRateModel } from './film/film';
 
@@ -47,7 +47,6 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   const checkCategory = check(categoryModel);
   const checkFilm = check(filmModel);
   const checkFilmRate = check(filmRateModel);
-  const checkCinemaRate = check(cinemaRateModel);
   const checkCinema = check(cinemaModel);
 
 
@@ -130,10 +129,13 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.delete('/cinema/rates/comment/:commentid/:author', ctx.rate.removeComment);
   app.put('/cinema/rates/comment/:commentid/:id/:author/:userid', ctx.rate.updateComment);
 
+  app.post('/films/rates', ctx.rate.rate);
+
+  app.get('/cinema/search', ctx.cinema.search);
+  app.post('/cinema/search', ctx.cinema.search);
   app.get('/cinema', ctx.cinema.all);
   app.post('/cinema', checkCinema, ctx.cinema.create);
-  app.get('/cinema/search', checkCinema, ctx.cinema.search);
-  app.post('/cinema/search', checkCinema, ctx.cinema.search);
+
   app.get('/cinema/:id', ctx.cinema.load);
   app.put('/cinema/:id', checkCinema, ctx.cinema.update);
   app.patch('/cinema/:id', checkCinema, ctx.cinema.patch);

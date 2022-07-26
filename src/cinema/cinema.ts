@@ -1,76 +1,49 @@
 import { Attributes, DateRange, Filter, Service } from 'onecore';
 import { Repository } from 'query-core';
+import { Info } from 'rate5';
 
 export interface CinemaFilter extends Filter {
-  cinemaId?: string;
-  cinemaName?: string;
-  latitude?: string;
-  longitude?: string;
+  id?: string;
+  name?: string;
+  address?: string;
+  parent?: string;
   status?: string;
-  createdby?: string;
-  createdat?: Date | DateRange;
-  parentCinema?: string;
-  updatedby?: string;
-  updatedat?: Date | DateRange;
+  latitude?: number;
+  longtitude?: number;
+  imageUrl?: string;
+  createdBy?: Date;
+  createAt?: Date;
+  createdAt?: Date;
+  updatedBy?: Date;
+  updatedAt?: Date;
+  gallery?: string;
+  coverUrl?: string;
   info?: Info;
 }
 
 export interface Cinema {
-  cinemaId: string;
-  cinemaName: string;
-  imageURL?: string;
-  coverURL?: string;
-  latitude?: string;
-  longitude?: string;
-  status?: string;
-  parentCinema?: string;
-  createdby?: string;
-  createdat?: Date;
-  updatedby?: string;
-  updatedat?: Date;
+  id: string;
+  name: string;
+  address: string;
+  parent: string;
+  status: string;
+  latitude: number;
+  longtitude: number;
+  imageUrl: string;
+  createdBy: Date;
+  createAt: Date;
+  createdAt: Date;
+  updatedBy: Date;
+  updatedAt: Date;
   gallery?: string;
+  coverUrl: string;
   info?: Info;
 }
 
-export interface Info {
-  id: string;
-  rate: number;
-  rate1: number;
-  rate2: number;
-  rate3: number;
-  rate4: number;
-  rate5: number;
-  viewCount: number;
-}
-
-export interface CinemaRate {
-  id: string;
-  userId: string;
-  rate: number;
-  rateTime?: Date;
-  review?: string;
-}
-
-export interface CinemaRateFilter extends Filter {
-  id?: string;
-  userId?: string;
-  rate?: number;
-  rateTime?: Date;
-  review?: string;
-}
 
 export interface CinemaRepository extends Repository<Cinema, string> { }
 
 export interface CinemaService extends Service<Cinema, string, CinemaFilter> {
-}
-
-export interface InfoRepository extends Repository<Info, string> { }
-
-export interface CinemaRateRepository extends Repository<CinemaRate, string> {
-}
-
-export interface CinemaRateService extends Service<CinemaRate, string, CinemaRateFilter> {
-
 }
 
 export const galleryModel: Attributes = {
@@ -85,15 +58,10 @@ export const galleryModel: Attributes = {
 export const cinemaModel: Attributes = {
   id: {
     key: true,
-    length: 40
+    length: 40,
+    match: 'equal'
   },
   name: {
-    length: 255,
-  },
-  latitude: {
-    length: 255,
-  },
-  longitude: {
     length: 255,
   },
   address: {
@@ -105,8 +73,13 @@ export const cinemaModel: Attributes = {
   status: {
     length: 1
   },
-  imageURL: {},
-  coverURL: {},
+  latitude: {
+    length: 255,
+  },
+  longitude: {
+    length: 255,
+  },
+  imageUrl: {},
   createdBy: {},
   createdAt: {
     column: 'createdat',
@@ -121,54 +94,7 @@ export const cinemaModel: Attributes = {
     column: 'gallery',
     type: 'array',
     typeof: galleryModel,
-  }
+  },
+  coverUrl: {}
 };
 
-export const cinemaRateModel: Attributes = {
-  id: {
-    key: true,
-    required: true
-  },
-  userId: {
-    key: true,
-    required: true
-  },
-  rate: {
-    type: 'integer',
-    min: 1,
-    max: 5
-  },
-  rateTime: {
-    type: 'datetime',
-  },
-  review: {
-    q: true,
-  }
-};
-
-export const infoModel: Attributes = {
-  id: {
-    key: true,
-  },
-  viewCount: {
-    type: 'number'
-  },
-  rate: {
-    type: 'number'
-  },
-  rate1: {
-    type: 'number',
-  },
-  rate2: {
-    type: 'number',
-  },
-  rate3: {
-    type: 'number',
-  },
-  rate4: {
-    type: 'number',
-  },
-  rate5: {
-    type: 'number',
-  },
-};
