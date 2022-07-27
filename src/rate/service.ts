@@ -168,7 +168,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
 }
 // tslint:disable-next-line:max-classes-per-file
 export class RateCommentManager extends Manager<RateComment, string, RateCommentFilter> implements RateCommentService {
-  constructor(search: Search<RateComment, RateCommentFilter>,
+  constructor(search:Search<RateComment, RateCommentFilter> ,
     protected replyRepository: RateCommentRepository) {
     super(search, replyRepository);
   }

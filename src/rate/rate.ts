@@ -1,3 +1,4 @@
+import { Query, ViewService } from 'express-ext';
 import { Attributes, Filter, Repository, Service, ViewRepository } from './core';
 
 export interface RateId {
@@ -54,7 +55,7 @@ export interface RateCommentRepository extends Repository<RateComment, string> {
   remove(commentId: string, id: string, author: string): Promise<number>;
 }
 
-export interface RateCommentService extends Service<RateComment, string, RateCommentFilter> {
+export interface RateCommentService extends Query<RateComment, string, RateCommentFilter> {
 }
 export const rateHistoryModel: Attributes = {
   rate: {
