@@ -2,10 +2,11 @@ import { Request, Response } from 'express';
 import { Controller, getStatusCode, handleError, Log } from 'express-ext';
 import { Validator } from 'onecore';
 import { createValidator } from 'xvalidators';
-import { Rate, RateComment, rateCommentModel, RateFilter, RateId, rateModel } from 'rate5';
+import { RateComment, rateCommentModel } from 'rate5';
+import { Rate, rateModel, RateFilter, RateId } from './ratefilms';
 import { RateService } from './service'
 
-export class RateController extends Controller<Rate, RateId, RateFilter> {
+export class RateFilmController extends Controller<Rate, RateId, RateFilter> {
   validator: Validator<Rate>;
   rateCommentValidator: Validator<RateComment>;
 
@@ -24,7 +25,6 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
     this.removeComment = this.removeComment.bind(this);
     this.updateComment = this.updateComment.bind(this);
     this.search = this.search.bind(this);
-    this.getImages = this.getImages.bind(this);
     this.validator = createValidator<Rate>(rateModel);
     this.rateCommentValidator = createValidator<RateComment>(rateCommentModel);
   }
@@ -32,19 +32,6 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
   protected author: string;
   protected userId: string;
   protected commentId: string;
-
-  getImages(req: Request, res: Response) {
-    const filter: RateFilter = req.body;
-    console.log({filter});
-    
-    this.rateService.search(filter).then(rate => {
-      if (rate) {
-        return res.status(200).json(rate).end();
-      } else {
-        return res.status(401).json(null).end();
-      }
-    }).catch(err => handleError(err, res, this.log));
-  }
 
   load(req: Request, res: Response) {
     const id = req.params[this.id];
@@ -121,8 +108,8 @@ export class RateController extends Controller<Rate, RateId, RateFilter> {
     const userId = req.params[this.userId];
     const commentId = req.params[this.commentId];
     const comment: RateComment = { commentId, id, author, userId, ...req.body };
-    console.log({comment});
-    
+    console.log({ comment });
+
     this.rateCommentValidator.validate(comment).then(errors => {
       if (errors && errors.length > 0) {
         res.status(getStatusCode(errors)).json(errors).end();

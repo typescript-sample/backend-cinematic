@@ -1,17 +1,23 @@
-import { Manager, Search } from './core';
+import { Manager, Search, SearchResult } from './core';
 import {
+  Info,
   InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId, RateReactionRepository,
   RateRepository, RateService, ShortComment, ShortRate
 } from './rate';
 
 export * from './rate';
 
+export interface URL {
+  id: string;
+  url: string;
+}
 export class RateManager extends Manager<Rate, RateId, RateFilter> implements RateService {
   constructor(search: Search<Rate, RateFilter>,
-    public repository: RateRepository,
+    public repository: RateRepository<Info>,
     private infoRepository: InfoRepository,
     private rateCommentRepository: RateCommentRepository,
-    private rateReactionRepository: RateReactionRepository) {
+    private rateReactionRepository: RateReactionRepository,
+    private queryURL?: (ids: string[]) => Promise<URL[]>) {
     super(search, repository);
     this.rate = this.rate.bind(this);
     this.update = this.update.bind(this);
@@ -20,6 +26,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     this.load = this.load.bind(this);
     this.removeComment = this.removeComment.bind(this);
     this.updateComment = this.updateComment.bind(this);
+    this.search = this.search.bind(this);
   }
   async rate(rate: Rate): Promise<number> {
     rate.time = new Date();
@@ -40,7 +47,7 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     let r = 0;
     if (exist) {
       r = exist.rate;
-      const sr: ShortRate = {review: exist.review, rate: exist.rate, time: exist.time};
+      const sr: ShortRate = { review: exist.review, rate: exist.rate, time: exist.time };
       if (exist.histories && exist.histories.length > 0) {
         const history = exist.histories;
         history.push(sr);
@@ -65,9 +72,44 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     info.rate = sumRate / count;
     info.viewCount = count;
     rate.usefulCount = 0;
-    await this.infoRepository.save(info);
-    await this.repository.save(rate);
-    return 1;
+    const res = await this.repository.save(rate, info);
+    return res;
+  }
+  search(s: RateFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Rate>> {
+    console.log(s);
+
+    return super.search(s, limit, offset, fields).then(res => {
+      console.log("enter");
+      
+      if (!this.queryURL) {
+        console.log("none url");
+        //console.log(JSON.stringify(res));
+        return res;
+      } else {
+        console.log(res);
+        
+        if (res.list && res.list.length > 0) {
+          const ids: string[] = [];
+          for (const rate of res.list) {
+            ids.push(rate.author);
+          }
+          console.log(JSON.stringify(ids));
+          return this.queryURL(ids).then(urls => {
+            console.log(JSON.stringify(urls));
+            for (const rate of res.list) {
+              const i = binarySearch(urls, rate.author);
+              if (i >= 0) {
+                rate.authorURL = urls[i].url;
+              }
+              // rate.authorURL = getUrl(rate.author, urls);
+            }
+            return res;
+          })
+        } else {
+          return res;
+        }
+      }
+    });
   }
   getRate(id: string, author: string): Promise<Rate | null> {
     return this.repository.getRate(id, author);
@@ -111,14 +153,15 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
           return -2;
         }
         exist.updatedAt = new Date();
-        exist.comment = comment.comment;
         const c: ShortComment = { comment: exist.comment, time: exist.time };
         if (exist.histories && exist.histories.length > 0) {
           exist.histories.push(c);
         } else {
           exist.histories = [c];
         }
-        return this.rateCommentRepository.update(exist);
+        exist.comment = comment.comment;
+        const res =  this.rateCommentRepository.update(exist);
+        return res;
       }
     });
   }
@@ -129,4 +172,32 @@ export class RateCommentManager extends Manager<RateComment, string, RateComment
     protected replyRepository: RateCommentRepository) {
     super(search, replyRepository);
   }
+}
+
+function getUrl(id: string, urls: URL[]): string|undefined {
+  for (const obj of urls) {
+    if (obj.id === id) {
+      return obj.url;
+    }
+  }
+  return undefined;
+}
+function binarySearch(ar: URL[], el: string): number {
+  var m = 0;
+  var n = ar.length - 1;
+  while (m <= n) {
+      var k = (n + m) >> 1;
+      var cmp = compare(el, ar[k].id);
+      if (cmp > 0) {
+          m = k + 1;
+      } else if(cmp < 0) {
+          n = k - 1;
+      } else {
+          return k;
+      }
+  }
+  return -m - 1;
+}
+function compare(s1: string, s2: string): number {
+  return s1.localeCompare(s2);
 }

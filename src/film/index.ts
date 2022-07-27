@@ -1,21 +1,24 @@
-
+import shortid from 'shortid';
 import { Log } from 'express-ext';
 import { Manager, Search } from 'onecore';
+import { buildToSave } from 'pg-extension';
 import { DB, SearchBuilder } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
-import { Film, FilmFilter, FilmInfo, FilmInfoRepository, filmModel, FilmRate, FilmRateFilter, filmRateModel, FilmRateRepository, FilmRateService, FilmRepository, FilmService, UsefulFilm, UsefulFilmFilter, UsefulFilmModel, UsefulFilmRepository } from './film';
+import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from '../rate/repo';
+import { RateComment, RateCommentFilter, RateCommentManager, rateCommentModel, RateCommentService, RateRepository } from 'rate5';
+import { RateFilmInfo, rateFilmInfoModel, RateFilmInfoRepository, rateModel, Rate, RateFilter } from '../rate-films/ratefilms';
+import { Film, FilmFilter, filmModel, FilmRepository, FilmService } from './film';
 import { FilmController } from './film-controller';
-import { FilmRateController } from './film-rate-controller';
-import { SqlFilmInfoRepositoy } from './sql-film-info-repository';
-import { SqlFilmRateRepositoy } from './sql-film-rate-repository';
 import { SqlFilmRepositoy } from './sql-film-repository';
-import { SqlFilmUsefulRepositoy } from './sql-film-useful-repository';
+import { RateFilmController } from '../rate-films/ratefilms-controller';
+import { RateFilmManager, RateService } from '../rate-films/service';
+import { RateCommentController } from '../rate/comment-controller'
 
 export class FilmManager extends Manager<Film, string, FilmFilter> implements FilmService {
   constructor(search: Search<Film, FilmFilter>,
     repository: FilmRepository,
-    private infoRepository: FilmInfoRepository,
-    private rateRepository: FilmRateRepository) {
+    private infoRepository: RateFilmInfoRepository,
+    private rateRepository: RateRepository) {
     super(search, repository);
   }
   load(id: string): Promise<Film | null> {
@@ -33,151 +36,44 @@ export class FilmManager extends Manager<Film, string, FilmFilter> implements Fi
       }
     });
   }
-  async rate(rate: FilmRate): Promise<boolean> {
-    if (rate.id) {
-      let info = await this.infoRepository.load(rate.id);
-      if (!info) {
-        const dbInfo = {
-          'id': rate.id,
-          'rate': 0,
-          'rate1': 0,
-          'rate2': 0,
-          'rate3': 0,
-          'rate4': 0,
-          'rate5': 0,
-          'rate6': 0,
-          'rate7': 0,
-          'rate8': 0,
-          'rate9': 0,
-          'rate10': 0,
-          'viewCount': 0,
-        };
-        await this.infoRepository.insert(dbInfo);
-        info = await this.infoRepository.load(rate.id);
-      }
-
-      if (!info || typeof info[('rate' + rate.rate.toString()) as keyof FilmInfo] === 'undefined') {
-        console.log('123');
-        return false;
-      }
-      if (rate.id) {
-        const dbRate = await this.rateRepository.searchFilmRate(rate);
-
-        if (dbRate) {
-          (info as any)['rate' + dbRate.rate.toString()] -= 1;
-          dbRate.rate = rate.rate;
-          dbRate.review = rate.review;
-          const res = await this.rateRepository.update(dbRate);
-
-          if (res < 1) {
-            return false;
-          }
-        } else {
-          const res = await this.rateRepository.insert(rate);
-          if (res < 1) {
-            return false;
-          }
-        }
-
-      } else {
-        return false;
-      }
-      (info as any)['rate' + rate.rate.toString()] += 1;
-      const sumRate = info.rate1 +
-        info.rate2 * 2 +
-        info.rate3 * 3 +
-        info.rate4 * 4 +
-        info.rate5 * 5 +
-        info.rate6 * 6 +
-        info.rate7 * 7 +
-        info.rate8 * 8 +
-        info.rate9 * 9 +
-        info.rate10 * 10;
-      const count = info.rate1 +
-        info.rate2 +
-        info.rate3 +
-        info.rate4 +
-        info.rate5 +
-        info.rate6 +
-        info.rate7 +
-        info.rate8 +
-        info.rate9 +
-        info.rate10;
-      info.rate = sumRate / count;
-      info.viewCount = count;
-      this.infoRepository.update(info);
-      return true;
-    }
-    return false;
-  }
 }
 export function useFilmService(db: DB, mapper?: TemplateMap): FilmService {
   const query = useQuery('film', mapper, filmModel, true);
   const builder = new SearchBuilder<Film, FilmFilter>(db.query, 'films', filmModel, db.driver, query);
   const repository = new SqlFilmRepositoy(db);
-  const infoRepository = new SqlFilmInfoRepositoy(db);
-  const rateRepository = new SqlFilmRateRepositoy(db);
+  const infoRepository = new SqlInfoRepository<RateFilmInfo>(db, 'rates_film_info', rateFilmInfoModel, buildToSave);
+  const rateRepository = new SqlRateRepository(db, 'rates_film', rateModel, buildToSave);
   return new FilmManager(builder.search, repository, infoRepository, rateRepository);
 }
 export function useFilmController(log: Log, db: DB, mapper?: TemplateMap): FilmController {
   return new FilmController(log, useFilmService(db, mapper));
 }
 
-export class FilmRateManager extends Manager<FilmRate, string, FilmRateFilter> implements FilmRateService {
-  constructor(search: Search<FilmRate, FilmRateFilter>,
-    repository: FilmRateRepository,
-    public searchUseful: Search<UsefulFilm, UsefulFilmFilter>,
-    public useful: UsefulFilmRepository) {
-    super(search, repository);
-  }
-
-  async usefulFilm(obj: UsefulFilmFilter): Promise<number> {
-    const data = await this.useful.searchUseful(obj);
-    console.log({ data });
-
-    let isInsert = false;
-    if (data?.id) {
-      const rs = await this.useful.deleteUseful(data.id, data.author);
-      if (!rs) {
-        return 0;
-      }
-    } else {
-      const newUseful = { ...obj };
-      const rs = await this.useful.insert(newUseful);
-      if (rs < 1) {
-        return rs;
-      }
-      isInsert = true;
-    }
-    const filmRate = await this.repository.load(obj.id);
-    if (filmRate) {
-      isInsert ? filmRate.usefulCount ? filmRate.usefulCount += 1 : filmRate.usefulCount = 1 : filmRate.usefulCount ? filmRate.usefulCount -= 1 : filmRate.usefulCount = 0;
-      const rs = await this.repository.update(filmRate);
-      if (rs === 1) {
-        return isInsert ? 1 : 2; /// 1:insert
-      }
-    }
-    return 0;
-  }
-  async usefulSearch(obj: UsefulFilmFilter): Promise<number> {
-    const data = await this.useful.searchUseful(obj);
-    if (data?.id) {
-      return 1;
-    }
-    return 0;
-  }
+export function useRateFilmService(db: DB, mapper?: TemplateMap): RateService {
+  const query = useQuery('rates_film', mapper, rateModel, true);
+  const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates_film', rateModel, db.driver, query);
+  const repository = new SqlRateRepository(db, 'rates_film', rateModel, buildToSave);
+  const infoRepository = new SqlInfoRepository<RateFilmInfo>(db, 'rates_film_info', rateFilmInfoModel, buildToSave);
+  const rateReactionRepository = new SqlRateReactionRepository(db, 'rates_film_reaction', rateReactionModel, 'rates_film', 'usefulCount', 'author', 'id');
+  const rateCommentRepository = new SqlRateCommentRepository(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'replyCount', 'author', 'id');
+  return new RateFilmManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
-export function useFilmRateService(db: DB, mapper?: TemplateMap): FilmRateService {
-  const query = useQuery('filmrate', mapper, filmRateModel, true);
-  const builder = new SearchBuilder<FilmRate, FilmRateFilter>(db.query, 'filmrate', filmRateModel, db.driver, query);
-  const queryUseful = useQuery('usefulfilm', mapper, UsefulFilmModel, true);
-  const builderUseful = new SearchBuilder<UsefulFilm, UsefulFilmFilter>(db.query, 'usefulfilm', UsefulFilmModel, db.driver, queryUseful);
-  const repository = new SqlFilmRateRepositoy(db);
-  const repositoryUseful = new SqlFilmUsefulRepositoy(db);
-  return new FilmRateManager(builder.search, repository, builderUseful.search, repositoryUseful);
+export function useRateFilmController(log: Log, db: DB, mapper?: TemplateMap): RateFilmController {
+  return new RateFilmController(log, useRateFilmService(db, mapper), generate, 'commentId', 'userId', 'author', 'id');
 }
 
-export function useFilmRateController(log: Log, db: DB, mapper?: TemplateMap): FilmRateController {
-  return new FilmRateController(log, useFilmRateService(db, mapper));
+export function useRateFilmCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
+  const query = useQuery('rates_film_comments', mapper, rateCommentModel, true);
+  const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rates_film_comments', rateCommentModel, db.driver, query);
+  const rateCommentRepository = new SqlRateCommentRepository(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'replyCount', 'author', 'id');
+  return new RateCommentManager(builder.search, rateCommentRepository);
+}
+
+export function useRateFilmCommentController(log: Log, db: DB, mapper?: TemplateMap): RateCommentController {
+  return new RateCommentController(log, useRateFilmCommentService(db, mapper));
+}
+
+export function generate(): string {
+  return shortid.generate();
 }

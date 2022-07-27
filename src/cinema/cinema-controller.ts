@@ -1,7 +1,5 @@
 import { Request, Response } from 'express';
 import { Controller, handleError, Log } from 'express-ext';
-import { Validator } from 'onecore';
-import { createValidator } from 'xvalidators';
 import { Cinema, CinemaFilter, CinemaService } from './cinema';
 
 export class CinemaController extends Controller<Cinema, string, CinemaFilter> {

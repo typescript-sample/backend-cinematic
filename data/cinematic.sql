@@ -192,7 +192,7 @@ CREATE TABLE appreciation(
 );
 
 CREATE TABLE rate_comments(
-  commentid serial,
+  commentid varchar(255),
   id varchar(255),
   author varchar(255),
   userid varchar(255),

@@ -8,6 +8,7 @@ export interface RateId {
 export interface Rate {
   id: string;
   author: string;
+  authorURL?: string;
   rate: number;
   time: Date;
   review: string;
@@ -30,11 +31,10 @@ export interface RateFilter extends Filter {
   replyCount?: number;
 }
 
-export interface RateRepository extends Repository<Rate, RateId> {
-  save(obj: Rate, ctx?: any): Promise<number>;
+export interface RateRepository<T> extends Repository<Rate, RateId> {
+  save(obj: Rate, info?: T, ctx?: any): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
 }
-
 export interface RateService extends Service<Rate, RateId, RateFilter> {
   getRate(id: string, author: string): Promise<Rate | null>;
   rate(rate: Rate): Promise<number>;

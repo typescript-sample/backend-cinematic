@@ -4,7 +4,7 @@ import multer from 'multer';
 import { categoryModel } from './category/category';
 import { cinemaModel } from './cinema/cinema';
 import { Context } from './context';
-import { filmModel, filmRateModel } from './film/film';
+import { filmModel } from './film/film';
 
 export function route(app: Application, ctx: Context, secure: boolean): void {
   const parser = multer();
@@ -46,7 +46,7 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
 
   const checkCategory = check(categoryModel);
   const checkFilm = check(filmModel);
-  const checkFilmRate = check(filmRateModel);
+  // const checkFilmRate = check(filmRateModel);
   const checkCinema = check(cinemaModel);
 
 
@@ -82,10 +82,10 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.patch('/categories/:id', checkCategory, ctx.category.patch);
   app.delete('/categories/:id', checkCategory, ctx.category.delete);
 
-  app.post('/film-rate/search', ctx.filmRate.search);
-  app.get('/film-rate/search', ctx.filmRate.search);
-  app.post('/film-rate/useful', ctx.filmRate.usefulFilm);
-  app.post('/film-rate/useful/search', ctx.filmRate.usefulSearch);
+  // app.post('/film-rate/search', ctx.filmRate.search);
+  // app.get('/film-rate/search', ctx.filmRate.search);
+  // app.post('/film-rate/useful', ctx.filmRate.usefulFilm);
+  // app.post('/film-rate/useful/search', ctx.filmRate.usefulSearch);
 
   app.get('/films', ctx.film.all);
   app.post('/films', checkFilm, ctx.film.create);
@@ -95,9 +95,9 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.put('/films/:id', checkFilm, ctx.film.update);
   app.patch('/films/:id', checkFilm, ctx.film.patch);
   app.delete('/films/:id', checkFilm, ctx.film.delete);
-  app.post('/films/rate', checkFilmRate, ctx.film.rate);
-  app.post('/film-rate/search', ctx.filmRate.search);
-  app.get('/film-rate/search', ctx.filmRate.search);
+  // app.post('/films/rate', checkFilmRate, ctx.film.rate);
+  // app.post('/film-rate/search', ctx.filmRate.search);
+  // app.get('/film-rate/search', ctx.filmRate.search);
 
   // const readCinemaParent = ctx.authorize('cinemaParent', read);
   // const writeCinemaParent = ctx.authorize('cinemaParent', write);
@@ -121,15 +121,22 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/cinema/rates/search', ctx.rate.search);
   app.get('/cinema/rates/comment/search', ctx.comment.search);
   app.post('/cinema/rates/comment/search', ctx.comment.search);
-  app.put('/cinema/rates/:id/:author', ctx.rate.updateRate);
   app.get('/cinema/rates/:id/:author', ctx.rate.load);
   app.post('/cinema/rates/useful/:id/:author/:userId', ctx.rate.setUseful);
   app.delete('/cinema/rates/useful/:id/:author/:userId', ctx.rate.removeUseful);
   app.post('/cinema/rates/comment/:id/:author/:userId', ctx.rate.comment);
   app.delete('/cinema/rates/comment/:commentId/:author', ctx.rate.removeComment);
   app.put('/cinema/rates/comment/:commentId/:id/:author/:userId', ctx.rate.updateComment);
+  app.post('/cinema/rates/images', ctx.rate.getImages)
 
-  app.post('/films/rates', ctx.rate.rate);
+  app.post('/films/rates/search', ctx.rateFilm.search);
+  app.post('/films/rates/comment/search', ctx.commentFilm.search);
+  app.post('/films/rates', ctx.rateFilm.rate);
+  app.post('/films/rates/useful/:id/:author/:userId', ctx.rateFilm.setUseful);
+  app.delete('/films/rates/useful/:id/:author/:userId', ctx.rateFilm.removeUseful);
+  app.post('/films/rates/comment/:id/:author/:userId', ctx.rateFilm.comment);
+  app.put('/films/rates/comment/:commentId/:id/:author/:userId', ctx.rateFilm.updateComment);
+  app.delete('/films/rates/comment/:commentId/:author', ctx.rateFilm.removeComment);
 
   app.get('/cinema/search', ctx.cinema.search);
   app.post('/cinema/search', ctx.cinema.search);

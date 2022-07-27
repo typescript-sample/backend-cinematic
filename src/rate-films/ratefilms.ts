@@ -1,6 +1,83 @@
-import { Attributes, Filter, Repository, Service, ViewRepository } from './core';
+import { RateComment } from 'rate5';
+import { Attributes, Filter, Repository, Service, ViewRepository } from '../rate/core';
+export interface RateId {
+    id: string;
+    author: string;
+}
 
+export interface Rate {
+    id: string;
+    author: string;
+    rate: number;
+    time: Date;
+    review: string;
+    usefulCount: number;
+    replyCount: number;
+    histories?: ShortRate[];
+}
+export interface ShortRate {
+    rate: number;
+    time: Date;
+    review: string;
+}
+export interface RateFilter extends Filter {
+    id?: string;
+    author?: string;
+    rate: number;
+    time?: Date;
+    review?: string;
+    usefulCount?: number;
+    replyCount?: number;
+}
+
+export const rateHistoryModel: Attributes = {
+    rate: {
+        type: 'integer'
+    },
+    time: {
+        type: 'datetime',
+    },
+    review: {
+    },
+};
+
+export const rateModel: Attributes = {
+    id: {
+        key: true,
+        required: true,
+        match: 'equal'
+    },
+    author: {
+        key: true,
+        required: true,
+        match: 'equal'
+    },
+    rate: {
+        type: 'integer',
+        min: 1,
+        max: 10
+    },
+    time: {
+        type: 'datetime',
+    },
+    review: {
+        q: true,
+    },
+    usefulCount: {
+        type: 'integer',
+        min: 0
+    },
+    replyCount: {
+        type: 'integer',
+        min: 0
+    },
+    histories: {
+        type: 'array',
+        typeof: rateHistoryModel
+    }
+};
 export interface RateFilmInfoRepository extends ViewRepository<RateFilmInfo, string> {
+    save(obj: RateFilmInfo, ctx?: any): Promise<number>;
 }
 
 export interface RateFilmInfo {
@@ -27,7 +104,9 @@ export const rateFilmInfoModel: Attributes = {
         type: 'number'
     },
     rate: {
-        type: 'number'
+        type: 'number',
+        min: 1,
+        max: 10
     },
     rate1: {
         type: 'number',

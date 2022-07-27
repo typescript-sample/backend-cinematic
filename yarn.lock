@@ -2372,10 +2372,10 @@
     "postgres-interval" "~1.0.0"
     "readable-stream" "2.x"
 
-"pg-extension@^0.1.1":
-  "integrity" "sha512-MRtrJa+AeTQ2v0SUSU9ot9giQsjrCfaTomiP4TcDjiHPw2DRaxdAC0oUwwdfM0KdZKge0qI58sw3maRM5MXwEw=="
-  "resolved" "https://registry.npmjs.org/pg-extension/-/pg-extension-0.1.1.tgz"
-  "version" "0.1.1"
+"pg-extension@^0.1.6":
+  "integrity" "sha512-Q535siPxCu/7N79+6HDryMJhFRwl9OwIerhL+Hb1g8qnfeboDtIOW6VwqFYN67R3+CyEIP+GyavOYTWWdm2xhg=="
+  "resolved" "https://registry.npmjs.org/pg-extension/-/pg-extension-0.1.6.tgz"
+  "version" "0.1.6"
   dependencies:
     "pg" "^8.6.0"
 
