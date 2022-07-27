@@ -1,4 +1,4 @@
-import { Attributes, buildToDelete, buildToInsert, DB, Repository, Statement } from 'query-core';
+import { Attributes, buildToDelete, buildToInsert, buildToUpdate, DB, Repository, Statement } from 'query-core';
 import { InfoRepository, Rate, RateComment, RateCommentRepository, RateId, RateReaction, RateReactionRepository, RateRepository } from './core-query';
 
 export * from './core-query';
@@ -23,10 +23,9 @@ export const rateReactionModel: Attributes = {
   }
 };
 
-export class SqlRateRepository<T> extends Repository<Rate, RateId> implements RateRepository<T> {
-  constructor(db: DB, table: string, attributes: Attributes, protected buildToSave: <K>(obj: K, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, protected infoTable?: string, protected infoAttributes?: Attributes) {
+export class SqlRateRepository extends Repository<Rate, RateId> implements RateRepository {
+  constructor(db: DB, table: string, attributes: Attributes, protected buildToSave: <K>(obj: K, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, public max: number, public infoTable: string, public id: string, public rate: string, public count: string, public score: string) {
     super(db, table, attributes);
-    this.save = this.save.bind(this);
     this.getRate = this.getRate.bind(this);
   }
   getRate(id: string, author: string, ctx?: any): Promise<Rate | null> {
@@ -34,6 +33,61 @@ export class SqlRateRepository<T> extends Repository<Rate, RateId> implements Ra
       return rates && rates.length > 0 ? rates[0] : null;
     });
   }
+  add(rate: Rate, newInfo?: boolean): Promise<number> {
+    const stmt = buildToInsert(rate, this.table, this.attributes, this.param);
+    if (stmt) {
+      if (newInfo) {
+        const query = this.insertInfo(rate.rate);
+        const s2: Statement = {query, params: [rate.id]};
+        return this.execBatch([s2, stmt], true);
+      } else {
+        const query = this.updateNewInfo(rate.rate);
+        const s2: Statement = {query, params: [rate.id]}; 
+        return this.execBatch([s2, stmt], true);
+      }
+    } else {
+      return Promise.resolve(-1);
+    }
+  }
+  protected insertInfo(r: number): string {
+    const rateCols: string[] = [];
+    const ps: string[] = [];
+    for (let i = 1; i <= this.max; i++) {
+      rateCols.push(`${this.rate}${i}`)
+      if (i === r) {
+        ps.push('' + r);
+      } else {
+        ps.push('0');
+      }
+    }
+    const query = `
+    insert into ${this.infoTable} (${this.id}, ${this.rate}, ${this.count}, ${this.score}, ${rateCols.join(',')}) 
+    values (${this.param(1)}, ${r}, 1, ${r}, ${ps.join(',')})`;
+    return query;
+  }
+  edit(rate: Rate, oldRate: number): Promise<number> {
+    const stmt = buildToUpdate(rate, this.table, this.attributes, this.param);
+    if (stmt) {
+      const query = this.updateOldInfo(rate.rate - oldRate);
+      const s2: Statement = {query, params: [rate.id]};
+      return this.execBatch([s2, stmt], true);
+    } else {
+      return Promise.resolve(-1);
+    }
+  }
+  protected updateNewInfo(r: number): string {
+    const query = `
+    update ${this.infoTable} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.count} = ${this.count} + 1, ${this.score} = ${this.score} + ${r}
+    where ${this.id} = ${this.param(1)}`;
+    return query;
+  }
+  protected updateOldInfo(delta: number): string {
+    const query = `
+    update ${this.infoTable} set ${this.rate} = (${this.score} + ${delta})/${this.count}, ${this.score} = ${this.score} + ${delta}
+    where ${this.id} = ${this.param(1)}`;
+    return query;
+  }
+  /*
   save(obj: Rate, info?: T, ctx?: any): Promise<number> {
     const stmt = this.buildToSave(obj, this.table, this.attributes);
     if (stmt) {
@@ -50,7 +104,7 @@ export class SqlRateRepository<T> extends Repository<Rate, RateId> implements Ra
     } else {
       return Promise.resolve(0);
     }
-  }
+  }*/
 }
 // tslint:disable-next-line:max-classes-per-file
 export class SqlInfoRepository<T> extends Repository<T, string> implements InfoRepository<T> {

@@ -93,15 +93,13 @@ export interface RateFilmInfo {
     rate8: number;
     rate9: number;
     rate10: number;
-    viewCount: number;
+    count: number;
+    score: number;
 }
 
 export const rateFilmInfoModel: Attributes = {
     id: {
         key: true,
-    },
-    viewCount: {
-        type: 'number'
     },
     rate: {
         type: 'number',
@@ -138,4 +136,10 @@ export const rateFilmInfoModel: Attributes = {
     rate10: {
         type: 'number',
     },
+    count: {
+      type: 'number',
+    },
+    score: {
+      type: 'number',
+    }
 }

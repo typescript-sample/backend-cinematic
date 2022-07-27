@@ -13,7 +13,7 @@ export interface URL {
 }
 export class RateManager extends Manager<Rate, RateId, RateFilter> implements RateService {
   constructor(search: Search<Rate, RateFilter>,
-    public repository: RateRepository<Info>,
+    public repository: RateRepository,
     private infoRepository: InfoRepository,
     private rateCommentRepository: RateCommentRepository,
     private rateReactionRepository: RateReactionRepository,
@@ -32,76 +32,41 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     rate.time = new Date();
     let info = await this.infoRepository.load(rate.id);
     if (!info) {
-      info = {
-        'id': rate.id,
-        'rate': 0,
-        'rate1': 0,
-        'rate2': 0,
-        'rate3': 0,
-        'rate4': 0,
-        'rate5': 0,
-        'viewCount': 0,
-      };
+      const res = await this.repository.add(rate, true);
+      return res;
     }
     const exist = await this.repository.getRate(rate.id, rate.author);
-    let r = 0;
-    if (exist) {
-      r = exist.rate;
-      const sr: ShortRate = { review: exist.review, rate: exist.rate, time: exist.time };
-      if (exist.histories && exist.histories.length > 0) {
-        const history = exist.histories;
-        history.push(sr);
-        rate.histories = history;
-      } else {
-        rate.histories = [sr];
-      }
+    if (!exist) {
+      const res = await this.repository.add(rate);
+      return res;
     }
-    (info as any)['rate' + rate.rate?.toString()] += 1;
-    const sumRate = info.rate1 +
-      info.rate2 * 2 +
-      info.rate3 * 3 +
-      info.rate4 * 4 +
-      info.rate5 * 5 - r;
-
-    const count = info.rate1 +
-      info.rate2 +
-      info.rate3 +
-      info.rate4 +
-      info.rate5 + (exist ? 0 : 1);
-
-    info.rate = sumRate / count;
-    info.viewCount = count;
-    rate.usefulCount = 0;
-    const res = await this.repository.save(rate, info);
+    const sr: ShortRate = { review: exist.review, rate: exist.rate, time: exist.time };
+    if (exist.histories && exist.histories.length > 0) {
+      const history = exist.histories;
+      history.push(sr);
+      rate.histories = history;
+    } else {
+      rate.histories = [sr];
+    }
+    const res = await this.repository.edit(rate, exist.rate);
     return res;
   }
   search(s: RateFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Rate>> {
-    console.log(s);
-
     return super.search(s, limit, offset, fields).then(res => {
-      console.log("enter");
-      
       if (!this.queryURL) {
-        console.log("none url");
-        //console.log(JSON.stringify(res));
         return res;
       } else {
-        console.log(res);
-        
         if (res.list && res.list.length > 0) {
           const ids: string[] = [];
           for (const rate of res.list) {
             ids.push(rate.author);
           }
-          console.log(JSON.stringify(ids));
           return this.queryURL(ids).then(urls => {
-            console.log(JSON.stringify(urls));
             for (const rate of res.list) {
               const i = binarySearch(urls, rate.author);
               if (i >= 0) {
                 rate.authorURL = urls[i].url;
               }
-              // rate.authorURL = getUrl(rate.author, urls);
             }
             return res;
           })

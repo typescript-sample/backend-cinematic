@@ -4,10 +4,11 @@ import { buildToSave, useUrlQuery } from 'pg-extension';
 import shortid from 'shortid';
 import { TemplateMap, useQuery } from 'query-mappers';
 import {
-  Info, infoModel, InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentService, RateFilter,
-  RateCommentManager, rateModel, RateRepository
-} from 'rate5';
-import {RateManager, RateService} from '../rate/service';
+  Info, infoModel, InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentService, RateFilter, rateModel
+} from '../rate/rate';
+import { RateCommentManager} from '../rate/service';
+
+import {RateManager, RateRepository, RateService} from '../rate/service';
 import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from '../rate/repo';
 import { Cinema, CinemaFilter, cinemaModel, CinemaRepository, CinemaService } from './cinema';
 import { CinemaController } from './cinema-controller';
@@ -46,7 +47,7 @@ export function useCinemaService(db: DB, mapper?: TemplateMap): CinemaService {
   const builder = new SearchBuilder<Cinema, CinemaFilter>(db.query, 'cinema', cinemaModel, db.driver, query);
   const repository = new SqlCinemaRepository(db);
   const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
-  const rateRepository = new SqlRateRepository<Info>(db, 'rates', rateModel, buildToSave, 'info', infoModel);
+  const rateRepository = new SqlRateRepository(db, 'rates', rateModel, buildToSave, 5 , 'info', 'id', 'rate', 'count', 'score');
   return new CinemaManager(builder.search, repository, infoRepository, rateRepository);
 }
 
@@ -57,13 +58,13 @@ export function useCinemaController(log: Log, db: DB, mapper?: TemplateMap): Cin
 export function useCinemaRateService(db: DB, mapper?: TemplateMap): RateService {
   const query = useQuery('rates', mapper, rateModel, true);
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
-  const repository = new SqlRateRepository<Info>(db, 'rates', rateModel, buildToSave, 'info', infoModel);
+  const rateRepository = new SqlRateRepository(db, 'rates', rateModel, buildToSave, 5 , 'info', 'id', 'rate', 'count', 'score');
   const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'usefulCount', 'author', 'id');
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
   // select id, imageurl as url from users;
   const queryUrl = useUrlQuery<string>(db.query, 'users', 'imageURL', 'id');
-  return new RateManager(builder.search, repository, infoRepository, rateCommentRepository, rateReactionRepository, queryUrl);
+  return new RateManager(builder.search, rateRepository, infoRepository, rateCommentRepository, rateReactionRepository, queryUrl);
 }
 
 export function useCinemaRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {

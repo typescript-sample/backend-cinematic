@@ -3,13 +3,12 @@ import {
     RateComment, RateCommentRepository, RateId, RateReactionRepository,
     RateRepository, RateService, ShortComment, ShortRate
 } from '../rate/rate';
-import { Rate, RateFilmInfo, RateFilter } from './ratefilms'
-import { RateFilmInfoRepository } from './ratefilms';
+import { Rate, RateFilmInfoRepository, RateFilter } from './ratefilms';
 
 export * from '../rate/rate';
 
 export class RateFilmManager extends Manager<Rate, RateId, RateFilter> implements RateService {
-    constructor(search: Search<Rate, RateFilter>, public repository: RateRepository<RateFilmInfo>,
+    constructor(search: Search<Rate, RateFilter>, public repository: RateRepository,
         private infoRepository: RateFilmInfoRepository,
         private rateCommentRepository: RateCommentRepository,
         private rateReactionRepository: RateReactionRepository) {
@@ -21,69 +20,26 @@ export class RateFilmManager extends Manager<Rate, RateId, RateFilter> implement
     }
 
     async rate(rate: Rate): Promise<number> {
-        console.log({ rate });
-
         rate.time = new Date();
         let info = await this.infoRepository.load(rate.id);
         if (!info) {
-            info = {
-                'id': rate.id,
-                'rate': 0,
-                'rate1': 0,
-                'rate2': 0,
-                'rate3': 0,
-                'rate4': 0,
-                'rate5': 0,
-                'rate6': 0,
-                'rate7': 0,
-                'rate8': 0,
-                'rate9': 0,
-                'rate10': 0,
-                'viewCount': 0,
-            };
+            const res = await this.repository.add(rate, true);
+            return res;
         }
         const exist = await this.repository.getRate(rate.id, rate.author);
-        let r = 0;
-        if (exist) {
-            r = exist.rate;
-            const sr: ShortRate = { review: exist.review, rate: exist.rate, time: exist.time };
-            if (exist.histories && exist.histories.length > 0) {
-                const history = exist.histories;
-                history.push(sr);
-                rate.histories = history;
-            } else {
-                rate.histories = [sr];
-            }
+        if (!exist) {
+            const res = await this.repository.add(rate);
+            return res;
         }
-        console.log(r);
-
-        (info as any)['rate' + rate.rate?.toString()] += 1;
-        const sumRate = info.rate1 +
-            info.rate2 * 2 +
-            info.rate3 * 3 +
-            info.rate4 * 4 +
-            info.rate5 * 5 +
-            info.rate6 * 6 +
-            info.rate7 * 7 +
-            info.rate8 * 8 +
-            info.rate9 * 9 +
-            info.rate10 * 10 - r;
-
-        const count = info.rate1 +
-            info.rate2 +
-            info.rate3 +
-            info.rate4 +
-            info.rate5 +
-            info.rate6 +
-            info.rate7 +
-            info.rate8 +
-            info.rate9 +
-            info.rate10 + (exist ? 0 : 1);
-
-        info.rate = sumRate / count;
-        info.viewCount = count;
-        rate.usefulCount = 0;
-        const res = await this.repository.save(rate, info);
+        const sr: ShortRate = { review: exist.review, rate: exist.rate, time: exist.time };
+        if (exist.histories && exist.histories.length > 0) {
+            const history = exist.histories;
+            history.push(sr);
+            rate.histories = history;
+        } else {
+            rate.histories = [sr];
+        }
+        const res = await this.repository.edit(rate, exist.rate);
         return res;
     }
     getRate(id: string, author: string): Promise<Rate | null> {

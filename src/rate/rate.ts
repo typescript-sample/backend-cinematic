@@ -32,8 +32,10 @@ export interface RateFilter extends Filter {
   replyCount?: number;
 }
 
-export interface RateRepository<T> extends Repository<Rate, RateId> {
-  save(obj: Rate, info?: T, ctx?: any): Promise<number>;
+export interface RateRepository extends Repository<Rate, RateId> {
+  // save(obj: Rate, info?: T, ctx?: any): Promise<number>;
+  add(rate: Rate, newInfo?: boolean): Promise<number>;
+  edit(rate: Rate, oldRate: number): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
 }
 export interface RateService extends Service<Rate, RateId, RateFilter> {
@@ -107,9 +109,6 @@ export const infoModel: Attributes = {
   id: {
     key: true,
   },
-  viewCount: {
-    type: 'number'
-  },
   rate: {
     type: 'number'
   },
@@ -128,6 +127,12 @@ export const infoModel: Attributes = {
   rate5: {
     type: 'number',
   },
+  count: {
+    type: 'number',
+  },
+  score: {
+    type: 'number',
+  }
 };
 
 export interface Info {
@@ -138,11 +143,11 @@ export interface Info {
   rate3: number;
   rate4: number;
   rate5: number;
-  viewCount: number;
+  count: number;
+  score: number;
 }
 
 export interface InfoRepository extends ViewRepository<Info, string> {
-  save(obj: Info, ctx?: any): Promise<number>;
 }
 
 export interface RateCommentId {

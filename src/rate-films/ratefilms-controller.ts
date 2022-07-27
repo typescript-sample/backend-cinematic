@@ -4,7 +4,7 @@ import { Validator } from 'onecore';
 import { createValidator } from 'xvalidators';
 import { RateComment, rateCommentModel } from 'rate5';
 import { Rate, rateModel, RateFilter, RateId } from './ratefilms';
-import { RateService } from './service'
+import { RateService } from './service';
 
 export class RateFilmController extends Controller<Rate, RateId, RateFilter> {
   validator: Validator<Rate>;
