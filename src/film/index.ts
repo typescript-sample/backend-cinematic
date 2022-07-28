@@ -6,20 +6,21 @@ import { DB, SearchBuilder } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
 import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from '../rate/repo';
 import { RateComment, RateCommentFilter, RateCommentManager, rateCommentModel, RateCommentService } from 'rate5';
-import { RateRepository } from '../rate/rate'
-import { RateFilmInfo, rateFilmInfoModel, RateFilmInfoRepository, rateModel, Rate, RateFilter } from '../rate-films/ratefilms';
+import { rateModel, Rate, RateFilter, info10Model } from '../rate/rate'
+import { RateFilmInfo, rateFilmInfoModel, RateFilmInfoRepository } from '../rate-films/ratefilms';
 import { Film, FilmFilter, filmModel, FilmRepository, FilmService } from './film';
 import { FilmController } from './film-controller';
 import { SqlFilmRepositoy } from './sql-film-repository';
 import { RateFilmController } from '../rate-films/ratefilms-controller';
 import { RateFilmManager, RateService } from '../rate-films/service';
-import { RateCommentController } from '../rate/comment-controller'
+import { RateCommentController } from '../rate';
+import { CommentValidator, RateValidator } from '../rate/service';
+import { check } from 'xvalidators';
 
 export class FilmManager extends Manager<Film, string, FilmFilter> implements FilmService {
   constructor(search: Search<Film, FilmFilter>,
     repository: FilmRepository,
-    private infoRepository: RateFilmInfoRepository,
-    private rateRepository: RateRepository) {
+    private infoRepository: RateFilmInfoRepository) {
     super(search, repository);
   }
   load(id: string): Promise<Film | null> {
@@ -43,8 +44,7 @@ export function useFilmService(db: DB, mapper?: TemplateMap): FilmService {
   const builder = new SearchBuilder<Film, FilmFilter>(db.query, 'films', filmModel, db.driver, query);
   const repository = new SqlFilmRepositoy(db);
   const infoRepository = new SqlInfoRepository<RateFilmInfo>(db, 'rates_film_info', rateFilmInfoModel, buildToSave);
-  const rateRepository = new SqlRateRepository(db, 'rates_film', rateModel, buildToSave, 10, 'rates_film_info', 'id', 'rate', 'count', 'score');
-  return new FilmManager(builder.search, repository, infoRepository, rateRepository);
+  return new FilmManager(builder.search, repository, infoRepository);
 }
 export function useFilmController(log: Log, db: DB, mapper?: TemplateMap): FilmController {
   return new FilmController(log, useFilmService(db, mapper));
@@ -54,14 +54,16 @@ export function useRateFilmService(db: DB, mapper?: TemplateMap): RateService {
   const query = useQuery('rates_film', mapper, rateModel, true);
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates_film', rateModel, db.driver, query);
   const rateRepository = new SqlRateRepository(db, 'rates_film', rateModel, buildToSave, 10, 'rates_film_info', 'id', 'rate', 'count', 'score');
-  const infoRepository = new SqlInfoRepository<RateFilmInfo>(db, 'rates_film_info', rateFilmInfoModel, buildToSave);
+  const infoRepository = new SqlInfoRepository<RateFilmInfo>(db, 'rates_film_info', info10Model, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'rates_film_reaction', rateReactionModel, 'rates_film', 'usefulCount', 'author', 'id');
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'replyCount', 'author', 'id');
   return new RateFilmManager(builder.search, rateRepository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
 export function useRateFilmController(log: Log, db: DB, mapper?: TemplateMap): RateFilmController {
-  return new RateFilmController(log, useRateFilmService(db, mapper), generate, 'commentId', 'userId', 'author', 'id');
+  const rateValidator = new RateValidator(rateModel, check, 10);
+  const commentValidator = new CommentValidator(rateCommentModel, check);
+  return new RateFilmController(log, useRateFilmService(db, mapper),rateValidator,commentValidator, generate, 'commentId', 'userId', 'author', 'id');
 }
 
 export function useRateFilmCommentService(db: DB, mapper?: TemplateMap): RateCommentService {

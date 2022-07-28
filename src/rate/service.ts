@@ -1,7 +1,6 @@
-import { Manager, Search, SearchResult } from './core';
+import { Attributes, Manager, Search, SearchResult } from './core';
 import {
-  Info,
-  InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateId, RateReactionRepository,
+  InfoRepository, Rate, RateComment, RateCommentFilter, RateCommentRepository, RateCommentService, RateFilter, RateReactionRepository,
   RateRepository, RateService, ShortComment, ShortRate
 } from './rate';
 
@@ -11,19 +10,15 @@ export interface URL {
   id: string;
   url: string;
 }
-export class RateManager extends Manager<Rate, RateId, RateFilter> implements RateService {
-  constructor(search: Search<Rate, RateFilter>,
+export class RateManager implements RateService {
+  constructor(protected find: Search<Rate, RateFilter>,
     public repository: RateRepository,
     private infoRepository: InfoRepository,
     private rateCommentRepository: RateCommentRepository,
     private rateReactionRepository: RateReactionRepository,
     private queryURL?: (ids: string[]) => Promise<URL[]>) {
-    super(search, repository);
     this.rate = this.rate.bind(this);
-    this.update = this.update.bind(this);
-    this.save = this.save.bind(this);
     this.comment = this.comment.bind(this);
-    this.load = this.load.bind(this);
     this.removeComment = this.removeComment.bind(this);
     this.updateComment = this.updateComment.bind(this);
     this.search = this.search.bind(this);
@@ -32,12 +27,12 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     rate.time = new Date();
     let info = await this.infoRepository.load(rate.id);
     if (!info) {
-      const res = await this.repository.add(rate, true);
+      const res = await this.repository.insert(rate, true);
       return res;
     }
     const exist = await this.repository.getRate(rate.id, rate.author);
     if (!exist) {
-      const res = await this.repository.add(rate);
+      const res = await this.repository.insert(rate);
       return res;
     }
     const sr: ShortRate = { review: exist.review, rate: exist.rate, time: exist.time };
@@ -48,11 +43,11 @@ export class RateManager extends Manager<Rate, RateId, RateFilter> implements Ra
     } else {
       rate.histories = [sr];
     }
-    const res = await this.repository.edit(rate, exist.rate);
+    const res = await this.repository.update(rate, exist.rate);
     return res;
   }
   search(s: RateFilter, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<Rate>> {
-    return super.search(s, limit, offset, fields).then(res => {
+    return this.find(s, limit, offset, fields).then(res => {
       if (!this.queryURL) {
         return res;
       } else {
@@ -139,14 +134,6 @@ export class RateCommentManager extends Manager<RateComment, string, RateComment
   }
 }
 
-function getUrl(id: string, urls: URL[]): string|undefined {
-  for (const obj of urls) {
-    if (obj.id === id) {
-      return obj.url;
-    }
-  }
-  return undefined;
-}
 function binarySearch(ar: URL[], el: string): number {
   var m = 0;
   var n = ar.length - 1;
@@ -165,4 +152,48 @@ function binarySearch(ar: URL[], el: string): number {
 }
 function compare(s1: string, s2: string): number {
   return s1.localeCompare(s2);
+}
+interface ErrorMessage {
+  field: string;
+  code: string;
+  param?: string|number|Date;
+  message?: string;
+}
+export class CommentValidator {
+  constructor(protected attributes: Attributes, protected check: (obj: any, attributes: Attributes) => ErrorMessage[]) {
+    this.validate = this.validate.bind(this);
+  }
+  validate(comment: RateComment): Promise<ErrorMessage[]> {
+    const errs = this.check(comment, this.attributes)
+    return Promise.resolve(errs);
+  }
+}
+export class RateValidator {
+  constructor(protected attributes: Attributes, protected check: (obj: any, attributes: Attributes) => ErrorMessage[], protected max: number) {
+    this.validate = this.validate.bind(this);
+  }
+  validate(rate: Rate): Promise<ErrorMessage[]> {
+    const errs = this.check(rate, this.attributes)
+    if (rate.rate > this.max) {
+      const err = createError('rate', 'max', this.max);
+      if (errs) {
+        errs.push(err);
+        return Promise.resolve(errs);
+      } else {
+        return Promise.resolve([err]);
+      }
+    } else {
+      return Promise.resolve(errs);
+    }
+  }
+}
+function createError(field: string, code?: string, param?: string | number | Date): ErrorMessage {
+  if (!code) {
+    code = 'string';
+  }
+  const error: ErrorMessage = { field, code };
+  if (param) {
+    error.param = param;
+  }
+  return error;
 }

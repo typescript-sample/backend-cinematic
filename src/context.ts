@@ -24,8 +24,7 @@ import { CinemaParentController, useCinemaParentController } from './cinemaparen
 import { useFilmController, useRateFilmCommentController, useRateFilmController } from './film';
 import { FilmController } from './film/film-controller';
 import { RateFilmController } from './rate-films/ratefilms-controller';
-import { RateCommentController } from './rate/comment-controller';
-import { RateController } from './rate/rate-controller';
+import { RateController, RateCommentController } from './rate/rate-controller';
 import { RoleController, useRoleController } from './role';
 import { SqlUploadSerive } from './uploads/SqlUploadsService';
 import { UploadController } from './uploads/UploadController';
@@ -131,5 +130,5 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const storageService = new GoogleStorageService(bucket, storageConfig, map);
   const uploadService = new SqlUploadSerive(pool, 'media', storageService.upload, storageService.delete, param, manager.query, manager.exec, manager.execBatch);
   const uploads = new UploadController(logger.error, uploadService);
-  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, rate, rateFilm, appreciation, appreciationReply, comment, commentFilm };
+  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, rate, rateFilm,appreciation, appreciationReply, comment, commentFilm };
 }

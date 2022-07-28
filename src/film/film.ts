@@ -27,7 +27,6 @@ export interface FilmRepository extends Repository<Film, string> {
 export interface FilmService extends Service<Film, string, FilmFilter> {
 }
 
-
 export const filmModel: Attributes = {
   filmId: {
     key: true,

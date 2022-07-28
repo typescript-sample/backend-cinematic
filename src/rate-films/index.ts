@@ -1,8 +1,7 @@
-import { RateCommentController } from '../rate/comment-controller';
+import { RateCommentController } from '../rate/rate-controller';
 import { RateFilmController } from './ratefilms-controller';
 
-export * from '../rate/comment-controller';
+export * from '../rate/rate-controller';
 export * from './ratefilms';
-export * from './ratefilms-controller';
 export { RateFilmController };
 export { RateCommentController };

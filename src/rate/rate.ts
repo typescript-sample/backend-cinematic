@@ -1,5 +1,5 @@
-import { Query, ViewService } from 'express-ext';
-import { Attributes, Filter, Repository, Service, ViewRepository } from './core';
+import { Query } from 'express-ext';
+import { Attributes, Filter, Repository, SearchResult, ViewRepository } from './core';
 
 export interface RateId {
   id: string;
@@ -32,13 +32,14 @@ export interface RateFilter extends Filter {
   replyCount?: number;
 }
 
-export interface RateRepository extends Repository<Rate, RateId> {
+export interface RateRepository {
   // save(obj: Rate, info?: T, ctx?: any): Promise<number>;
-  add(rate: Rate, newInfo?: boolean): Promise<number>;
-  edit(rate: Rate, oldRate: number): Promise<number>;
+  insert(rate: Rate, newInfo?: boolean): Promise<number>;
+  update(rate: Rate, oldRate: number): Promise<number>;
   getRate(id: string, author: string): Promise<Rate | null>;
 }
-export interface RateService extends Service<Rate, RateId, RateFilter> {
+export interface RateService {
+  search(s: RateFilter, limit?: number, offset?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<Rate>>;
   getRate(id: string, author: string): Promise<Rate | null>;
   rate(rate: Rate): Promise<number>;
   setUseful(id: string, author: string, userId: string, ctx?: any): Promise<number>;
@@ -83,7 +84,6 @@ export const rateModel: Attributes = {
   rate: {
     type: 'integer',
     min: 1,
-    max: 5
   },
   time: {
     type: 'datetime',
@@ -134,7 +134,50 @@ export const infoModel: Attributes = {
     type: 'number',
   }
 };
-
+export const info10Model: Attributes = {
+  id: {
+    key: true,
+  },
+  rate: {
+    type: 'number'
+  },
+  rate1: {
+    type: 'number',
+  },
+  rate2: {
+    type: 'number',
+  },
+  rate3: {
+    type: 'number',
+  },
+  rate4: {
+    type: 'number',
+  },
+  rate5: {
+    type: 'number',
+  },
+  rate6: {
+    type: 'number',
+  },
+  rate7: {
+    type: 'number',
+  },
+  rate8: {
+    type: 'number',
+  },
+  rate9: {
+    type: 'number',
+  },
+  rate10: {
+    type: 'number',
+  },
+  count: {
+    type: 'number',
+  },
+  score: {
+    type: 'number',
+  }
+};
 export interface Info {
   id: string;
   rate: number;

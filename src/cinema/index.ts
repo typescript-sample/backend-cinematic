@@ -1,21 +1,22 @@
 import { Log, Manager, Search } from 'onecore';
-import { DB, SearchBuilder } from 'query-core';
 import { buildToSave, useUrlQuery } from 'pg-extension';
-import shortid from 'shortid';
+import { DB, SearchBuilder } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
+import shortid from 'shortid';
 import {
   Info, infoModel, InfoRepository, Rate, RateComment, RateCommentFilter, rateCommentModel, RateCommentService, RateFilter, rateModel
 } from '../rate/rate';
-import { RateCommentManager} from '../rate/service';
+import { CommentValidator, RateCommentManager, RateValidator } from '../rate/service';
 
-import {RateManager, RateRepository, RateService} from '../rate/service';
+import { RateCommentController, RateController } from '../rate';
 import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from '../rate/repo';
+import { RateManager, RateRepository, RateService } from '../rate/service';
 import { Cinema, CinemaFilter, cinemaModel, CinemaRepository, CinemaService } from './cinema';
 import { CinemaController } from './cinema-controller';
+import { SqlCinemaRepository } from './sql-cinema-repository';
+import { check } from 'xvalidators';
 export * from './cinema-controller';
 export { CinemaController };
-import { SqlCinemaRepository } from './sql-cinema-repository';
-import { RateCommentController, RateController } from '../rate';
 
 export class CinemaManager extends Manager<Cinema, string, CinemaFilter> implements CinemaService {
   constructor(search: Search<Cinema, CinemaFilter>,
@@ -33,8 +34,12 @@ export class CinemaManager extends Manager<Cinema, string, CinemaFilter> impleme
         return this.infoRepository.load(id).then(info => {
           if (info) {
             delete (info as any)['id'];
+            delete (info as any)['count'];
+            delete (info as any)['score'];
             cinema.info = info;
           }
+          console.log({ cinema });
+
           return cinema;
         });
       }
@@ -47,7 +52,7 @@ export function useCinemaService(db: DB, mapper?: TemplateMap): CinemaService {
   const builder = new SearchBuilder<Cinema, CinemaFilter>(db.query, 'cinema', cinemaModel, db.driver, query);
   const repository = new SqlCinemaRepository(db);
   const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
-  const rateRepository = new SqlRateRepository(db, 'rates', rateModel, buildToSave, 5 , 'info', 'id', 'rate', 'count', 'score');
+  const rateRepository = new SqlRateRepository(db, 'rates', rateModel, buildToSave, 5, 'info', 'id', 'rate', 'count', 'score');
   return new CinemaManager(builder.search, repository, infoRepository, rateRepository);
 }
 
@@ -58,7 +63,7 @@ export function useCinemaController(log: Log, db: DB, mapper?: TemplateMap): Cin
 export function useCinemaRateService(db: DB, mapper?: TemplateMap): RateService {
   const query = useQuery('rates', mapper, rateModel, true);
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
-  const rateRepository = new SqlRateRepository(db, 'rates', rateModel, buildToSave, 5 , 'info', 'id', 'rate', 'count', 'score');
+  const rateRepository = new SqlRateRepository(db, 'rates', rateModel, buildToSave, 5, 'info', 'id', 'rate', 'count', 'score');
   const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'usefulCount', 'author', 'id');
   const rateCommentRepository = new SqlRateCommentRepository(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
@@ -68,7 +73,9 @@ export function useCinemaRateService(db: DB, mapper?: TemplateMap): RateService 
 }
 
 export function useCinemaRateController(log: Log, db: DB, mapper?: TemplateMap): RateController {
-  return new RateController(log, useCinemaRateService(db, mapper), generate, 'commentId', 'userId', 'author', 'id');
+  const rateValidator = new RateValidator(rateModel, check, 5);
+  const commentValidator = new CommentValidator(rateCommentModel, check);
+  return new RateController(log, useCinemaRateService(db, mapper), rateValidator, commentValidator, generate, 'commentId', 'userId', 'author', 'id');
 }
 
 export function useCinemaRateCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
