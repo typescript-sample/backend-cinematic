@@ -8,8 +8,8 @@ import {
 } from '../rate/rate';
 import { CommentValidator, RateCommentManager, RateValidator } from '../rate/service';
 
-import { RateCommentController, RateController } from '../rate';
-import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from '../rate/repo';
+import { RateCommentController, RateController } from 'rate-express';
+import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from 'rate-query';
 import { RateManager, RateRepository, RateService } from '../rate/service';
 import { Cinema, CinemaFilter, cinemaModel, CinemaRepository, CinemaService } from './cinema';
 import { CinemaController } from './cinema-controller';

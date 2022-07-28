@@ -4,7 +4,7 @@ import { Manager, Search } from 'onecore';
 import { buildToSave } from 'pg-extension';
 import { DB, SearchBuilder } from 'query-core';
 import { TemplateMap, useQuery } from 'query-mappers';
-import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from '../rate/repo';
+import { rateReactionModel, SqlInfoRepository, SqlRateCommentRepository, SqlRateReactionRepository, SqlRateRepository } from 'rate-query';
 import { RateComment, RateCommentFilter, RateCommentManager, rateCommentModel, RateCommentService } from 'rate5';
 import { rateModel, Rate, RateFilter, info10Model } from '../rate/rate'
 import { RateFilmInfo, rateFilmInfoModel, RateFilmInfoRepository } from '../rate-films/ratefilms';
@@ -13,7 +13,7 @@ import { FilmController } from './film-controller';
 import { SqlFilmRepositoy } from './sql-film-repository';
 import { RateFilmController } from '../rate-films/ratefilms-controller';
 import { RateFilmManager, RateService } from '../rate-films/service';
-import { RateCommentController } from '../rate';
+import { RateCommentController } from 'rate-express';
 import { CommentValidator, RateValidator } from '../rate/service';
 import { check } from 'xvalidators';
 
