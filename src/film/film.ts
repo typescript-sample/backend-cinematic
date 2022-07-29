@@ -1,6 +1,6 @@
 import { Attributes, Filter, Service } from 'onecore';
 import { Repository } from 'query-core';
-import { RateFilmInfo} from '../rate-films/ratefilms';
+import { Info10 } from 'rate-core';
 
 export interface FilmFilter extends Filter {
   id?: string;
@@ -19,7 +19,7 @@ export interface Film {
   imageUrl?: string;
   trailerUrl?: string;
   categories?: string[];
-  info?: RateFilmInfo;
+  info?: Info10;
 }
 
 export interface FilmRepository extends Repository<Film, string> {

@@ -23,7 +23,6 @@ import { CinemaController } from './cinema/cinema-controller';
 import { CinemaParentController, useCinemaParentController } from './cinemaparent';
 import { useFilmController, useRateFilmCommentController, useRateFilmController } from './film';
 import { FilmController } from './film/film-controller';
-import { RateFilmController } from './rate-films/ratefilms-controller';
 import { RateController, RateCommentController } from 'rate-express';
 import { RoleController, useRoleController } from './role';
 import { SqlUploadSerive } from './uploads/SqlUploadsService';
@@ -61,7 +60,7 @@ export interface Context {
   // cinemaRate: CinemaRateController;
   uploads: UploadController;
   rate: RateController;
-  rateFilm: RateFilmController;
+  rateFilm: RateController;
   appreciation: AppreciationController;
   appreciationReply: AppreciationReplyController;
   comment: RateCommentController; 

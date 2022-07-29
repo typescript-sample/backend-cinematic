@@ -1,6 +1,6 @@
 import { Attributes, Filter, Service } from 'onecore';
 import { Repository } from 'query-core';
-import { Info } from '../rate/rate';
+import { Info } from 'rate-core';
 
 export interface CinemaFilter extends Filter {
   id?: string;
