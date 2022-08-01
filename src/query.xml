@@ -129,6 +129,12 @@
     <if test="rate != null">
       rate = #{rate} and
     </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
     1 = 1
     <if test="sort != null">
       order by {sort}
@@ -142,6 +148,12 @@
     </if>
     <if test="rate != null">
       rate = #{rate} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
     </if>
     1 = 1
     <if test="sort != null">

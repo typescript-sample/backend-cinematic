@@ -2565,15 +2565,20 @@
   "resolved" "https://registry.npmjs.org/range-parser/-/range-parser-1.2.1.tgz"
   "version" "1.2.1"
 
-"rate-query@^0.0.3":
-  "integrity" "sha512-4ikzNFwE/HI+aWWS9Ii5LbEsLR66FRjz3y2rCy5ga3E+7hiM7ON57huftiM3aVpfadAjYo6PodnSfP5gDKx1dQ=="
-  "resolved" "https://registry.npmjs.org/rate-query/-/rate-query-0.0.3.tgz"
-  "version" "0.0.3"
+"rate-core@^0.0.2":
+  "integrity" "sha512-ScumpiigiHG+ePCnwDyanLD9RZcPycoV+JDbHvSTOi9kQ2hN+3Hiwabtd86lTh0eVGvzCwVk9nBaflMGxKhfQA=="
+  "resolved" "https://registry.npmjs.org/rate-core/-/rate-core-0.0.2.tgz"
+  "version" "0.0.2"
 
-"rate5@^0.0.1":
-  "integrity" "sha512-Zdx9B6Tq9cBgw1apQWRsywoe8/2+a6nD/MAZwvhHGT9GHncFesBw3L2r5qqNDt5Cb4WUeITS+LwAPcCcspkpiw=="
-  "resolved" "https://registry.npmjs.org/rate5/-/rate5-0.0.1.tgz"
+"rate-express@^0.0.1":
+  "integrity" "sha512-ANc7d3N+deLhKp5xVk2pmsaEFo2zSDC5VYlGYCZRdcXQwHcJIQjsbeMWdHKaC5WMFUzpR83h5/qcIdP8HaigCQ=="
+  "resolved" "https://registry.npmjs.org/rate-express/-/rate-express-0.0.1.tgz"
   "version" "0.0.1"
+
+"rate-query@^0.0.5":
+  "integrity" "sha512-X7tDwFerB1ekz7PiWTLe80HrMAXv17ShtNcUdsArVLd4nZ4ZL1pW2IA8Jak3+LDLXZE7y52YWoZFTbSTpCZcxg=="
+  "resolved" "https://registry.npmjs.org/rate-query/-/rate-query-0.0.5.tgz"
+  "version" "0.0.5"
 
 "raw-body@2.4.2":
   "integrity" "sha512-RPMAFUJP19WIet/99ngh6Iv8fzAbqum4Li7AD6DtGaW2RpMB/11xDoalPiJMTbu6I3hkbMVkATvZrqb9EEqeeQ=="

@@ -127,9 +127,10 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/cinema/rates/comment/:id/:author/:userId', ctx.rate.comment);
   app.delete('/cinema/rates/comment/:commentId/:author', ctx.rate.removeComment);
   app.put('/cinema/rates/comment/:commentId/:id/:author/:userId', ctx.rate.updateComment);
-  app.post('/cinema/rates/images', ctx.rate.getImages)
 
+  app.get('/films/rates/search', ctx.rateFilm.search);
   app.post('/films/rates/search', ctx.rateFilm.search);
+  app.get('/films/rates/comment/search', ctx.commentFilm.search);
   app.post('/films/rates/comment/search', ctx.commentFilm.search);
   app.post('/films/rates', ctx.rateFilm.rate);
   app.post('/films/rates/useful/:id/:author/:userId', ctx.rateFilm.setUseful);

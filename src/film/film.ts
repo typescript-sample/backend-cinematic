@@ -1,6 +1,6 @@
 import { Attributes, Filter, Service } from 'onecore';
 import { Repository } from 'query-core';
-import { RateFilmInfo} from '../rate-films/ratefilms';
+import { Info10 } from 'rate-core';
 
 export interface FilmFilter extends Filter {
   filmId?: string;
@@ -28,14 +28,13 @@ export interface Film {
   filmcast? : string[];
   productions?: string[];
   countries?: string[];
-  info?: RateFilmInfo;
+  info?: Info10;
 }
 
 export interface FilmRepository extends Repository<Film, string> {
 }
 export interface FilmService extends Service<Film, string, FilmFilter> {
 }
-
 
 export const filmModel: Attributes = {
   filmId: {
