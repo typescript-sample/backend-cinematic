@@ -72,6 +72,18 @@
     <if test="categories != null" array="skip">
       categories && #{categories} and
     </if>
+    <if test="directors != null" array="skip">
+      directors && #{directors} and
+    </if>
+    <if test="cast != null" array="skip">
+      cast && #{cast} and
+    </if>
+    <if test="productions != null" array="skip">
+      productions && #{productions} and
+    </if>
+    <if test="countries != null" array="skip">
+      countries && #{countries} and
+    </if>
     <if test="q != null">
       (title like #{q} or description like #{q} or imageUrl like #{q} or trailerUrl like #{trailerUrl}) and
     </if>

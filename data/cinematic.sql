@@ -331,3 +331,10 @@ ALTER TABLE modules ADD FOREIGN KEY (parent) REFERENCES modules (moduleid);
 ALTER TABLE rolemodules ADD FOREIGN KEY (roleid) REFERENCES roles (roleid);
 ALTER TABLE rolemodules ADD FOREIGN KEY (moduleid) REFERENCES modules (moduleid);
 */
+
+create table directors(
+  director character varying(255) primary key
+);
+
+INSERT INTO directors (director) VALUES('Sony');
+INSERT INTO directors (director) VALUES ('Samsung');
