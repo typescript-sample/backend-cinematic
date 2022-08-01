@@ -52,10 +52,10 @@ export function useFilmController(log: Log, db: DB, mapper?: TemplateMap): FilmC
 export function useRateFilmService(db: DB, mapper?: TemplateMap): Rater {
   const query = useQuery('rates_film', mapper, rateModel, true);
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates_film', rateModel, db.driver, query);
-  const rateRepository = new SqlRateRepository<Rate>(db, 'rates_film', rateModel, buildToSave, 10, 'rates_film_info', 'count', 'score', 'rate', 'rate', 'author', 'id', 'id', 'id');
+  const rateRepository = new SqlRateRepository<Rate>(db, 'rates_film', rateModel, buildToSave, 10, 'rates_film_info', 'rate', 'count', 'score', 'author', 'id');
   const infoRepository = new SqlInfoRepository<Info10>(db, 'rates_film_info', info10Model, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'rates_film_reaction', rateReactionModel, 'rates_film', 'usefulCount', 'author', 'id');
-  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'replyCount', 'author', 'id', 'author');
+  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'id', 'author', 'replyCount', 'author', 'time', 'id');
   return new RateService(builder.search, rateRepository, infoRepository, rateCommentRepository, rateReactionRepository);
 }
 
@@ -68,7 +68,7 @@ export function useRateFilmController(log: Log, db: DB, mapper?: TemplateMap): R
 export function useRateFilmCommentService(db: DB, mapper?: TemplateMap): RateCommentQuery {
   const query = useQuery('rates_film_comments', mapper, rateCommentModel, true);
   const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rates_film_comments', rateCommentModel, db.driver, query);
-  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'replyCount', 'author', 'id', 'author');
+  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rates_film_comments', rateCommentModel, 'rates_film', 'id', 'author', 'replyCount', 'author', 'time', 'id');
   return new RateCommentManager(builder.search, rateCommentRepository);
 }
 

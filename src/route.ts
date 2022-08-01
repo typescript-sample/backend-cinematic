@@ -149,6 +149,9 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.patch('/cinema/:id', checkCinema, ctx.cinema.patch);
   app.delete('/cinema/:id', checkCinema, ctx.cinema.delete);
 
+  app.post('/cinema/rate-criteria/search', ctx.rateCriteria.search);
+  app.post('/cinema/rate-criteria', ctx.rateCriteria.create)
+
   app.post('/appreciation/search', ctx.appreciation.search);
   app.post('/appreciation/reply/search', ctx.comment.search);
   app.post('/appreciation', ctx.appreciation.create);

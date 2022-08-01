@@ -36,7 +36,7 @@
     "query-mappers": "0.0.3",
     "rate-core": "^0.0.2",
     "rate-express": "^0.0.1",
-    "rate-query": "^0.0.5",
+    "rate-query": "^0.0.6",
     "security-express": "^0.1.4",
     "shortid": "^2.2.16",
     "ts-node-dev": "^2.0.0",

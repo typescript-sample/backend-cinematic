@@ -61,10 +61,10 @@ export function useCinemaController(log: Log, db: DB, mapper?: TemplateMap): Cin
 export function useCinemaRateService(db: DB, mapper?: TemplateMap): Rater {
   const query = useQuery('rates', mapper, rateModel, true);
   const builder = new SearchBuilder<Rate, RateFilter>(db.query, 'rates', rateModel, db.driver, query);
-  const rateRepository = new SqlRateRepository<Rate>(db, 'rates', rateModel, buildToSave, 5, 'info', 'count', 'score', 'rate', 'rate', 'author', 'id', 'id', 'id');
+  const rateRepository = new SqlRateRepository<Rate>(db, 'rates', rateModel, buildToSave, 5, 'info', 'rate', 'count', 'score', 'author', 'id');
   const infoRepository = new SqlInfoRepository<Info>(db, 'info', infoModel, buildToSave);
   const rateReactionRepository = new SqlRateReactionRepository(db, 'ratereaction', rateReactionModel, 'rates', 'usefulCount', 'author', 'id');
-  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
+  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rate_comments', rateCommentModel, 'rates', 'id', 'author', 'replyCount','author', 'id');
   // select id, imageurl as url from users;
   const queryUrl = useUrlQuery<string>(db.query, 'users', 'imageURL', 'id');
   return new RateService(builder.search, rateRepository, infoRepository, rateCommentRepository, rateReactionRepository, queryUrl);
@@ -79,7 +79,7 @@ export function useCinemaRateController(log: Log, db: DB, mapper?: TemplateMap):
 export function useCinemaRateCommentService(db: DB, mapper?: TemplateMap): RateCommentService {
   const query = useQuery('ratecomment', mapper, rateCommentModel, true);
   const builder = new SearchBuilder<RateComment, RateCommentFilter>(db.query, 'rate_comments', rateCommentModel, db.driver, query);
-  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rate_comments', rateCommentModel, 'rates', 'replyCount', 'author', 'id');
+  const rateCommentRepository = new SqlCommentRepository<RateComment>(db, 'rate_comments', rateCommentModel, 'rates', 'id', 'author', 'replyCount', 'author', 'time', 'id');
   const queryUrl = useUrlQuery<string>(db.query, 'users', 'imageURL', 'id');
   return new RateCommentManager(builder.search, rateCommentRepository, queryUrl);
 }

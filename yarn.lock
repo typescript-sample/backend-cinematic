@@ -2575,10 +2575,10 @@
   "resolved" "https://registry.npmjs.org/rate-express/-/rate-express-0.0.1.tgz"
   "version" "0.0.1"
 
-"rate-query@^0.0.5":
-  "integrity" "sha512-X7tDwFerB1ekz7PiWTLe80HrMAXv17ShtNcUdsArVLd4nZ4ZL1pW2IA8Jak3+LDLXZE7y52YWoZFTbSTpCZcxg=="
-  "resolved" "https://registry.npmjs.org/rate-query/-/rate-query-0.0.5.tgz"
-  "version" "0.0.5"
+"rate-query@^0.0.6":
+  "integrity" "sha512-FLGkkwE/jXaiWY8eRZDGI7VRTtN3LO3cHS/0aZvGdsHfPiv8C/rx9qd/BiLvMnYkHClrrUNrLz4rU/LAogQm/A=="
+  "resolved" "https://registry.npmjs.org/rate-query/-/rate-query-0.0.6.tgz"
+  "version" "0.0.6"
 
 "raw-body@2.4.2":
   "integrity" "sha512-RPMAFUJP19WIet/99ngh6Iv8fzAbqum4Li7AD6DtGaW2RpMB/11xDoalPiJMTbu6I3hkbMVkATvZrqb9EEqeeQ=="
