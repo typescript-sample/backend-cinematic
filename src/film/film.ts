@@ -3,12 +3,17 @@ import { Repository } from 'query-core';
 import { Info10 } from 'rate-core';
 
 export interface FilmFilter extends Filter {
-  id?: string;
+  filmId?: string;
   title?: string;
   description?: string;
   imageUrl?: string;
   trailerUrl?: string;
   status?: string;
+  categories?: string[];
+  directors?: string[];
+  filmcast? : string[];
+  productions?: string[];
+  countries?: string[];
 }
 
 export interface Film {
@@ -19,6 +24,10 @@ export interface Film {
   imageUrl?: string;
   trailerUrl?: string;
   categories?: string[];
+  directors?: string[];
+  filmcast? : string[];
+  productions?: string[];
+  countries?: string[];
   info?: Info10;
 }
 
@@ -52,6 +61,18 @@ export const filmModel: Attributes = {
   status: {
     match: 'equal',
     length: 1
+  },
+  directors: {
+    type: 'primitives',
+  },
+  filmcast: {
+    type: 'primitives',
+  },
+  productions: {
+    type: 'primitives',
+  },
+  countries: {
+    type: 'primitives',
   },
   createdBy: {},
   createdAt: {

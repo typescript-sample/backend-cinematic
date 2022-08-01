@@ -2,12 +2,12 @@ import { Storage } from '@google-cloud/storage';
 import { initializeStatus, PrivilegeRepository, SqlAuthConfig, useUserRepository } from 'authen-service';
 import { CategoryController } from 'category/category-controller';
 //import { CinemaRateController } from 'cinema/cinema-rate-controller';
-import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources } from 'express-ext';
+import { HealthController, LogController, Logger, Middleware, MiddlewareController, resources, QueryController } from 'express-ext';
 import { GoogleStorageService, map, StorageConfig } from 'google-storage';
 import { buildJwtError, Payload, verify } from 'jsonwebtoken-plus';
 import { Conf } from 'ldap-plus';
 import { Pool } from 'pg';
-import { param, PoolManager } from 'pg-extension';
+import { param, PoolManager, StringService } from 'pg-extension';
 import { createChecker, DB } from 'query-core';
 import { TemplateMap } from 'query-mappers';
 import { Authorizer, PrivilegeLoader, useToken } from 'security-express';
@@ -106,10 +106,54 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
 
   const role = useRoleController(logger.error, db, mapper);
   const user = useUserController(logger.error, db, mapper);
-
   const auditLog = useAuditLogController(logger.error, db);
 
-  const film = useFilmController(logger.error, db, mapper);
+  const directorService = new StringService(
+    "film_directors",
+    "director",
+    db.query,
+    db.exec
+  );
+  const director = new QueryController<string[]>(
+    logger.error,
+    directorService.load,
+    "keyword"
+  );
+  const castService = new StringService(
+    "film_cast",
+    "actor",
+    db.query,
+    db.exec
+  );
+  const cast = new QueryController<string[]>(
+    logger.error,
+    castService.load,
+    "keyword"
+  );
+  const productionService = new StringService(
+    "film_productions",
+    "production",
+    db.query,
+    db.exec
+  );
+  const production = new QueryController<string[]>(
+    logger.error,
+    productionService.load,
+    "keyword"
+  );
+  const countryService = new StringService(
+    "film_countries",
+    "country",
+    db.query,
+    db.exec
+  );
+  const country = new QueryController<string[]>(
+    logger.error,
+    countryService.load,
+    "keyword"
+  );
+
+  const film = useFilmController(logger.error, db, directorService.save, castService.save, productionService.save, countryService.save, mapper);
   //const filmRate = useFilmRateController(logger.error, db, mapper);
   const category = useCategoryController(logger.error, db, mapper);
 
