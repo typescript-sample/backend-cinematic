@@ -29,7 +29,8 @@ import { SqlUploadSerive } from './uploads/SqlUploadsService';
 import { UploadController } from './uploads/UploadController';
 import { UserController, useUserController } from './user';
 import { RateCriteriaController } from 'rate-criteria/rate-criteria-controller';
-import { useRateCriteriaController } from './rate-criteria';
+//import { useRateCriteriaController } from './rate-criteria';
+import { Comment, Rate, RateFilter } from 'rate-core';
 
 resources.createValidator = createValidator;
 resources.check = check;
@@ -61,14 +62,13 @@ export interface Context {
   cinema: CinemaController;
   // cinemaRate: CinemaRateController;
   uploads: UploadController;
-  rate: RateController;
-  rateFilm: RateController;
+  rate: RateController<Rate, RateFilter, Comment>;
+  rateFilm: RateController<Rate, RateFilter, Comment>;
   appreciation: AppreciationController;
   appreciationReply: AppreciationReplyController;
-  comment: RateCommentController; 
-  commentFilm: RateCommentController;
-  //commentFilm: RateFilmCommentController ;
-  rateCriteria: RateCriteriaController;
+  comment: RateCommentController<Comment>; 
+  commentFilm: RateCommentController<Comment>;
+  // rateCriteria: RateCriteriaController;
 }
 
 const credentials = {
@@ -167,7 +167,7 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const appreciationReply = useAppreciationReplyController(logger.error, db, mapper);
   const comment = useRateCommentController(logger.error, db, mapper);
   const commentFilm = useRateFilmCommentController(logger.error, db, mapper);
-  const rateCriteria = useRateCriteriaController(logger.error, db, mapper);
+  //const rateCriteria = useRateCriteriaController(logger.error, db, mapper);
   // const healthChecker2  =new Checker2('mongo',"https://localhost:443/health",5000);
   // const health2 = new HealthController2([healthChecker2])
   const manager = new PoolManager(pool);
@@ -177,5 +177,5 @@ export function useContext(db: DB, logger: Logger, midLogger: Middleware, conf: 
   const storageService = new GoogleStorageService(bucket, storageConfig, map);
   const uploadService = new SqlUploadSerive(pool, 'media', storageService.upload, storageService.delete, param, manager.query, manager.exec, manager.execBatch);
   const uploads = new UploadController(logger.error, uploadService);
-  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, rate, rateFilm,appreciation, appreciationReply, comment, commentFilm , rateCriteria};
+  return { health, log, middleware, role, user, auditLog, film, category, cinema, cinemaParent, uploads, rate, rateFilm,appreciation, appreciationReply, comment, commentFilm };
 }

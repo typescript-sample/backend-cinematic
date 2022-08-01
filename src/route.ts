@@ -116,9 +116,9 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   // get(app, '/cinemaParent', readCinemaParent, ctx.cinemaParent.all, secure);
   app.get('/cinema/comment/search', ctx.comment.search);
   app.post('/cinema/comment/search', ctx.comment.search);
-  app.post('/cinema/rates', ctx.rate.rate);
-  app.get('/cinema/rates/search', ctx.rate.search);
-  app.post('/cinema/rates/search', ctx.rate.search);
+  app.post('/cinema/rates/:id/:author', ctx.rate.rate);
+  app.get('/cinema/rates/search/:id/:author', ctx.rate.search);
+  app.post('/cinema/rates/search/:id/:author', ctx.rate.search);
   app.get('/cinema/rates/comment/search', ctx.comment.search);
   app.post('/cinema/rates/comment/search', ctx.comment.search);
   app.get('/cinema/rates/:id/:author', ctx.rate.load);
@@ -132,7 +132,7 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.post('/films/rates/search', ctx.rateFilm.search);
   app.get('/films/rates/comment/search', ctx.commentFilm.search);
   app.post('/films/rates/comment/search', ctx.commentFilm.search);
-  app.post('/films/rates', ctx.rateFilm.rate);
+  app.post('/films/rates/:id/:author', ctx.rateFilm.rate);
   app.post('/films/rates/useful/:id/:author/:userId', ctx.rateFilm.setUseful);
   app.delete('/films/rates/useful/:id/:author/:userId', ctx.rateFilm.removeUseful);
   app.post('/films/rates/comment/:id/:author/:userId', ctx.rateFilm.comment);
@@ -149,8 +149,8 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.patch('/cinema/:id', checkCinema, ctx.cinema.patch);
   app.delete('/cinema/:id', checkCinema, ctx.cinema.delete);
 
-  app.post('/cinema/rate-criteria/search', ctx.rateCriteria.search);
-  app.post('/cinema/rate-criteria', ctx.rateCriteria.create)
+  // app.post('/cinema/rate-criteria/search', ctx.rateCriteria.search);
+  // app.post('/cinema/rate-criteria', ctx.rateCriteria.create)
 
   app.post('/appreciation/search', ctx.appreciation.search);
   app.post('/appreciation/reply/search', ctx.comment.search);

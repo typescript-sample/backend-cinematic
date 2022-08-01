@@ -19,9 +19,11 @@ export interface RateCriteriaFilter extends Filter {
     review?: string;
 }
 
-
-export interface RateCriteriaRepository extends Repository<RateCriteria, RateCriteriaId> {
+export interface RateCriteriaRepository<R> {
 }
+
+// export interface RateCriteriaRepository extends Repository<RateCriteria, RateCriteriaId> {
+// }
 
 export interface RateCriteriaService extends Service<RateCriteria, RateCriteriaId, RateCriteriaFilter> {
 }
