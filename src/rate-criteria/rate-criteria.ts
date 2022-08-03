@@ -35,14 +35,14 @@ export interface RateCriteriaFilter extends Filter {
 }
 
 export interface RateCriteriaRepository<R> {
-    getRate(id: string, author: string): Promise<R | null>;
+    load(id: string, author: string): Promise<R | null>;
     insert(rate: R, newInfo?: boolean): Promise<number>;
     update(rate: R, oldRate: number): Promise<number>;
 }
 
 export interface RateCriteriaService {
     search(s: RateCriteriaFilter, limit?: number, offset?: number | string, fields?: string[], ctx?: any): Promise<SearchResult<RateCriteria>>;
-    getRate(id: string, author: string): Promise<RateCriteria | null>;
+    load(id: string, author: string): Promise<RateCriteria | null>;
     rate(rate: RateCriteria): Promise<number>;
 }
 

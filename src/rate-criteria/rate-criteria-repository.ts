@@ -51,7 +51,7 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
                 this.rate = this.rateField;
             }
         }
-        this.getRate = this.getRate.bind(this);
+        this.load = this.load.bind(this);
         this.insert = this.insert.bind(this);
     }
     map?: StringMap;
@@ -69,7 +69,7 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
     rate4?: string;
     rate5?: string;
 
-    getRate(id: string, author: string, ctx?: any): Promise<R | null> {
+    load(id: string, author: string, ctx?: any): Promise<R | null> {
         return this.db.query<R>(`select * from ${this.table} where ${this.idCol} = ${this.db.param(1)} and ${this.authorCol} = ${this.db.param(2)}`, [id, author], this.map, undefined, ctx).then(rates => {
             return rates && rates.length > 0 ? rates[0] : null;
         });

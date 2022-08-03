@@ -49,7 +49,7 @@ export class RateCriteriaController<R, F> {
     getRate(req: Request, res: Response) {
         const id = req.params[this.id];
         const author = req.params[this.author];
-        this.rateCriteriaService.getRate(id, author)
+        this.rateCriteriaService.load(id, author)
             .then(cinemas => res.status(200).json(cinemas))
             .catch(err => handleError(err, res, this.log));
     }

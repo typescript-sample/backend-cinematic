@@ -22,7 +22,7 @@ export class RateCriteriaManager implements RateCriteriaService {
         public infoRepository: InfoRepository<RateFullInfo>,
         private queryURL?: (ids: string[]) => Promise<URL[]>) {
         this.search = this.search.bind(this);
-        this.getRate = this.getRate.bind(this);
+        this.load = this.load.bind(this);
     }
 
     search(s: RateCriteria, limit?: number, offset?: number | string, fields?: string[]): Promise<SearchResult<RateCriteria>> {
@@ -51,8 +51,8 @@ export class RateCriteriaManager implements RateCriteriaService {
         });
     }
 
-    async getRate(id: string, author: string): Promise<RateCriteria | null> {
-        return await this.repository.getRate(id, author);
+    async load(id: string, author: string): Promise<RateCriteria | null> {
+        return await this.repository.load(id, author);
     }
 
     async rate(rate: RateCriteria): Promise<number> {
@@ -63,7 +63,7 @@ export class RateCriteriaManager implements RateCriteriaService {
             const r0 = await this.repository.insert(newRate, true);         
             return r0;
         }
-        const exist = await this.repository.getRate(rate.id, rate.author);
+        const exist = await this.repository.load(rate.id, rate.author);
         if (!exist) {
             const r1 = await this.repository.insert(newRate);
             return r1;
