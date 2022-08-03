@@ -476,5 +476,220 @@
       order by {sort}
     </if>
   </select>
+
+  <!-- <select id="rate_criteria_info">
+    select * from rate_criteria_info
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select> -->
+
+  <select id="rate_full_info">
+    select * from rate_full_info
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="rate_info01">
+    select * from rate_info01
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="rate1 != null">
+      rate1 = #{rate1} and
+    </if>
+    <if test="rate2 != null">
+      rate2 = #{rate2} and
+    </if>
+    <if test="rate3 != null">
+      rate3 = #{rate3} and
+    </if>
+    <if test="rate4 != null">
+      rate4 = #{rate4} and
+    </if>
+    <if test="rate5 != null">
+      rate5 = #{rate5} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="rate_info02">
+    select * from rate_info02
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="rate1 != null">
+      rate1 = #{rate1} and
+    </if>
+    <if test="rate2 != null">
+      rate2 = #{rate2} and
+    </if>
+    <if test="rate3 != null">
+      rate3 = #{rate3} and
+    </if>
+    <if test="rate4 != null">
+      rate4 = #{rate4} and
+    </if>
+    <if test="rate5 != null">
+      rate5 = #{rate5} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="rate_info03">
+    select * from rate_info03
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="rate1 != null">
+      rate1 = #{rate1} and
+    </if>
+    <if test="rate2 != null">
+      rate2 = #{rate2} and
+    </if>
+    <if test="rate3 != null">
+      rate3 = #{rate3} and
+    </if>
+    <if test="rate4 != null">
+      rate4 = #{rate4} and
+    </if>
+    <if test="rate5 != null">
+      rate5 = #{rate5} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="rate_info04">
+    select * from rate_info04
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="rate1 != null">
+      rate1 = #{rate1} and
+    </if>
+    <if test="rate2 != null">
+      rate2 = #{rate2} and
+    </if>
+    <if test="rate3 != null">
+      rate3 = #{rate3} and
+    </if>
+    <if test="rate4 != null">
+      rate4 = #{rate4} and
+    </if>
+    <if test="rate5 != null">
+      rate5 = #{rate5} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
+
+  <select id="rate_info05">
+    select * from rate_info05
+    <if test="id != null">
+      id = #{id} and
+    </if>
+    <if test="rate != null">
+      rate = #{rate} and
+    </if>
+    <if test="rate1 != null">
+      rate1 = #{rate1} and
+    </if>
+    <if test="rate2 != null">
+      rate2 = #{rate2} and
+    </if>
+    <if test="rate3 != null">
+      rate3 = #{rate3} and
+    </if>
+    <if test="rate4 != null">
+      rate4 = #{rate4} and
+    </if>
+    <if test="rate5 != null">
+      rate5 = #{rate5} and
+    </if>
+    <if test="count != null">
+      count = #{count} and
+    </if>
+    <if test="score != null">
+      score = #{score} and
+    </if>
+    1 = 1
+    <if test="sort != null">
+      order by {sort}
+    </if>
+  </select>
   
 </mapper>

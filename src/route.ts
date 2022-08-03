@@ -87,14 +87,7 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   // app.post('/film-rate/useful', ctx.filmRate.usefulFilm);
   // app.post('/film-rate/useful/search', ctx.filmRate.usefulSearch);
 
-  app.get('/films', ctx.film.all);
-  app.post('/films', checkFilm, ctx.film.create);
-  app.get('/films/search', checkFilm, ctx.film.search);
-  app.post('/films/search', checkFilm, ctx.film.search);
-  app.get('/films/:id', ctx.film.load);
-  app.put('/films/:id', checkFilm, ctx.film.update);
-  app.patch('/films/:id', checkFilm, ctx.film.patch);
-  app.delete('/films/:id', checkFilm, ctx.film.delete);
+
   // app.post('/films/rate', checkFilmRate, ctx.film.rate);
   // app.post('/film-rate/search', ctx.filmRate.search);
   // app.get('/film-rate/search', ctx.filmRate.search);
@@ -114,6 +107,16 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   // const readCinema = ctx.authorize('cinema', read);
   // const writeCinema = ctx.authorize('cinema', write);
   // get(app, '/cinemaParent', readCinemaParent, ctx.cinemaParent.all, secure);
+
+  app.get('/films', ctx.film.all);
+  app.post('/films', checkFilm, ctx.film.create);
+  app.get('/films/search', checkFilm, ctx.film.search);
+  app.post('/films/search', checkFilm, ctx.film.search);
+  app.get('/films/:id', ctx.film.load);
+  app.put('/films/:id', checkFilm, ctx.film.update);
+  app.patch('/films/:id', checkFilm, ctx.film.patch);
+  app.delete('/films/:id', checkFilm, ctx.film.delete);
+  
   app.get('/cinema/comment/search', ctx.comment.search);
   app.post('/cinema/comment/search', ctx.comment.search);
   app.post('/cinema/rates/:id/:author', ctx.rate.rate);
@@ -149,9 +152,12 @@ export function route(app: Application, ctx: Context, secure: boolean): void {
   app.patch('/cinema/:id', checkCinema, ctx.cinema.patch);
   app.delete('/cinema/:id', checkCinema, ctx.cinema.delete);
 
-  // app.post('/cinema/rate-criteria/search', ctx.rateCriteria.search);
-  // app.post('/cinema/rate-criteria', ctx.rateCriteria.create)
-
+  //criteria
+  app.post('/cinema/rate-criteria/search', ctx.rateCriteria.search);
+  app.post('/cinema/rate-criteria/search/:id/:author', ctx.rateCriteria.search);
+  app.post('/cinema/rate-criteria/:id/:author', ctx.rateCriteria.getRate);
+  app.post('/cinema/rate-criteria/rate/:id/:author', ctx.rateCriteria.rate);
+ 
   app.post('/appreciation/search', ctx.appreciation.search);
   app.post('/appreciation/reply/search', ctx.comment.search);
   app.post('/appreciation', ctx.appreciation.create);

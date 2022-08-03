@@ -18,8 +18,7 @@ import { check } from 'xvalidators';
 
 export class FilmManager
   extends Manager<Film, string, FilmFilter>
-  implements FilmService
-{
+  implements FilmService {
   constructor(
     search: Search<Film, FilmFilter>,
     repository: FilmRepository,
@@ -28,7 +27,7 @@ export class FilmManager
     protected saveProductions: (values: string[]) => Promise<number>,
     protected saveCountries: (values: string[]) => Promise<number>,
     private infoRepository: InfoRepository<Info10>
-    ){
+  ) {
     super(search, repository);
   }
   load(id: string): Promise<Film | null> {
@@ -140,7 +139,7 @@ export function useRateFilmService(db: DB, mapper?: TemplateMap): Rater {
 export function useRateFilmController(log: Log, db: DB, mapper?: TemplateMap): RateController<Rate, RateFilter, Comment> {
   const rateValidator = new RateValidator(rateModel, check, 10);
   const commentValidator = new CommentValidator(rateCommentModel, check);
-  return new RateController(log, useRateFilmService(db, mapper),rateValidator,commentValidator, ['time'], ['rate', 'usefulCount', 'replyCount', 'count', 'score'], generate, 'commentId', 'userId', 'author', 'id');
+  return new RateController(log, useRateFilmService(db, mapper), rateValidator, commentValidator, ['time'], ['rate', 'usefulCount', 'replyCount', 'count', 'score'], generate, 'commentId', 'userId', 'author', 'id');
 }
 
 export function useRateFilmCommentService(db: DB, mapper?: TemplateMap): RateCommentQuery {
