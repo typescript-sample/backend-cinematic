@@ -88,13 +88,13 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
 
         const stmts: Statement[] = [];
         if (newInfo) {
-            const fullStmt: Statement = { query: this.insertFullInfo(rate.rate, this.fullTable), params: [id] };
-            stmts.push(fullStmt);
-
             for (let i = 0; i < rate.rates.length; i++) {
                 const sql = this.insertInfo(rate.rates[i], this.tables[i]);
                 stmts.push({ query: sql, params: [id] });
             }
+            const fullStmt: Statement = { query: this.insertFullInfo(rate.rate, this.fullTable, this.tables), params: [id, id, id, id, id, id] };
+            stmts.push(fullStmt);
+            console.log(fullStmt);
             stmts.push(mainStmt);
             return this.db.execBatch(stmts, true);
         } else {
@@ -124,10 +124,16 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
           values (${this.db.param(1)}, ${r}, 1, ${r}, ${ps.join(',')})`;
         return query;
     }
-    protected insertFullInfo(r: number, table: string): string {
+    protected insertFullInfo(r: number, table: string, tables: string[]): string {
+        const rateCols: string[] = [];
+        const s: string[] = [];
+        for (let i = 1; i <= tables.length; i++) {
+            rateCols.push(`${this.rate}${i}`)
+            s.push(`(select avg(${this.rate}) from ${tables[i - 1]} where ${this.id} = ${this.db.param(i)} group by ${this.id})`);
+        }
         const query = `
-                insert into ${table} (${this.id}, ${this.rate}, ${this.count}, ${this.score})
-                values (${this.db.param(1)}, ${r}, 1, ${r})`;
+                insert into ${table} (${this.id}, ${this.rate}, ${this.count}, ${this.score}, ${rateCols.join(', ')})
+                values (${this.db.param(6)}, ${r}, 1, ${r}, ${s.join(',')})`;
         return query;
     }
 
@@ -138,11 +144,9 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
                 s.push(`${this.rate}${i} = (select avg(${this.rate}) from ${tables[i - 1]} where ${this.id} = ${this.db.param(i)} group by ${this.id})`);
             }
             const query = `
-              update ${table} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.score} = ${this.score} + ${r},
-                ${s.join(',')},
-                ${this.count} = ${this.count} + 1
+              update ${table} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.score} = ${this.score} + ${r},${this.count} = ${this.count} + 1, ${s.join(',')}
               where ${this.id} = ${this.db.param(6)}`;
-            return query;    
+            return query;
         } else {
             const query = `
               update ${table} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.score} = ${this.score} + ${r},
@@ -157,32 +161,41 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
           where ${this.id} = ${this.db.param(1)}`;
         return query;
     }
-    protected updateOldInfo(newRate: number, oldRate: number, table: string): string {
+    protected updateOldInfo(newRate: number, oldRate: number, table: string, tables?: string[]): string {
         const delta = newRate - oldRate;
-        const query = `
-          update ${table} set ${this.rate} = (${this.score} + ${delta})/${this.count}, ${this.score} = ${this.score} + ${delta}, ${this.count} = ${this.count}
-          where ${this.id} = ${this.db.param(1)}`;
-        return query;
+        const s: string[] = [];
+        if (tables && tables.length > 0) {
+            for (let i = 1; i <= tables.length; i++) {
+                s.push(`${this.rate}${i} = (select avg(${this.rate}) from ${tables[i - 1]} where ${this.id} = ${this.db.param(i)} group by ${this.id})`);
+            }
+            const query = `
+              update ${table} set ${this.rate} = (${this.score} + ${delta})/${this.count}, ${this.score} = ${this.score} + ${delta}, ${this.count} = ${this.count}, ${s.join(',')}
+              where ${this.id} = ${this.db.param(6)}`;
+            return query;
+        } else {
+            const query = `
+            update ${table} set ${this.rate} = (${this.score} + ${delta})/${this.count}, ${this.score} = ${this.score} + ${delta}, ${this.count} = ${this.count}
+            where ${this.id} = ${this.db.param(6)}`;
+            return query;
+        }
     }
     update(rate: R, oldRate: number): Promise<number> {
         const rates = rate.rates;
         const r = rate.rate;
-
         const stmts: Statement[] = [];
         const stmt = buildToUpdate(rate, this.table, this.attributes, this.db.param);
-
         if (r && rates && rates.length > 0) {
             if (stmt) {
                 const obj: any = rate;
                 const id: string = obj[this.idField];
-                const query: Statement = { query: this.updateOldInfo(rate.rate, oldRate, this.fullTable), params: [id] };
-                stmts.push(query)
+
                 for (let i = 0; i < rate.rates.length; i++) {
                     const sql = this.updateNewInfo(rate.rates[i], this.tables[i]);
                     stmts.push({ query: sql, params: [id] });
                 }
+                const query: Statement = { query: this.updateOldInfo(rate.rate, oldRate, this.fullTable, this.tables), params: [id, id, id, id, id, id] };
+                stmts.push(query)
                 stmts.push(stmt);
-
                 return this.db.execBatch(stmts, true);
             } else {
                 return Promise.resolve(-1);

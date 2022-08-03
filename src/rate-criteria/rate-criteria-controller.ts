@@ -58,10 +58,14 @@ export class RateCriteriaController<R, F> {
         const id = req.params[this.id];
         const author = req.params[this.author];
         const rate: any = { [this.id]: id, [this.author]: author, ...req.body};
-        console.log({rate});
-        
-        this.rateCriteriaService.rate(rate)
-            .then(cinemas => res.status(200).json(cinemas))
-            .catch(err => handleError(err, res, this.log));
+        this.validator.validate(rate).then(errors => {
+            if (errors && errors.length > 0) {
+              res.status(getStatusCode(errors)).json(errors).end();
+            } else {
+              this.rateCriteriaService.rate(rate).then(rs => {
+                return res.status(200).json(rs).end();
+              }).catch(err => handleError(err, res, this.log));
+            }
+          }).catch(err => handleError(err, res, this.log));
     }
 }
