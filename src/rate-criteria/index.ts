@@ -57,26 +57,18 @@ export class RateCriteriaManager implements RateCriteriaService {
 
     async rate(rate: RateCriteria): Promise<number> {
         const info = await this.infoRepository.load(rate.id);
-        //console.log({ info });
         const newRate = { ...rate, time: new Date() };
-        console.log({info});
         
         if (!info) {
-            console.log("enter !info");
             const r0 = await this.repository.insert(newRate, true);         
             return r0;
         }
-        console.log("pass info");
-        
         const exist = await this.repository.getRate(rate.id, rate.author);
         if (!exist) {
-            console.log("enter !exist");
-            
             const r1 = await this.repository.insert(newRate);
             return r1;
         }
-       
-        
+    
         const sr: ShortRate = { review: exist.review, rates: exist.rates, time: exist.time };
         if (exist.histories && exist.histories.length > 0) {
             const history = exist.histories;
@@ -85,11 +77,6 @@ export class RateCriteriaManager implements RateCriteriaService {
         } else {
             rate.histories = [sr];
         }
-        
-        console.log(exist.rate);
-        console.log(newRate);
-        
-        
         const res = await this.repository.update(newRate, exist.rate);
         return res
     }
@@ -98,13 +85,15 @@ export class RateCriteriaManager implements RateCriteriaService {
 export function useRateCriteriaService(db: DB, mapper?: TemplateMap): RateCriteriaService {
     const query = useQuery('rate_criteria', mapper, rateCriteriaModel, true);
     const builder = new SearchBuilder<RateCriteria, RateCriteriaFilter>(db.query, 'rate_criteria', rateCriteriaModel, db.driver, query);
-    const repository = new SqlRateCriteriaRepository<RateCriteria>(db, 'rate_criteria', 'rate_full_info',['rate_info01', 'rate_info02', 'rate_info03', 'rate_info04', 'rate_info05'], rateCriteriaModel, buildToSave, 5, 'rfi','rate' ,'count', 'score', 'author', 'id');
+    const repository = new SqlRateCriteriaRepository<RateCriteria>(db, 'rate_criteria', 'rate_full_info',['rate_info01', 'rate_info02', 'rate_info03', 'rate_info04', 'rate_info05'], 
+                                            rateCriteriaModel, buildToSave, 5,'rate' ,'count', 'score', 'author', 'id','id', 'id', 'rate', 'rate1', 'rate2','rate3','rate4', 'rate5');
     const infoRepository = new SqlInfoRepository<Info>(db, 'rate_full_info', infoModel, buildToSave);
     return new RateCriteriaManager(builder.search, repository, infoRepository);
 }
 export function useRateCriteriaController(log: Log, db: DB, mapper?: TemplateMap): RateCriteriaController<RateCriteria, RateCriteriaFilter> {
     const rateValidator = new RateCriteriaValidator(rateCriteriaModel, check, 10);
-    return new RateCriteriaController(log, useRateCriteriaService(db, mapper), rateValidator, ['dates'], ['rate', 'usefulCount', 'replyCount', 'count', 'score'], generate, 'commentId', 'userId', 'author', 'id');
+    return new RateCriteriaController(log, useRateCriteriaService(db, mapper), rateValidator, ['dates'], ['rate', 'usefulCount', 'replyCount', 'count', 'score'], generate,
+                                     'commentId', 'userId', 'author', 'id');
 }
 function binarySearch(ar: URL[], el: string): number {
     let m = 0;

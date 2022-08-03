@@ -13,7 +13,10 @@ export function avg(n: number[]): number {
     return sum / n.length;
 }
 export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriteriaRepository<R> {
-    constructor(public db: DB, public table: string, public fullTable: string, public tables: string[], public attributes: Attributes, protected buildToSave: <K>(obj: K, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined, public max: number, public infoTable: string, rateField?: string, count?: string, score?: string, authorCol?: string, id?: string, idField?: string, idCol?: string, rateCol?: string) {
+    constructor(public db: DB, public table: string, public fullTable: string, public tables: string[], public attributes: Attributes,
+        protected buildToSave: <K>(obj: K, table: string, attrs: Attributes, ver?: string, buildParam?: (i: number) => string, i?: number) => Statement | undefined,
+        public max: number, rateField?: string, count?: string, score?: string, authorCol?: string, id?: string, idField?: string, idCol?: string,
+        rateCol?: string, rate1?: string, rate2?: string, rate3?: string, rate4?: string, rate5?: string) {
         const m = metadata(attributes);
         this.map = m.map;
         this.id = (id && id.length > 0 ? id : 'id');
@@ -23,6 +26,11 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
         this.idField = (idField && idField.length > 0 ? idField : 'id');
         this.rateField = (rateField && rateField.length > 0 ? rateField : 'rate');
         this.authorCol = (authorCol && authorCol.length > 0 ? authorCol : 'author');
+        this.rate1 = (rate1 && rate1.length > 0 ? rate1 : 'rate1');
+        this.rate2 = (rate2 && rate2.length > 0 ? rate2 : 'rate2');
+        this.rate3 = (rate3 && rate3.length > 0 ? rate3 : 'rate3');
+        this.rate4 = (rate4 && rate4.length > 0 ? rate4 : 'rate4');
+        this.rate5 = (rate5 && rate5.length > 0 ? rate5 : 'rate5');
         if (idCol && idCol.length > 0) {
             this.idCol = idCol;
         } else {
@@ -55,6 +63,11 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
     rateField: string;
     idCol: string;
     authorCol: string;
+    rate1?: string;
+    rate2?: string;
+    rate3?: string;
+    rate4?: string;
+    rate5?: string;
 
     getRate(id: string, author: string, ctx?: any): Promise<R | null> {
         return this.db.query<R>(`select * from ${this.table} where ${this.idCol} = ${this.db.param(1)} and ${this.authorCol} = ${this.db.param(2)}`, [id, author], this.map, undefined, ctx).then(rates => {
@@ -62,15 +75,7 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
         });
     }
 
-    protected getFullInfo(id: string, ctx?: any): Promise<RateFullInfo | null> {
-        return this.db.query<RateFullInfo>(`select * from ${this.fullTable} where ${this.idCol} = ${this.db.param(1)}`, [id], this.map, undefined, ctx).then(fullinfo => {
-            return fullinfo && fullinfo.length > 0 ? fullinfo[0] : null;
-        })
-    }
-
     insert(rate: R, newInfo?: boolean): Promise<number> {
-        console.log("rate: " + JSON.stringify(rate));
-
         if (rate.rates.length != this.tables.length) {
             return Promise.reject('Invalid rates length');
         }
@@ -83,8 +88,6 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
 
         const stmts: Statement[] = [];
         if (newInfo) {
-            console.log("enter newInfo");
-
             const fullStmt: Statement = { query: this.insertFullInfo(rate.rate, this.fullTable), params: [id] };
             stmts.push(fullStmt);
 
@@ -93,13 +96,9 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
                 stmts.push({ query: sql, params: [id] });
             }
             stmts.push(mainStmt);
-            console.log(stmts);
-
             return this.db.execBatch(stmts, true);
         } else {
-            console.log("enter");
-
-            const fullStmt: Statement = { query: this.updateFullInfo(rate.rate, this.fullTable), params: [id] };
+            const fullStmt: Statement = { query: this.updateFullInfo(rate.rate, this.fullTable, this.tables), params: [id, id, id, id, id, id] };
             stmts.push(fullStmt);
             for (let i = 0; i < rate.rates.length; i++) {
                 const sql = this.updateNewInfo(rate.rates[i], this.tables[i]);
@@ -131,11 +130,26 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
                 values (${this.db.param(1)}, ${r}, 1, ${r})`;
         return query;
     }
-    protected updateFullInfo(r: number, table: string): string {
-        const query = `
-          update ${table} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.count} = ${this.count} + 1, ${this.score} = ${this.score} + ${r}
-          where ${this.id} = ${this.db.param(1)}`;
-        return query;
+
+    protected updateFullInfo(r: number, table: string, tables?: string[]): string {
+        if (tables && tables.length > 0) {
+            const s: string[] = [];
+            for (let i = 1; i <= tables.length; i++) {
+                s.push(`${this.rate}${i} = (select avg(${this.rate}) from ${tables[i - 1]} where ${this.id} = ${this.db.param(i)} group by ${this.id})`);
+            }
+            const query = `
+              update ${table} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.score} = ${this.score} + ${r},
+                ${s.join(',')},
+                ${this.count} = ${this.count} + 1
+              where ${this.id} = ${this.db.param(6)}`;
+            return query;    
+        } else {
+            const query = `
+              update ${table} set ${this.rate} = (${this.score} + ${r})/(${this.count} + 1), ${this.score} = ${this.score} + ${r},
+                ${this.count} = ${this.count} + 1
+              where ${this.id} = ${this.db.param(6)}`;
+            return query;
+        }
     }
     protected updateNewInfo(r: number, table: string): string {
         const query = `
@@ -145,26 +159,18 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
     }
     protected updateOldInfo(newRate: number, oldRate: number, table: string): string {
         const delta = newRate - oldRate;
-        console.log(newRate);
-        console.log(oldRate);
-        console.log(delta);
-
         const query = `
           update ${table} set ${this.rate} = (${this.score} + ${delta})/${this.count}, ${this.score} = ${this.score} + ${delta}, ${this.count} = ${this.count}
           where ${this.id} = ${this.db.param(1)}`;
         return query;
     }
-
-
     update(rate: R, oldRate: number): Promise<number> {
-        console.log("call update");
-        console.log(rate);
         const rates = rate.rates;
         const r = rate.rate;
 
         const stmts: Statement[] = [];
         const stmt = buildToUpdate(rate, this.table, this.attributes, this.db.param);
-    
+
         if (r && rates && rates.length > 0) {
             if (stmt) {
                 const obj: any = rate;
@@ -186,8 +192,6 @@ export class SqlRateCriteriaRepository<R extends BaseRate> implements RateCriter
                 return Promise.reject('cannot build to insert rate');
             } else {
                 stmts.push(stmt);
-                console.log("stmt" + stmt);
-                
                 return this.db.execBatch(stmts, true);
             }
         }
